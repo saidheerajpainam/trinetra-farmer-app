@@ -189,7 +189,7 @@ async function sendViaTwilio({ e164, otp, config }) {
  * Fast2SMS Provider Implementation (Indian OTP Gateway)
  */
 async function sendViaFast2SMS({ mobile10, otp, config }) {
-  const apiKey = config.FAST2SMS_API_KEY;
+  const apiKey = String(config.FAST2SMS_API_KEY || '').trim().replace(/^["']|["']$/g, '');
   if (!apiKey) {
     throw new Error('Fast2SMS configuration incomplete: FAST2SMS_API_KEY is required.');
   }
