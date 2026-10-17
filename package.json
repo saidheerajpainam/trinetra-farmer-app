@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Trinetra Drones & Robotics - Agriculture Drone Booking Platform for Andhra Pradesh Farmers",
   "main": "server.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "scripts": {
     "start": "node server.js",
     "init-db": "node init_db.js",

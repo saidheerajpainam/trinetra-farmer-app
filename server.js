@@ -236,9 +236,11 @@ function serveStatic(req, res, filePath) {
     };
     if (ext === '.apk' || ext === '.aab') {
       headers['Content-Disposition'] = `attachment; filename="${path.basename(resolvedPath)}"`;
+      headers['Connection'] = 'close';
     }
     res.writeHead(200, headers);
-    fs.createReadStream(resolvedPath).pipe(res);
+    const stream = fs.createReadStream(resolvedPath);
+    stream.pipe(res);
   });
 }
 
