@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
@@ -41,11 +43,17 @@ class FarmerWebViewPage extends StatefulWidget {
 }
 
 class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
+  static const String defaultCloudUrl =
+      'https://trinetra-farmer-app.onrender.com/farmer-app.html';
+  static const String prefUrlKey = 'trinetra_saved_backend_url';
+
   late final WebViewController _controller;
   int _loadingProgress = 0;
   bool _hasError = false;
   String _errorMessage = '';
-  String _currentUrl = 'http://10.0.2.2:8088/farmer-app.html';
+  String _currentUrl = defaultCloudUrl;
+  Timer? _autoRetryTimer;
+  int _retryCountdown = 0;
 
   @override
   void initState() {
@@ -53,7 +61,16 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
     _initWebView();
   }
 
-  void _initWebView() {
+  @override
+  void dispose() {
+    _autoRetryTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _initWebView() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String savedUrl = prefs.getString(prefUrlKey) ?? defaultCloudUrl;
+
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0xFF0F172A))
@@ -65,36 +82,67 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
             });
           },
           onPageStarted: (String url) {
+            _autoRetryTimer?.cancel();
             setState(() {
               _hasError = false;
               _loadingProgress = 0;
             });
           },
           onPageFinished: (String url) {
+            _autoRetryTimer?.cancel();
             setState(() {
               _loadingProgress = 100;
+              _hasError = false;
             });
           },
           onWebResourceError: (WebResourceError error) {
-            // If server isn't reached, show fallback options
             if (error.isForMainFrame ?? true) {
               setState(() {
                 _hasError = true;
                 _errorMessage = error.description;
               });
+              _scheduleAutoRetry();
             }
           },
         ),
       );
 
-    _loadAppUrl(_currentUrl);
+    _loadAppUrl(savedUrl, saveToPrefs: false);
   }
 
-  void _loadAppUrl(String url) {
+  void _scheduleAutoRetry() {
+    _autoRetryTimer?.cancel();
+    _retryCountdown = 4;
+    _autoRetryTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      setState(() {
+        _retryCountdown--;
+      });
+      if (_retryCountdown <= 0) {
+        timer.cancel();
+        if (_hasError) {
+          _controller.reload();
+        }
+      }
+    });
+  }
+
+  Future<void> _loadAppUrl(String url, {bool saveToPrefs = true}) async {
+    _autoRetryTimer?.cancel();
     setState(() {
       _currentUrl = url;
       _hasError = false;
+      _loadingProgress = 0;
     });
+
+    if (saveToPrefs) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString(prefUrlKey, url);
+    }
+
     if (url.startsWith('http://') || url.startsWith('https://')) {
       _controller.loadRequest(Uri.parse(url));
     } else {
@@ -118,7 +166,7 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Enter Backend Server URL (Local or Cloud):',
+              'Backend Server URL (Permanently Saved):',
               style: TextStyle(color: Colors.white70, fontSize: 13),
             ),
             const SizedBox(height: 8),
@@ -128,7 +176,7 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color(0xFF0F172A),
-                hintText: 'http://10.0.2.2:8088/farmer-app.html',
+                hintText: defaultCloudUrl,
                 hintStyle: const TextStyle(color: Colors.white38),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -141,19 +189,13 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
               runSpacing: 6,
               children: [
                 ActionChip(
-                  label: const Text('Emulator (10.0.2.2)'),
+                  label: const Text('24/7 Render Cloud'),
                   onPressed: () {
-                    textController.text = 'http://10.0.2.2:8088/farmer-app.html';
+                    textController.text = defaultCloudUrl;
                   },
                 ),
                 ActionChip(
-                  label: const Text('Localhost'),
-                  onPressed: () {
-                    textController.text = 'http://localhost:8088/farmer-app.html';
-                  },
-                ),
-                ActionChip(
-                  label: const Text('Bundled Offline Asset'),
+                  label: const Text('Offline Local Asset'),
                   onPressed: () {
                     textController.text = 'assets/farmer-app.html';
                   },
@@ -176,7 +218,7 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
               Navigator.pop(ctx);
               _loadAppUrl(textController.text.trim());
             },
-            child: const Text('కనెక్ట్ చేయి (Connect)'),
+            child: const Text('సేవ్ చేయి (Save & Connect)'),
           ),
         ],
       ),
@@ -185,154 +227,170 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF15803D),
-        elevation: 2,
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/trinetra-logo.png',
-              width: 32,
-              height: 32,
-              errorBuilder: (context, error, stackTrace) => const Icon(
-                Icons.agriculture,
-                color: Colors.white,
-                size: 28,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        if (await _controller.canGoBack()) {
+          await _controller.goBack();
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0F172A),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF15803D),
+          elevation: 2,
+          title: Row(
+            children: [
+              Image.asset(
+                'assets/trinetra-logo.png',
+                width: 32,
+                height: 32,
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                  Icons.agriculture,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'TRINETRA DRONES',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                  Text(
-                    'రైతు డ్రోన్ బుకింగ్ యాప్ (Andhra Pradesh)',
-                    style: TextStyle(
-                      color: Color(0xFFBBF7D0),
-                      fontSize: 10,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            tooltip: 'Reload App',
-            onPressed: () => _controller.reload(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white),
-            tooltip: 'Server Settings',
-            onPressed: _showServerConfigDialog,
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          if (!_hasError)
-            WebViewWidget(controller: _controller)
-          else
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
+              const SizedBox(width: 10),
+              const Expanded(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.cloud_off_rounded,
-                      size: 64,
-                      color: Color(0xFFF87171),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'సర్వర్ కనెక్షన్ లభించలేదు\n(Backend Server Connection Failed)',
-                      textAlign: TextAlign.center,
+                    Text(
+                      'TRINETRA DRONES',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 0.8,
                       ),
                     ),
-                    const SizedBox(height: 8),
                     Text(
-                      _errorMessage.isNotEmpty
-                          ? _errorMessage
-                          : 'Please ensure Trinetra backend server is running on port 8088.',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF16A34A),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                          ),
-                          icon: const Icon(Icons.refresh),
-                          label: const Text('తిరిగి ప్రయత్నించు (Retry)'),
-                          onPressed: () => _loadAppUrl(_currentUrl),
-                        ),
-                        const SizedBox(width: 12),
-                        OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white38),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                          ),
-                          icon: const Icon(Icons.storage),
-                          label: const Text('ఆఫ్‌లైన్ మోడ్ (Offline)'),
-                          onPressed: () =>
-                              _loadAppUrl('assets/farmer-app.html'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      onPressed: _showServerConfigDialog,
-                      child: const Text(
-                        'సర్వర్ IP మార్చండి (Change Server URL)',
-                        style: TextStyle(color: Color(0xFF86EFAC)),
+                      'రైతు డ్రోన్ బుకింగ్ యాప్ (Andhra Pradesh)',
+                      style: TextStyle(
+                        color: Color(0xFFBBF7D0),
+                        fontSize: 10,
                       ),
                     ),
                   ],
                 ),
               ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.white),
+              tooltip: 'Reload App',
+              onPressed: () => _controller.reload(),
             ),
-          if (_loadingProgress < 100 && !_hasError)
-            LinearProgressIndicator(
-              value: _loadingProgress / 100.0,
-              backgroundColor: Colors.transparent,
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                Color(0xFF22C55E),
+            IconButton(
+              icon: const Icon(Icons.settings, color: Colors.white),
+              tooltip: 'Server Settings',
+              onPressed: _showServerConfigDialog,
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            if (!_hasError)
+              WebViewWidget(controller: _controller)
+            else
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.cloud_sync_rounded,
+                        size: 64,
+                        color: Color(0xFF38BDF8),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'క్లౌడ్ సర్వర్‌తో కనెక్ట్ అవుతోంది...\n(Connecting to 24/7 Cloud Server...)',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _retryCountdown > 0
+                          ? 'Auto-reconnecting in $_retryCountdown seconds...'
+                          : 'Reconnecting now...',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Color(0xFF86EFAC),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (_errorMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Text(
+                            _errorMessage,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white38,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF16A34A),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                            ),
+                            icon: const Icon(Icons.refresh),
+                            label: const Text('రీకనెక్ట్ (Reconnect)'),
+                            onPressed: () => _loadAppUrl(_currentUrl),
+                          ),
+                          const SizedBox(width: 12),
+                          OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.white38),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                            ),
+                            icon: const Icon(Icons.offline_bolt),
+                            label: const Text('ఆఫ్‌లైన్ (Offline Mode)'),
+                            onPressed: () =>
+                                _loadAppUrl('assets/farmer-app.html', saveToPrefs: false),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-        ],
+            if (_loadingProgress < 100 && !_hasError)
+              LinearProgressIndicator(
+                value: _loadingProgress / 100.0,
+                backgroundColor: Colors.transparent,
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  Color(0xFF22C55E),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
