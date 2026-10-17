@@ -73,7 +73,7 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
 
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0xFF0F172A))
+      ..setBackgroundColor(const Color(0xFFF8FAFC))
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
@@ -238,7 +238,7 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF0F172A),
+        backgroundColor: const Color(0xFFF8FAFC),
         appBar: AppBar(
           backgroundColor: const Color(0xFF15803D),
           elevation: 2,

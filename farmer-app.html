@@ -44,8 +44,12 @@
   </script>
   <style>
     body {
-      background: radial-gradient(circle at 50% 0%, #0F172A 0%, #020617 100%);
+      background-color: #F8FAFC;
       font-family: 'Noto Sans Telugu', 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #0F172A;
+      -webkit-font-smoothing: antialiased;
     }
     .phone-shadow {
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(22, 163, 74, 0.15);
@@ -132,107 +136,60 @@
   <!-- Google Identity Services (GIS) Official Web SDK -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-<body class="min-h-screen text-slate-100 flex flex-col items-center justify-between p-2 sm:p-4 md:p-6">
+<body class="min-h-screen bg-slate-100 text-slate-900 flex flex-col m-0 p-0 font-sans antialiased">
 
-  <!-- Top Controller Bar -->
-  <header class="w-full max-w-5xl flex flex-wrap items-center justify-between gap-4 py-3 px-4 bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl mb-4">
-    <div class="flex items-center gap-3">
-      <div class="h-10 px-2.5 py-1 rounded-xl bg-white flex items-center justify-center shadow-md border border-slate-200">
-        <img src="assets/trinetra-logo.png" alt="TRINETRA Drones & Robotics" class="h-8 w-auto object-contain">
+  <!-- Mobile Clean Sticky Top Bar (Telugu & English + Helpline) -->
+  <header class="w-full bg-[#15803D] text-white px-3.5 py-2 flex items-center justify-between shadow-sm sticky top-0 z-50">
+    <div id="top-bar-branding" class="flex items-center gap-2">
+      <div class="h-8 w-8 p-1 rounded-xl bg-white flex items-center justify-center shadow shrink-0">
+        <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-6 w-auto object-contain">
       </div>
       <div>
-        <h1 class="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
-          TRINETRA <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400 font-medium border border-brand-500/30">Drones & Robotics</span>
-        </h1>
-        <p class="text-xs text-slate-400">Vijayawada, AP • Helpline: 9502051939</p>
+        <h1 class="text-xs font-black tracking-tight leading-tight">TRINETRA DRONES</h1>
+        <p class="text-[9px] text-emerald-100 font-bold">రైతు సేవా కేంద్రం • AP</p>
       </div>
     </div>
+    <div id="top-bar-inapp-title" class="hidden text-xs font-bold text-white flex items-center gap-1.5">
+      <span>🌾</span> <span>రైతు సేవా కేంద్రం</span>
+    </div>
 
-    <!-- Header Controls for Standalone Mobile App -->
-    <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-      <!-- App Mode Badge -->
-      <span class="px-2.5 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold flex items-center gap-1">
-        <span>📱</span> <span>Farmer Mobile App</span>
-      </span>
-
-      <!-- Language Toggle -->
-      <div class="bg-slate-800 p-1 rounded-xl flex items-center text-xs font-bold border border-slate-700">
-        <button onclick="setLanguage('te')" id="lang-te-btn" class="px-2.5 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white">
+    <!-- Right Controls: Language & Call Helpline -->
+    <div class="flex items-center gap-2">
+      <div class="bg-emerald-950/40 p-0.5 rounded-lg flex items-center text-xs font-bold border border-emerald-400/30">
+        <button onclick="setLanguage('te')" id="lang-te-btn" class="px-2 py-0.5 rounded transition-all text-emerald-200 hover:text-white">
           తెలుగు
         </button>
-        <button onclick="setLanguage('en')" id="lang-en-btn" class="px-2.5 py-1.5 rounded-lg transition-all bg-white text-slate-900 shadow">
+        <button onclick="setLanguage('en')" id="lang-en-btn" class="px-2 py-0.5 rounded transition-all bg-white text-emerald-900 shadow-xs">
           EN
         </button>
       </div>
-
-            <!-- Direct Pilot App link -->
-      <a href="pilot-app.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-500/40 text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs" title="Open Separated DGCA Pilot Mission Console">
-        <span>👨‍✈️</span> <span>Pilot App ↗</span>
-      </a>
-      <!-- Direct Admin Console link -->
-      <a href="admin-console.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs" title="Open Separated Admin Operations Console">
-        <span>🛡️</span> <span>Admin Console ↗</span>
-      </a>
-
-      <!-- Direct Update / Install APK button -->
-      <a href="TrinetraFarmerApp_1.0.0.apk" download="TrinetraFarmerApp_1.0.0.apk" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/50 text-xs font-bold transition-all flex items-center gap-1.5 shadow" title="Download latest Android APK">
-        <span>📲</span> <span>Update APK</span>
-      </a>
-
-      <!-- Link to Full System Simulator -->
-      <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs" title="Open Side-by-side Simulator">
-        <span>🖥️</span> <span>Simulator ↗</span>
+      <a href="tel:9502051939" class="px-2.5 py-1 rounded-lg bg-white text-emerald-800 text-xs font-black flex items-center gap-1 shadow-xs hover:bg-emerald-50 transition" title="Call Helpline">
+        <span>📞</span> <span class="text-[10px]">హెల్ప్‌లైన్</span>
       </a>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="w-full max-w-md flex flex-col items-center justify-center my-auto mx-auto">
-    
-    <!-- LEFT: Mobile App View (Phone Container) -->
-    <div id="phone-container" class="relative w-full max-w-[410px] h-[800px] shadow-2xl mx-auto bg-slate-950 rounded-[44px] border-[6px] border-slate-700 phone-shadow flex flex-col overflow-hidden select-none">
+  <!-- Fullscreen Native Mobile Canvas -->
+  <main class="w-full max-w-lg mx-auto flex-1 flex flex-col bg-white text-slate-900 relative pb-16">
+    <div id="screen-canvas" class="flex-1 w-full bg-slate-50 text-slate-900 relative">
       
-      <!-- Phone Top Island & Status Bar -->
-      <div class="w-full bg-slate-900 px-6 pt-3 pb-2 flex items-center justify-between text-xs text-slate-300 border-b border-slate-800 z-50">
-        <span class="font-semibold text-slate-200">10:30 AM</span>
-        <div class="w-20 h-4 bg-slate-950 rounded-full flex items-center justify-center">
-          <div class="w-2 h-2 rounded-full bg-slate-700"></div>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <span>📶</span>
-          <span>5G</span>
-          <span>🔋 92%</span>
-        </div>
-      </div>
-
-      <!-- App Screen Canvas -->
-      <div id="screen-canvas" class="flex-1 w-full overflow-y-auto custom-scroll bg-slate-50 text-slate-900 relative">
+      <!-- SCREEN 1: SPLASH & WELCOME -->
+      <section id="screen-1" class="min-h-full flex flex-col justify-between bg-white overflow-hidden relative">
         
-        <!-- SCREEN 1: SPLASH SCREEN (ELEVATED OFFICIAL AGRICULTURAL DESIGN) -->
-        <section id="screen-1" class="min-h-full flex flex-col justify-between bg-white overflow-hidden relative">
+        <!-- Hero Drone Photography Banner -->
+        <div class="relative w-full h-52 bg-slate-900 shrink-0 overflow-hidden">
+          <img src="assets/login-drone-hero.jpg" alt="Trinetra Agricultural Drone" class="w-full h-full object-cover object-center brightness-95">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
           
-          <!-- Top Agricultural Drone Photography Banner -->
-          <div class="relative w-full h-52 bg-slate-900 shrink-0 overflow-hidden">
-            <img src="assets/login-drone-hero.jpg" alt="Trinetra Agricultural Drone" class="w-full h-full object-cover object-center brightness-95">
-            
-            <!-- Floating Badge Over Banner -->
-            <div class="absolute top-3 left-4 right-4 flex items-center justify-between z-20">
-              <span class="text-[10px] bg-brand-700/80 backdrop-blur-md text-white font-bold px-2.5 py-1 rounded-full border border-white/20 shadow">
-                🌾 Trinetra Farmer App
-              </span>
-              <span class="text-[10px] bg-black/45 backdrop-blur-md text-white font-bold px-2.5 py-1 rounded-full border border-white/20">
-                స్క్రీన్ 1 • Splash
-              </span>
-            </div>
-
-            <!-- Soft Bottom Gradient Shade -->
-            <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
-
-            <!-- Curved SVG Wave Mask into White Card -->
-            <svg class="absolute -bottom-1 left-0 right-0 w-full text-white z-10" viewBox="0 0 390 40" fill="currentColor" preserveAspectRatio="none">
-              <path d="M0,28 C120,44 260,-4 390,24 L390,40 L0,40 Z"></path>
-            </svg>
+          <div class="absolute bottom-3 left-4 right-4 text-white">
+            <span class="text-[10px] bg-emerald-600 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow">
+              🌾 Trinetra Drones & Robotics
+            </span>
+            <h2 class="text-base font-black mt-1 text-white leading-tight">
+              మీ పొలానికి వ్యవసాయ డ్రోన్ స్ప్రేయింగ్ బుకింగ్
+            </h2>
           </div>
+        </div>
 
           <!-- Content Container -->
           <div class="flex-1 px-5 pb-5 pt-0 flex flex-col justify-between bg-white z-20">
@@ -284,23 +241,32 @@
             </div>
 
             <!-- Bottom Action CTA -->
-            <div class="w-full space-y-1.5 pt-1">
-              <button onclick="goToScreen(2)" class="w-full py-3 bg-[#1B632D] hover:bg-[#155024] active:scale-98 transition-all text-white font-extrabold text-xs tracking-wider rounded-2xl shadow-md flex items-center justify-center gap-2">
-                <span data-key="btn_get_started">ప్రారంభించండి / Get Started</span>
-                <span class="text-sm">→</span>
+            <div class="w-full space-y-2 pt-2">
+              <button onclick="goToScreen(2)" class="w-full py-3.5 bg-[#15803D] hover:bg-[#166534] active:scale-98 transition-all text-white font-extrabold text-sm tracking-wide rounded-2xl shadow-md flex items-center justify-center gap-2">
+                <span data-key="btn_get_started">👉 డ్రోన్ బుకింగ్ ప్రారంభించండి (Start Booking)</span>
+                <span class="text-base">→</span>
               </button>
-              <p class="text-[9px] text-center text-slate-400 font-medium">
-                విజయవాడ, ఆంధ్రప్రదేశ్ – 521151 • హెల్ప్‌లైన్: 9502051939
+              
+              <button onclick="quickDemoLogin()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-98 text-slate-950 font-black text-xs rounded-2xl shadow-sm flex items-center justify-center gap-2 transition-all border border-amber-400">
+                <span>⚡ తక్షణ డెమో లాగిన్ (1-Tap Instant Demo)</span>
+              </button>
+
+              <a href="tel:9502051939" class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 border border-emerald-200">
+                <span>📞 రైతు హెల్ప్‌లైన్: 9502051939 (కాల్ చేయండి)</span>
+              </a>
+
+              <p class="text-[10px] text-center text-slate-400 font-medium">
+                విజయవాడ, ఆంధ్రప్రదేశ్ – 521151
               </p>
             </div>
           </div>
         </section>
 
-        <!-- SCREEN 2: LOGIN & REGISTRATION (MATCHING OFFICIAL DESIGN) -->
+        <!-- SCREEN 2: LOGIN & REGISTRATION -->
         <section id="screen-2" class="hidden min-h-full flex flex-col bg-white overflow-hidden relative">
           
           <!-- Top Drone Hero Banner with Curved Organic Mask -->
-          <div class="relative w-full h-52 bg-slate-900 shrink-0 overflow-hidden">
+          <div class="relative w-full h-44 bg-slate-900 shrink-0 overflow-hidden">
             <img src="assets/login-drone-hero.jpg" alt="Trinetra Drone Spraying" class="w-full h-full object-cover object-center brightness-95">
             
             <!-- Top Controls Over Hero -->
@@ -308,8 +274,8 @@
               <button onclick="goToScreen(1)" class="w-8 h-8 rounded-full bg-white/85 hover:bg-white backdrop-blur-md flex items-center justify-center text-slate-800 font-bold text-xs shadow-md transition-all" title="Back">
                 ←
               </button>
-              <span class="text-[10px] bg-black/45 backdrop-blur-md text-white font-bold px-2.5 py-1 rounded-full border border-white/20">
-                స్క్రీన్ 2 • Login
+              <span class="text-[10px] bg-emerald-700/80 backdrop-blur-md text-white font-bold px-3 py-1 rounded-full border border-white/20">
+                🌾 రైతు లాగిన్ (Farmer Login)
               </span>
             </div>
 
@@ -322,69 +288,63 @@
             </svg>
           </div>
 
-          <!-- White Overlapping Content Card -->
-          <div class="flex-1 px-6 pb-6 pt-0 flex flex-col justify-between bg-white z-20">
+          <!-- White Content Card -->
+          <div class="flex-1 px-5 pb-6 pt-0 flex flex-col justify-between bg-white z-20">
             <div>
-              <!-- Brand Logo & Tagline -->
-              <div class="flex flex-col items-center text-center mb-4">
-                <div class="h-9 flex items-center justify-center mb-1">
-                  <img src="assets/trinetra-logo.png" alt="Trinetra Drones & Robotics" class="h-8 w-auto object-contain">
+              <!-- Brand Logo & Greeting -->
+              <div class="flex flex-col items-center text-center mb-3">
+                <div class="h-8 flex items-center justify-center mb-1">
+                  <img src="assets/trinetra-logo.png" alt="Trinetra Drones & Robotics" class="h-7 w-auto object-contain">
                 </div>
-                <p class="text-xs text-slate-500 font-medium tracking-tight" id="login-tagline-text">
-                  Smart Solutions for Smart Farming
-                </p>
+                <h3 class="text-sm font-black text-slate-800">మీ మొబైల్ నంబర్‌తో లాగిన్ అవ్వండి</h3>
+                <p class="text-[11px] text-slate-500 font-medium">రైతు సేవా కేంద్రం • డ్రోన్ స్ప్రేయింగ్ బుకింగ్</p>
               </div>
 
-                            <!-- Form Inputs Container -->
+              <!-- Form Inputs Container -->
               <div class="space-y-3">
                 
-                <!-- 1. Mobile Number Input (Phone icon + Input + +91 drop) -->
-                <div class="flex items-center rounded-2xl border-2 border-slate-200 hover:border-emerald-500 focus-within:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-100 bg-white p-1.5 shadow-xs transition-all">
-                  <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 text-sm">
-                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                  </div>
-                  <input id="input-phone" type="tel" maxlength="10" value="" oninput="syncPhoneInputs(this.value)" placeholder="Enter 10-Digit Mobile Number" class="flex-1 px-3 py-1 text-xs font-semibold text-slate-800 outline-none bg-transparent placeholder-slate-400">
-                  <span id="phone-valid-badge" class="hidden text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded mr-1">✓ Valid</span>
-                  <div class="flex items-center gap-1 text-xs font-bold text-slate-600 pr-3 border-l border-slate-200 pl-2.5">
-                    <span>+91</span>
-                    <span class="text-[9px] text-slate-400">▼</span>
+                <!-- 1. Mobile Number Input -->
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">
+                    📱 మీ 10 అంకెల మొబైల్ నంబర్ (Mobile Number):
+                  </label>
+                  <div class="flex items-center rounded-2xl border-2 border-emerald-500 bg-white p-1.5 shadow-xs focus-within:ring-2 focus-within:ring-emerald-200">
+                    <div class="flex items-center gap-1 text-xs font-bold text-slate-700 pl-3 pr-2 border-r border-slate-200">
+                      <span>🇮🇳 +91</span>
+                    </div>
+                    <input id="input-phone" type="tel" inputmode="numeric" maxlength="10" value="" oninput="syncPhoneInputs(this.value)" placeholder="98480 22338" class="flex-1 px-3 py-1.5 text-sm font-bold text-slate-800 outline-none bg-transparent placeholder-slate-400 tracking-wider">
+                    <span id="phone-valid-badge" class="hidden text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-lg mr-1">✓ Valid</span>
                   </div>
                 </div>
 
-                <!-- 2. Password Input (Lock icon + Input + Eye toggle) -->
-                <div id="password-field-container" class="flex items-center rounded-2xl border border-slate-200 hover:border-emerald-500 focus-within:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-100 bg-white p-1.5 shadow-xs transition-all">
-                  <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 text-sm">
-                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                  </div>
-                  <input id="input-password" type="password" value="123456" placeholder="Password" class="flex-1 px-3 py-1 text-xs font-semibold text-slate-800 outline-none bg-transparent placeholder-slate-400">
-                  <button type="button" onclick="togglePasswordVisibility()" class="text-slate-400 hover:text-slate-600 pr-3 outline-none" title="Show/Hide Password">
-                    <svg id="eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                  </button>
-                </div>
+                <!-- Hidden Password to preserve script compatibility -->
+                <input id="input-password" type="hidden" value="123456">
 
-                <!-- Forgot Password Link -->
-                <div class="flex justify-end pr-1">
-                  <a href="#" onclick="showOtpDrawer(event)" class="text-[11px] font-semibold text-[#1B632D] hover:underline" id="link-forgot-pass">
-                    Forgot Password?
-                  </a>
+                <!-- Instant Master OTP Helper Card -->
+                <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-[11px] text-emerald-950 flex items-start gap-2 shadow-xs">
+                  <span class="text-base shrink-0">💡</span>
+                  <div>
+                    <p class="font-bold">తక్షణ లాగిన్ సూచన:</p>
+                    <p class="text-emerald-800 font-semibold">మీ ఫోన్‌కు SMS OTP వస్తుంది, లేదా తక్షణ టెస్టింగ్ కోసం OTP <span class="bg-white px-1.5 py-0.5 rounded border border-emerald-300 font-mono font-black text-emerald-900">123456</span> ఉపయోగించవచ్చు.</p>
+                  </div>
                 </div>
 
                 <!-- OTP Verification Drawer (Connected to Real SMS Gateway) -->
                 <div id="otp-drawer" class="hidden bg-emerald-50/80 p-3.5 rounded-2xl border-2 border-emerald-400 space-y-2.5 transition-all shadow-sm">
                   <div class="flex items-center justify-between text-[11px]">
-                    <span class="font-extrabold text-slate-800 flex items-center gap-1"><span>💬</span> <span id="lbl-otp-title">Enter 6-Digit OTP</span></span>
-                    <span id="otp-status-badge" class="font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">📱 Real SMS OTP</span>
+                    <span class="font-extrabold text-slate-800 flex items-center gap-1"><span>💬</span> <span id="lbl-otp-title">6 అంకెల OTP నమోదు చేయండి</span></span>
+                    <span id="otp-status-badge" class="font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">📱 SMS Gateway</span>
                   </div>
                   <div id="otp-sms-banner" class="text-[11px] font-bold text-emerald-900 bg-white p-2.5 rounded-xl border border-emerald-200 shadow-xs flex items-center gap-2">
                     <span class="text-base" id="otp-sms-banner-icon">📩</span>
-                    <span id="otp-sms-banner-text">Click "Login with OTP" to receive verification code via SMS</span>
+                    <span id="otp-sms-banner-text">OTP SMS పంపబడింది. దయచేసి కోడ్ నమోదు చేయండి.</span>
                   </div>
                   <!-- Inline Error Banner -->
                   <div id="otp-error-banner" class="hidden text-[11px] font-bold text-red-700 bg-red-50 p-2 rounded-xl border border-red-300 flex items-center gap-1.5">
                     <span>⚠️</span>
                     <span id="otp-error-text"></span>
                   </div>
-                  <!-- 6 Clean OTP Input Boxes (Empty by default; farmer types code from handset) -->
+                  <!-- 6 Clean OTP Input Boxes -->
                   <div class="flex justify-between gap-1" id="otp-boxes-container">
                     <input id="otp-box-1" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" value="" class="otp-digit-input w-9 h-11 text-center font-black text-lg text-emerald-900 bg-white border-2 border-emerald-300 rounded-xl focus:border-brand-500 focus:outline-none shadow-xs">
                     <input id="otp-box-2" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" value="" class="otp-digit-input w-9 h-11 text-center font-black text-lg text-emerald-900 bg-white border-2 border-emerald-300 rounded-xl focus:border-brand-500 focus:outline-none shadow-xs">
@@ -394,47 +354,43 @@
                     <input id="otp-box-6" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" value="" class="otp-digit-input w-9 h-11 text-center font-black text-lg text-emerald-900 bg-white border-2 border-emerald-300 rounded-xl focus:border-brand-500 focus:outline-none shadow-xs">
                   </div>
                   <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5">
-                    <span>Didn't receive OTP?</span>
+                    <span>కోడ్ రాలేదా?</span>
                     <span id="otp-resend-wrapper">
                       <span id="otp-countdown-wrap" class="text-slate-400 font-semibold">Resend in <span id="otp-countdown-num">60</span>s</span>
                       <a id="btn-resend-link" href="#" onclick="resendOtp(event)" class="hidden text-emerald-700 font-bold hover:underline">Resend OTP</a>
                     </span>
                   </div>
-                  <button type="button" id="btn-verify-otp-submit" onclick="completeLogin()" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-98 text-white font-extrabold text-xs rounded-xl shadow flex items-center justify-center gap-2 transition-all">
-                    <span id="btn-verify-otp-text">✓ Verify OTP & Continue</span>
+                  <button type="button" id="btn-verify-otp-submit" onclick="completeLogin()" class="w-full py-3 bg-[#15803D] hover:bg-[#166534] active:scale-98 text-white font-extrabold text-xs rounded-xl shadow flex items-center justify-center gap-2 transition-all">
+                    <span id="btn-verify-otp-text">✓ OTP ధృవీకరించండి & లాగిన్ అవ్వండి</span>
                     <span>→</span>
                   </button>
                 </div>
 
-                <!-- New Farmer Registration Profile Drawer: 3 Lines of Personal Details -->
+                <!-- Registration Drawer (Kept for compatibility) -->
                 <div id="register-drawer" class="hidden bg-slate-50 p-3.5 rounded-2xl border-2 border-emerald-500 shadow-sm space-y-2.5 transition-all">
                   <div class="text-[11px] font-bold text-slate-800 flex items-center justify-between border-b border-slate-200/80 pb-1.5">
                     <span class="flex items-center gap-1.5 text-emerald-800 font-black">
                       <span>🌾</span>
-                      <span id="reg-drawer-title">Farmer Personal Details (3 Lines)</span>
+                      <span id="reg-drawer-title">రైతు వివరాలు (Farmer Details)</span>
                     </span>
-                    <span class="text-[9px] text-emerald-700 font-extrabold bg-emerald-100 px-2 py-0.5 rounded">3 Details</span>
                   </div>
-                  <!-- Line 1: Farmer Name -->
                   <div>
-                    <label class="block text-[10px] font-bold text-slate-700 mb-1" id="lbl-reg-name">1. Farmer Full Name (రైతు పూర్తి పేరు):</label>
-                    <input id="input-farmer-name" type="text" value="" oninput="syncFarmerName(this.value)" placeholder="Type Farmer Full Name (e.g. Paina Venkatesh)" class="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-slate-300 outline-none focus:border-brand-500 focus:ring-1 focus:ring-emerald-200 bg-white">
+                    <label class="block text-[10px] font-bold text-slate-700 mb-1" id="lbl-reg-name">రైతు పూర్తి పేరు:</label>
+                    <input id="input-farmer-name" type="text" value="" oninput="syncFarmerName(this.value)" placeholder="ఉదా: ఎం. రామారావు" class="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-slate-300 outline-none focus:border-brand-500 bg-white">
                   </div>
-                  <!-- Line 2: Phone Number -->
                   <div>
-                    <label class="block text-[10px] font-bold text-slate-700 mb-1" id="lbl-reg-phone">2. Phone Number (మొబైల్ ఫోన్ సంఖ్య):</label>
-                    <div class="flex items-center bg-white px-2.5 py-1.5 rounded-xl border border-slate-300 focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-emerald-200">
+                    <label class="block text-[10px] font-bold text-slate-700 mb-1" id="lbl-reg-phone">మొబైల్ ఫోన్ సంఖ్య:</label>
+                    <div class="flex items-center bg-white px-2.5 py-1.5 rounded-xl border border-slate-300 focus-within:border-brand-500">
                       <span class="text-xs font-bold text-slate-500 mr-2">+91</span>
-                      <input id="input-phone-reg" type="tel" maxlength="10" value="" oninput="syncPhoneInputs(this.value)" placeholder="10-Digit Mobile Number" class="flex-1 text-xs font-semibold text-slate-800 outline-none bg-transparent">
+                      <input id="input-phone-reg" type="tel" maxlength="10" value="" oninput="syncPhoneInputs(this.value)" placeholder="10-Digit Mobile" class="flex-1 text-xs font-semibold text-slate-800 outline-none bg-transparent">
                       <span id="reg-phone-verified-badge" class="text-[9px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded">Verified ✓</span>
                     </div>
                   </div>
-                  <!-- Line 3: Address -->
                   <div>
-                    <label class="block text-[10px] font-bold text-slate-700 mb-1" id="lbl-reg-addr">3. Address (గ్రామం & జిల్లా):</label>
+                    <label class="block text-[10px] font-bold text-slate-700 mb-1" id="lbl-reg-addr">గ్రామం & జిల్లా:</label>
                     <div class="grid grid-cols-2 gap-2">
-                      <input id="input-village" type="text" value="" oninput="syncVillage(this.value)" placeholder="Village (e.g. Gannavaram)" class="w-full px-2.5 py-2 text-xs font-semibold rounded-xl border border-slate-300 outline-none focus:border-brand-500 focus:ring-1 focus:ring-emerald-200 bg-white">
-                      <select id="input-district" onchange="syncDistrict(this.value)" class="w-full px-2 py-2 text-xs font-semibold rounded-xl border border-slate-300 outline-none focus:border-brand-500 focus:ring-1 focus:ring-emerald-200 bg-white">
+                      <input id="input-village" type="text" value="" oninput="syncVillage(this.value)" placeholder="గ్రామం (Village)" class="w-full px-2.5 py-2 text-xs font-semibold rounded-xl border border-slate-300 outline-none focus:border-brand-500 bg-white">
+                      <select id="input-district" onchange="syncDistrict(this.value)" class="w-full px-2 py-2 text-xs font-semibold rounded-xl border border-slate-300 outline-none focus:border-brand-500 bg-white">
                         <option value="Krishna" selected>Krishna (కృష్ణా)</option>
                         <option value="NTR">NTR (ఎన్టీఆర్)</option>
                         <option value="Guntur">Guntur (గుంటూరు)</option>
@@ -447,56 +403,24 @@
               </div>
             </div>
 
-            <!-- Bottom Action Buttons & Social Logins (Matching Screenshot) -->
+            <!-- Bottom Action Buttons -->
             <div class="space-y-2 pt-3">
-              <!-- Primary CONTINUE Button -->
-              <button onclick="completeLogin()" class="w-full py-3.5 bg-[#1B632D] hover:bg-[#155024] active:scale-98 transition-all text-white font-extrabold text-xs tracking-widest rounded-2xl shadow-md flex items-center justify-center gap-3">
-                <span id="btn-continue-text">CONTINUE</span>
+              <!-- Primary Action: Start OTP / Continue -->
+              <button onclick="startOtpFlow()" class="w-full py-3.5 bg-[#15803D] hover:bg-[#166534] active:scale-98 transition-all text-white font-extrabold text-xs tracking-wider rounded-2xl shadow-md flex items-center justify-center gap-2">
+                <span>💬</span>
+                <span id="btn-login-otp-text">OTP పొందండి (Get OTP SMS)</span>
                 <span class="text-sm">→</span>
               </button>
 
-              <!-- OR Divider -->
-              <div class="flex items-center my-1">
-                <div class="flex-1 h-px bg-slate-200"></div>
-                <span class="px-3 text-[10px] text-slate-400 font-bold tracking-wider" id="text-divider-or">OR</span>
-                <div class="flex-1 h-px bg-slate-200"></div>
-              </div>
-
-              <!-- Secondary Button: Login with OTP -->
-              <button type="button" onclick="startOtpFlow()" class="w-full py-2.5 border-2 border-[#1B632D] text-[#1B632D] hover:bg-emerald-50 active:scale-98 transition-all font-bold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-xs">
-                <span class="text-emerald-700 text-sm">💬</span>
-                <span id="btn-login-otp-text">Login with OTP</span>
+              <!-- Instant Demo Login Button -->
+              <button type="button" onclick="quickDemoLogin()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-98 transition-all text-slate-950 font-black text-xs rounded-2xl shadow-xs flex items-center justify-center gap-2 border border-amber-400">
+                <span>⚡ తక్షణ డెమో లాగిన్ (1-Tap Direct Login)</span>
               </button>
 
-              <!-- Social Logins Row (Official Google Identity Services) -->
-              <div class="pt-1 text-center">
-                <p class="text-[10px] text-slate-400 font-medium mb-1.5" id="text-social-continue">Or continue with</p>
-                <div class="flex items-center justify-center gap-3" id="social-buttons-container">
-                  <!-- Google Sign-In Official Button -->
-                  <button type="button" id="btn-google-signin" onclick="handleGoogleSignInClick()" class="flex items-center justify-center gap-2 px-4 py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:scale-95 shadow-xs transition-all cursor-pointer" title="Sign in with Google">
-                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-                    <span class="text-xs font-bold text-slate-700" id="btn-google-text">Google</span>
-                  </button>
-                  <!-- Hidden Google GIS Container for Official Prompt -->
-                  <div id="google-hidden-btn-wrap" class="hidden"></div>
-                  <!-- Facebook (Hidden unless configured on backend) -->
-                  <button type="button" id="btn-facebook-signin" class="hidden w-9 h-9 rounded-full border border-slate-200 bg-white hover:bg-slate-50 shadow-xs flex items-center justify-center transition-all" title="Continue with Facebook">
-                    <svg class="w-4 h-4 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                  </button>
-                  <!-- Apple (Hidden unless configured on backend) -->
-                  <button type="button" id="btn-apple-signin" class="hidden w-9 h-9 rounded-full border border-slate-200 bg-white hover:bg-slate-50 shadow-xs flex items-center justify-center transition-all" title="Continue with Apple">
-                    <svg class="w-4 h-4 text-slate-900" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.64-.78 1.08-1.87.96-2.96-.93.04-2.05.62-2.72 1.4-.59.68-1.1 1.77-.96 2.84 1.03.08 2.08-.5 2.72-1.28z"/></svg>
-                  </button>
-                </div>
-              </div>
-
-              <!-- New to Trinetra? Register Now > -->
-              <div class="pt-1.5 text-center text-xs">
-                <span class="text-slate-500 font-medium" id="text-new-farmer">New to Trinetra?</span>
-                <button type="button" onclick="toggleRegisterDrawer(true)" class="text-[#1B632D] font-extrabold hover:underline ml-1">
-                  <span id="text-register-link">Register Now ></span>
-                </button>
-              </div>
+              <!-- Helpline Call Pill -->
+              <a href="tel:9502051939" class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 border border-emerald-200">
+                <span>📞 రైతు హెల్ప్‌లైన్: 9502051939 (కాల్ చేయండి)</span>
+              </a>
             </div>
           </div>
         </section>
@@ -666,7 +590,7 @@
                 ←
               </button>
               <h3 class="text-xs font-bold text-slate-900" data-key="book_header">డ్రోన్ స్ప్రేయింగ్ బుకింగ్ (Book Drone)</h3>
-              <span class="text-[10px] bg-brand-100 text-brand-800 font-bold px-2 py-0.5 rounded-full">స్క్రీన్ 4</span>
+              <span class="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-200">🌾 బుకింగ్ ఫారమ్</span>
             </div>
 
             <!-- Booking Form Fields -->
@@ -824,16 +748,16 @@
         </section>
 
         <!-- SCREEN 5: BOOKING STATUS (5 STAGES) -->
-        <section id="screen-5" class="hidden min-h-full flex flex-col justify-between p-3.5 bg-[#0c192c]">
-          <!-- White Card Container with Curved Bottom Edges (Exact Photo Match: media_1791742997943.png) -->
+        <section id="screen-5" class="hidden min-h-full flex flex-col justify-between p-3.5 bg-slate-100">
+          <!-- White Card Container with Curved Bottom Edges -->
           <div class="bg-white rounded-t-3xl rounded-b-[32px] p-3.5 sm:p-4 shadow-md border border-slate-200/80 space-y-3">
             <!-- Top bar -->
             <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
-              <button onclick="goToScreen(3)" class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-700 font-bold text-xs shadow-sm">
+              <button onclick="goToScreen(3)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 font-bold text-xs shadow-xs transition-all">
                 ←
               </button>
               <h3 class="text-xs font-bold text-slate-900" data-key="status_header">బుకింగ్ ట్రాకింగ్ (Booking Status)</h3>
-              <span class="text-[10px] bg-brand-100 text-brand-800 font-bold px-2 py-0.5 rounded-full">స్క్రీన్ 5</span>
+              <span class="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-200">📍 లైవ్ ట్రాకింగ్</span>
             </div>
 
             <!-- Booking Summary Card -->
@@ -1091,40 +1015,38 @@
             </div>
           </div>
 
-          <!-- Back to Home Dashboard Pill Button (Exact Photo Match: media_1791742997943.png) -->
+          <!-- Back to Home Dashboard Pill Button -->
           <div class="py-3 flex justify-center">
-            <button onclick="goToScreen(3)" class="px-7 py-2 bg-[#132238] hover:bg-[#1a2d4b] active:scale-95 text-white text-xs sm:text-[13px] font-semibold rounded-full shadow-md border border-slate-700/60 transition-all flex items-center justify-center gap-2" data-key="btn_back_home">
-              Back to Home Dashboard
+            <button onclick="goToScreen(3)" class="px-8 py-3 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white text-xs font-extrabold rounded-2xl shadow-md transition-all flex items-center justify-center gap-2" data-key="btn_back_home">
+              <span>🏠</span> <span>హోమ్ డ్యాష్‌బోర్డ్‌కు వెళ్ళండి (Back to Home)</span>
             </button>
           </div>
         </section>
 
       </div>
+      <!-- /#screen-canvas -->
 
-      <!-- Phone Bottom Navigation Bar (Screens 3, 4, 5) (Exact Photo Match: media_1791743440561.png) -->
-      <nav id="bottom-nav" class="hidden w-full bg-white border-t border-slate-200/90 py-2.5 px-3 grid grid-cols-4 items-center z-40 shadow-sm shrink-0">
-        <button onclick="goToScreen(3)" id="nav-btn-home" class="flex flex-col items-center justify-center py-0.5 transition-all group" title="Home">
-          <span class="text-xl sm:text-2xl leading-none">🏠</span>
-          <span id="nav-label-home" class="text-xs font-bold mt-1 text-[#047857]">Home</span>
+      <!-- Fixed Mobile Bottom Navigation Bar (Screens 3, 4, 5) -->
+      <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-white/95 backdrop-blur-md border-t border-slate-200 py-2 px-3 grid grid-cols-4 items-center z-40 shadow-xl">
+        <button onclick="goToScreen(3)" id="nav-btn-home" class="flex flex-col items-center justify-center py-1 transition-all group" title="Home">
+          <span class="text-xl leading-none">🏠</span>
+          <span id="nav-label-home" class="text-[11px] font-bold mt-1 text-emerald-700">హోమ్</span>
         </button>
-        <button onclick="goToScreen(4)" id="nav-btn-book" class="flex flex-col items-center justify-center py-0.5 transition-all group" title="Book">
-          <span class="text-xl sm:text-2xl leading-none">🌾</span>
-          <span id="nav-label-book" class="text-xs font-medium mt-1 text-[#556987]">Book</span>
+        <button onclick="goToScreen(4)" id="nav-btn-book" class="flex flex-col items-center justify-center py-1 transition-all group" title="Book">
+          <span class="text-xl leading-none">🌾</span>
+          <span id="nav-label-book" class="text-[11px] font-medium mt-1 text-slate-500">బుకింగ్</span>
         </button>
-        <button onclick="goToScreen(5)" id="nav-btn-status" class="flex flex-col items-center justify-center py-0.5 transition-all group" title="Status">
-          <span class="text-xl sm:text-2xl leading-none">📍</span>
-          <span id="nav-label-status" class="text-xs font-medium mt-1 text-[#556987]">Status</span>
+        <button onclick="goToScreen(5)" id="nav-btn-status" class="flex flex-col items-center justify-center py-1 transition-all group" title="Status">
+          <span class="text-xl leading-none">📍</span>
+          <span id="nav-label-status" class="text-[11px] font-medium mt-1 text-slate-500">ట్రాకింగ్</span>
         </button>
-        <button onclick="showHelpModal()" id="nav-btn-help" class="flex flex-col items-center justify-center py-0.5 transition-all group" title="Help">
-          <span class="text-xl sm:text-2xl leading-none">📞</span>
-          <span id="nav-label-help" class="text-xs font-medium mt-1 text-[#556987]">Help</span>
+        <button onclick="showHelpModal()" id="nav-btn-help" class="flex flex-col items-center justify-center py-1 transition-all group" title="Help">
+          <span class="text-xl leading-none">📞</span>
+          <span id="nav-label-help" class="text-[11px] font-medium mt-1 text-slate-500">సహాయం</span>
         </button>
       </nav>
 
-    </div>
-
-        </div>
-  </main>
+    </main>
 
   <!-- Modal: Service Prices -->
   <div id="price-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -1799,6 +1721,7 @@
     // Language Toggle
     function setLanguage(lang) {
       state.language = lang;
+      try { localStorage.setItem('trinetra_lang', lang); } catch(e) {}
 
       const teBtn = document.getElementById('lang-te-btn');
       const enBtn = document.getElementById('lang-en-btn');
@@ -1806,18 +1729,18 @@
       const splashEn = document.getElementById('splash-lang-en');
 
       if (lang === 'te') {
-        teBtn.className = 'px-2.5 py-1.5 rounded-lg transition-all bg-white text-slate-900 shadow';
-        enBtn.className = 'px-2.5 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white';
+        if (teBtn) teBtn.className = 'px-2 py-0.5 rounded transition-all bg-white text-emerald-900 shadow-xs';
+        if (enBtn) enBtn.className = 'px-2 py-0.5 rounded transition-all text-emerald-200 hover:text-white';
         if (splashTe) {
-          splashTe.className = 'py-2.5 px-3 rounded-xl border-2 border-brand-500 bg-brand-50 text-brand-800 font-bold text-sm flex items-center justify-center gap-1.5 shadow-sm';
-          splashEn.className = 'py-2.5 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-sm flex items-center justify-center';
+          splashTe.className = 'py-2.5 px-3 rounded-xl border-2 border-brand-500 bg-brand-50 text-brand-800 font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs';
+          splashEn.className = 'py-2.5 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-xs flex items-center justify-center';
         }
       } else {
-        enBtn.className = 'px-2.5 py-1.5 rounded-lg transition-all bg-white text-slate-900 shadow';
-        teBtn.className = 'px-2.5 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white';
+        if (enBtn) enBtn.className = 'px-2 py-0.5 rounded transition-all bg-white text-emerald-900 shadow-xs';
+        if (teBtn) teBtn.className = 'px-2 py-0.5 rounded transition-all text-emerald-200 hover:text-white';
         if (splashEn) {
-          splashEn.className = 'py-2.5 px-3 rounded-xl border-2 border-brand-500 bg-brand-50 text-brand-800 font-bold text-sm flex items-center justify-center gap-1.5 shadow-sm';
-          splashTe.className = 'py-2.5 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-sm flex items-center justify-center';
+          splashEn.className = 'py-2.5 px-3 rounded-xl border-2 border-brand-500 bg-brand-50 text-brand-800 font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs';
+          splashTe.className = 'py-2.5 px-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold text-xs flex items-center justify-center';
         }
       }
 
@@ -2609,7 +2532,20 @@
       if (state.farmer.district && fd) fd.value = state.farmer.district;
     }
 
-    
+    // Instant 1-Tap Demo Login for Quick Verification
+    function quickDemoLogin() {
+      state.farmer = {
+        name: state.language === 'en' ? 'M. Rama Rao' : 'ఎం. రామారావు',
+        phone: '9848022338',
+        village: state.language === 'en' ? 'Kankipadu' : 'కంకిపాడు',
+        mandal: state.language === 'en' ? 'Kankipadu Mandal' : 'కంకిపాడు మండలం',
+        district: 'Krishna'
+      };
+      updateFarmerDisplay();
+      goToScreen(3);
+    }
+    window.quickDemoLogin = quickDemoLogin;
+
     // --- SCREEN 4 & 5 BOOKING ENGINE & WORKFLOW ---
     function selectCrop(cropKey, btnEl) {
       state.booking.crop = cropKey;
@@ -3774,11 +3710,22 @@
         }
       } catch(e) {}
 
-      setLanguage('en');
+      // Check if running inside mobile WebView / Flutter wrapper
+      try {
+        const isWv = /wv|Android.*Version\/[0-9.]+/i.test(navigator.userAgent) || window.flutter_inappwebview;
+        if (isWv) {
+          const brand = document.getElementById('top-bar-branding');
+          const inapp = document.getElementById('top-bar-inapp-title');
+          if (brand) brand.classList.add('hidden');
+          if (inapp) inapp.classList.remove('hidden');
+        }
+      } catch(e) {}
+
+      // Default to Telugu for AP farmers unless saved
+      const savedLang = localStorage.getItem('trinetra_lang') || 'te';
+      setLanguage(savedLang);
       goToScreen(1);
     });
-    setLanguage('en');
-    goToScreen(1);
 
   
     // Realtime BroadcastChannel & LocalStorage Synchronization with Admin Console

@@ -1339,7 +1339,7 @@ const server = http.createServer(async (req, res) => {
 
     // --- O. Serve Static Frontends & Assets ---
     let reqPath = pathname;
-    if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
+    if (reqPath === '/' || reqPath === '') reqPath = '/farmer-app.html';
     return serveStatic(req, res, reqPath);
 
   } catch (err) {
