@@ -95,7 +95,27 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
               _hasError = false;
             });
           },
+          onNavigationRequest: (NavigationRequest request) {
+            final String url = request.url.toLowerCase();
+            if (url.startsWith('tel:') ||
+                url.startsWith('mailto:') ||
+                url.startsWith('sms:') ||
+                url.startsWith('whatsapp:') ||
+                url.startsWith('intent:') ||
+                url.startsWith('upi:')) {
+              // Block webview navigation to prevent net::ERR_UNKNOWN_URL_SCHEME
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
           onWebResourceError: (WebResourceError error) {
+            final String desc = error.description.toUpperCase();
+            final String? errUrl = error.url?.toLowerCase();
+            // Never show full-screen error for external URL schemes like tel:
+            if (desc.contains('ERR_UNKNOWN_URL_SCHEME') ||
+                (errUrl != null && (errUrl.startsWith('tel:') || errUrl.startsWith('mailto:')))) {
+              return;
+            }
             if (error.isForMainFrame ?? true) {
               setState(() {
                 _hasError = true;
