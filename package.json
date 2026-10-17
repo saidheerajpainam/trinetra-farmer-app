@@ -1,0 +1,25 @@
+{
+  "name": "trinetra-farmer-app",
+  "version": "1.0.0",
+  "description": "Trinetra Drones & Robotics - Agriculture Drone Booking Platform for Andhra Pradesh Farmers",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "node init_db.js",
+    "test": "node test_database_e2e.js && node test_sms_otp_e2e.js && node test_google_auth_e2e.js",
+    "test:db": "node test_database_e2e.js",
+    "test:sms": "node test_sms_otp_e2e.js",
+    "test:google": "node test_google_auth_e2e.js",
+    "test:milestones": "node test_milestones_status.js"
+  },
+  "keywords": [
+    "agriculture",
+    "drones",
+    "farming",
+    "andhra-pradesh",
+    "drone-spraying",
+    "sqlite"
+  ],
+  "author": "Trinetra Drones & Robotics",
+  "license": "ISC"
+}

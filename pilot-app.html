@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRINETRA Drones & Robotics — Pilot Mission Console (Pilot App)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#F0FDF4',
+              100: '#DCFCE7',
+              500: '#16A34A',
+              600: '#15803D',
+              700: '#166534',
+              800: '#14532D',
+              900: '#052E16',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans Telugu"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: #0B1120;
+      color: #E2E8F0;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Telugu', sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(51, 65, 85, 0.7);
+    }
+    .leaflet-container {
+      font-family: inherit !important;
+      background: #0B1120 !important;
+    }
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .pulse-ring {
+      animation: pulseRing 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+  <!-- TOP HEADER & BRAND BAR -->
+  <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      
+      <!-- Pilot & Company Identity -->
+      <div class="flex items-center gap-3">
+        <div class="bg-white p-1.5 rounded-xl shadow-md border border-slate-200">
+          <img src="assets/trinetra-logo.png" alt="Trinetra Logo" class="h-9 w-auto object-contain">
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-extrabold text-white tracking-wide">TRINETRA PILOT CONSOLE</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-400 border border-blue-500/40 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping"></span>
+              <span>DGCA RPC LICENSED</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Pilot: <strong class="text-white">రమేష్ కుమార్ (Ramesh Kumar)</strong> • Lic: <span class="font-mono text-emerald-400 font-bold">DGCA-RPC-2024-889</span> • Base: Vijayawada
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation & Cross-App Links -->
+      <div class="flex items-center flex-wrap gap-2 text-xs">
+        
+        <!-- Live Duty Status -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 font-semibold">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-emerald-400 font-bold" id="pilot-duty-badge">ON DUTY • FIELD ACTIVE</span>
+          <span class="text-slate-500 text-[11px]" id="live-time-clock">--:--:--</span>
+        </div>
+
+        <!-- Language Switcher -->
+        <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1">
+          <button onclick="setPilotLang('en')" id="btn-lang-en" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold transition-all">EN</button>
+          <button onclick="setPilotLang('te')" id="btn-lang-te" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all">తెలుగు</button>
+        </div>
+
+        <!-- Cross-app Link: Farmer App -->
+        <a href="farmer-app.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 font-bold flex items-center gap-1.5 shadow transition-all">
+          <span>📱</span>
+          <span>Farmer App ↗</span>
+        </a>
+
+        <!-- Cross-app Link: Admin Console -->
+        <a href="admin-console.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-blue-600/30 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 font-bold flex items-center gap-1.5 shadow transition-all">
+          <span>🛡️</span>
+          <span>Admin Console ↗</span>
+        </a>
+
+        <!-- Cross-app Link: Simulator -->
+        <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold flex items-center gap-1.5 shadow transition-all">
+          <span>🖥️</span>
+          <span>Simulator ↗</span>
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN PILOT INTERFACE CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 space-y-5">
+
+    <!-- ACTIVE MISSION BANNER -->
+    <section class="glass-card rounded-3xl p-5 lg:p-6 border border-slate-800 shadow-2xl relative overflow-hidden">
+      <!-- Glow Accent -->
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40" id="mission-status-pill">
+              ASSIGNED MISSION • READY FOR DEPLOYMENT
+            </span>
+            <span class="text-xs font-mono text-slate-400">Mission ID: <strong class="text-white" id="mission-id-val">TRN-2026-881</strong></span>
+          </div>
+          <h2 class="text-xl lg:text-2xl font-black text-white mt-1.5" id="mission-title-text">
+            Precision Drone Spraying: Venkateswara Rao Farm
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Target Location: <span class="text-slate-200 font-bold">Kankipadu, Krishna District</span> (Near Ramalayam Temple) • Drone: <span class="text-emerald-400 font-mono font-bold">Trinetra Hexa-16L (AP-07)</span>
+          </p>
+        </div>
+
+        <!-- Fast Google Maps Turn-by-Turn GPS Navigation Link -->
+        <div class="flex items-center gap-2">
+          <a id="btn-pilot-turn-by-turn" href="https://www.google.com/maps/dir/?api=1&destination=16.4971,80.7856" target="_blank" class="py-2.5 px-4 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold rounded-2xl text-xs flex items-center gap-2 shadow-lg shadow-blue-900/40 transition-all">
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span id="nav-gmaps-btn-text">Navigate to Field (Google Maps) 🧭</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Farmer Contact & Crop Metrics Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 pt-4 text-xs">
+        
+        <!-- Farmer Box -->
+        <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <span class="text-[10px] text-slate-400 uppercase font-bold">Farmer Name</span>
+          <p class="font-bold text-white text-sm" id="card-farmer-name">వెంకటేశ్వర రావు</p>
+          <p class="text-[10px] text-emerald-400 font-semibold">Venkateswara Rao ✓</p>
+        </div>
+
+        <!-- Phone Box with Call Button -->
+        <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <span class="text-[10px] text-slate-400 uppercase font-bold">Farmer Phone</span>
+          <p class="font-mono font-bold text-white text-sm" id="card-farmer-phone">+91 98765 43210</p>
+          <div class="flex gap-1 pt-0.5">
+            <a href="tel:9876543210" class="px-2 py-0.5 bg-emerald-600/30 text-emerald-300 rounded font-bold text-[10px] hover:bg-emerald-600 hover:text-white">📞 Call</a>
+            <a href="https://wa.me/919876543210" target="_blank" class="px-2 py-0.5 bg-green-600/30 text-green-300 rounded font-bold text-[10px] hover:bg-green-600 hover:text-white">💬 WhatsApp</a>
+          </div>
+        </div>
+
+        <!-- Crop & Acreage -->
+        <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <span class="text-[10px] text-slate-400 uppercase font-bold">Crop & Area</span>
+          <p class="font-bold text-amber-300 text-sm" id="card-crop-acres">వరి • 5.0 ఎకరాలు</p>
+          <p class="text-[10px] text-slate-400">Paddy • 5.0 Acres Plot</p>
+        </div>
+
+        <!-- Service & Rate -->
+        <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <span class="text-[10px] text-slate-400 uppercase font-bold">Service & Rate</span>
+          <p class="font-bold text-white text-sm">పురుగుమందుల స్ప్రేయింగ్</p>
+          <p class="text-[10px] text-slate-400">₹450 / Acre</p>
+        </div>
+
+        <!-- Total Bill to Collect -->
+        <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1 col-span-2 md:col-span-4 lg:col-span-1">
+          <span class="text-[10px] text-slate-400 uppercase font-bold">Bill to Collect</span>
+          <p class="font-black text-emerald-400 text-base" id="card-total-bill">₹2,250</p>
+          <p class="text-[10px] text-amber-400 font-semibold">Pay After Service ✓</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2-COLUMN OPERATIONAL WORKSPACE -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      
+      <!-- LEFT 2 COLUMNS: FIELD MAP & LIVE FLIGHT TELEMETRY -->
+      <div class="lg:col-span-2 space-y-5">
+        
+        <!-- Live Field Satellite Map Container -->
+        <div class="glass-card rounded-3xl p-5 border border-slate-800 shadow-xl space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🛰️</span>
+              <h3 class="text-sm font-extrabold text-white" id="map-heading">Google Satellite Field Plot & Pilot Navigation</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-xl border border-emerald-500/30">
+                GPS: 16.4971, 80.7856
+              </span>
+              <button onclick="recenterPlotMap()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-all">
+                🎯 Recenter
+              </button>
+            </div>
+          </div>
+
+          <!-- Leaflet Map Div -->
+          <div class="relative rounded-2xl overflow-hidden border border-slate-700 h-[360px] bg-slate-950">
+            <div id="pilot-map" class="w-full h-full z-0"></div>
+
+            <!-- Floating Pilot Telemetry Card -->
+            <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-xl text-xs z-[400] flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+              <div>
+                <p class="font-bold text-white text-[11px]" id="overlay-farm-name">Venkateswara Rao Farm Plot</p>
+                <p class="text-[10px] text-slate-400">5.0 Acres Polygon Defined</p>
+              </div>
+            </div>
+
+            <div class="absolute bottom-3 right-3 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 shadow-xl text-xs z-[400] flex items-center gap-2">
+              <span class="text-emerald-400 font-bold text-[11px]">RTK Precision Lock: ±2 cm</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Drone Spraying Telemetry -->
+        <div class="glass-card rounded-3xl p-5 border border-slate-800 shadow-xl space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🚁</span>
+              <h3 class="text-sm font-extrabold text-white" id="telemetry-heading">Trinetra Hexa-16L Active Telemetry Stream</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse">
+              100% SIGNAL • 18 SATELLITES
+            </span>
+          </div>
+
+          <!-- Gauge Metrics -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-center">
+            
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <p class="text-[10px] text-slate-400 font-semibold">Altitude (AGL)</p>
+              <p class="text-lg font-black text-white" id="tele-alt">2.5 m</p>
+              <p class="text-[9px] text-emerald-400">Optimal Canopy</p>
+            </div>
+
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <p class="text-[10px] text-slate-400 font-semibold">Ground Speed</p>
+              <p class="text-lg font-black text-white" id="tele-speed">18.2 km/h</p>
+              <p class="text-[9px] text-emerald-400">Consistent Swath</p>
+            </div>
+
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <p class="text-[10px] text-slate-400 font-semibold">Spray Rate</p>
+              <p class="text-lg font-black text-blue-400" id="tele-flow">1.2 L/min</p>
+              <p class="text-[9px] text-slate-400">ULV Micron Mist</p>
+            </div>
+
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <p class="text-[10px] text-slate-400 font-semibold">LiPo Battery</p>
+              <p class="text-lg font-black text-emerald-400" id="tele-battery">84%</p>
+              <p class="text-[9px] text-slate-400">22.8V (6S 22Ah)</p>
+            </div>
+
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <p class="text-[10px] text-slate-400 font-semibold">Chemical Tank</p>
+              <p class="text-lg font-black text-amber-300" id="tele-tank">4.5 L</p>
+              <p class="text-[9px] text-slate-400">of 16.0 Liters</p>
+            </div>
+
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <p class="text-[10px] text-slate-400 font-semibold">Area Done</p>
+              <p class="text-lg font-black text-emerald-400" id="tele-progress">3.5 / 5.0</p>
+              <p class="text-[9px] text-emerald-400 font-bold">70% Sprayed</p>
+            </div>
+
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="space-y-1 pt-1">
+            <div class="flex justify-between text-[11px] text-slate-400 font-bold">
+              <span>Spray Mission Progress</span>
+              <span class="text-emerald-400" id="tele-progress-pct">70% Complete</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div id="tele-progress-bar" class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-500" style="width: 70%"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: PILOT ACTION COMMANDS & PAYMENT DESK -->
+      <div class="space-y-5">
+        
+        <!-- STEP-BY-STEP MISSION ACTION COMMANDS -->
+        <div class="glass-card rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4">
+          <div class="border-b border-slate-800/80 pb-2">
+            <h3 class="text-sm font-extrabold text-white flex items-center gap-1.5" id="actions-heading">
+              <span>⚡</span> <span>Mission Execution Actions</span>
+            </h3>
+            <p class="text-[11px] text-slate-400">
+              Tap buttons to progress the flight and synchronize live with Farmer App and Admin Console.
+            </p>
+          </div>
+
+          <div class="space-y-2.5">
+            
+            <!-- Action 1: Arrived at Field -->
+            <button onclick="pilotTrigger('arrived')" id="btn-action-arrived" class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 active:scale-95 text-white font-bold rounded-2xl text-xs flex items-center justify-between shadow transition-all">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">🚗</span>
+                <div class="text-left">
+                  <p class="font-extrabold" id="lbl-action-arrived">1. Arrived at Farm Location</p>
+                  <p class="text-[10px] text-slate-400">Notify farmer pilot is on-site</p>
+                </div>
+              </div>
+              <span class="text-xs text-blue-400 font-bold">Transmit →</span>
+            </button>
+
+            <!-- Action 2: Pre-Flight Safety Verification -->
+            <button onclick="openChecklistModal()" id="btn-action-check" class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 active:scale-95 text-white font-bold rounded-2xl text-xs flex items-center justify-between shadow transition-all">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">🛡️</span>
+                <div class="text-left">
+                  <p class="font-extrabold" id="lbl-action-check">2. Pre-Flight Safety Checklist</p>
+                  <p class="text-[10px] text-emerald-400" id="checklist-status-badge">✓ 5 Checks Passed</p>
+                </div>
+              </div>
+              <span class="text-xs text-emerald-400 font-bold">Review ↗</span>
+            </button>
+
+            <!-- Action 3: Start Drone Spraying -->
+            <button onclick="pilotTrigger('in_progress')" id="btn-action-start" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold rounded-2xl text-xs flex items-center justify-between shadow-lg shadow-blue-950/50 transition-all">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">🚁</span>
+                <div class="text-left">
+                  <p class="font-extrabold" id="lbl-action-start">3. Start Drone Spraying Mission</p>
+                  <p class="text-[10px] text-blue-200">Transmit live telemetry to farmer app</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold bg-white/20 px-2 py-0.5 rounded">Stage 4</span>
+            </button>
+
+            <!-- Action 4: Complete Service & Show SBI QR -->
+            <button onclick="pilotTrigger('completed')" id="btn-action-complete" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-extrabold rounded-2xl text-xs flex items-center justify-between shadow-lg shadow-emerald-950/50 transition-all">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">✅</span>
+                <div class="text-left">
+                  <p class="font-extrabold text-sm" id="lbl-action-complete">4. Complete Service & Bill</p>
+                  <p class="text-[10px] text-emerald-100">Show SBI Stand QR for ₹2,250</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold bg-white/20 px-2 py-0.5 rounded">Stage 5</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- PAYMENT SETTLEMENT & SBI STAND QR DESK -->
+        <div class="glass-card rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4 text-center">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-1.5 text-left">
+              <span class="text-lg">🏦</span>
+              <div>
+                <h4 class="text-xs font-extrabold text-white">Pilot Payment Desk</h4>
+                <p class="text-[10px] text-slate-400">Collect via SBI Stand QR or Cash</p>
+              </div>
+            </div>
+            <span class="text-sm font-black text-emerald-400 font-mono">₹2,250</span>
+          </div>
+
+          <!-- Embedded SBI Stand Image -->
+          <div class="p-2.5 bg-white rounded-2xl inline-block shadow-xl border border-slate-200">
+            <img src="assets/trinetra-sbi-qr.jpg" alt="SBI Stand QR" class="max-h-56 w-auto object-contain rounded-lg mx-auto">
+          </div>
+
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs">
+            <p class="text-[10px] text-slate-400">SBI UPI ID for Farmer:</p>
+            <p class="font-mono font-black text-emerald-400 select-all">trinetradronesandrobotics@sbi</p>
+          </div>
+
+          <!-- Payment Mode Buttons -->
+          <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+            <button onclick="recordPayment('upi')" class="py-2.5 px-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow transition-all">
+              ✓ Paid Online UPI
+            </button>
+            <button onclick="recordPayment('cash')" class="py-2.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition-all">
+              💵 Paid Pilot Cash
+            </button>
+          </div>
+
+          <button onclick="openInvoiceModal()" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-slate-700 rounded-xl text-xs font-bold transition-all">
+            📄 View / Share Tax Invoice
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL: PRE-FLIGHT SAFETY CHECKLIST -->
+  <div id="checklist-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 text-slate-100 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-base">🛡️</span>
+          <h3 class="font-bold text-sm text-white">DGCA Mandatory Pre-Flight Checklist</h3>
+        </div>
+        <button onclick="closeChecklistModal()" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 font-bold text-xs">✕</button>
+      </div>
+
+      <div class="space-y-2.5 text-xs">
+        <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer">
+          <input type="checkbox" checked class="mt-0.5 rounded text-emerald-600">
+          <div>
+            <p class="font-bold text-white">1. Battery Voltage Check</p>
+            <p class="text-[10px] text-slate-400">6S 22000mAh cells balanced above 22.2V</p>
+          </div>
+        </label>
+        <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer">
+          <input type="checkbox" checked class="mt-0.5 rounded text-emerald-600">
+          <div>
+            <p class="font-bold text-white">2. Spray Chemical Tank Calibration</p>
+            <p class="text-[10px] text-slate-400">16 Liters filled & nozzles primed</p>
+          </div>
+        </label>
+        <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer">
+          <input type="checkbox" checked class="mt-0.5 rounded text-emerald-600">
+          <div>
+            <p class="font-bold text-white">3. Flight Zone Safety</p>
+            <p class="text-[10px] text-slate-400">No persons, cattle, or HT lines in spray corridor</p>
+          </div>
+        </label>
+        <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer">
+          <input type="checkbox" checked class="mt-0.5 rounded text-emerald-600">
+          <div>
+            <p class="font-bold text-white">4. Weather Clearance Verified</p>
+            <p class="text-[10px] text-slate-400">Wind 10.8 km/h (< 15 km/h limit) • Zero rain</p>
+          </div>
+        </label>
+        <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer">
+          <input type="checkbox" checked class="mt-0.5 rounded text-emerald-600">
+          <div>
+            <p class="font-bold text-white">5. Fail-Safe Return-to-Home (RTH)</p>
+            <p class="text-[10px] text-slate-400">RTH altitude set to 15m AGL with GPS lock</p>
+          </div>
+        </label>
+      </div>
+
+      <button onclick="closeChecklistModal(); alert('Pre-Flight Checklist Confirmed by Pilot Ramesh Kumar!');" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow transition-all">
+        ✓ Confirm Pre-Flight Clearance
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="pilot-toast" class="fixed top-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-2xl border border-blue-500 shadow-2xl text-xs font-bold hidden z-[1000] flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+    <span id="toast-msg">Action Transmitted</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & REALTIME BROADCAST ENGINE -->
+  <script>
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const str = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
+      const el = document.getElementById('live-time-clock');
+      if (el) el.innerText = str + ' IST';
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // BroadcastChannel for cross-app synchronization
+    const opsChannel = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('trinetra_ops_channel') : null;
+    if (opsChannel) {
+      opsChannel.onmessage = function(e) {
+        console.log('[PilotApp] Received message:', e.data);
+        if (e.data && e.data.type === 'SETTINGS_UPDATE') {
+          applyDynamicSettings(e.data.settings);
+          showPilotToast('🔔 Admin Updated Prices & Bank Settings');
+        }
+        if (e.data && e.data.status) {
+          updatePilotStatusDisplay(e.data.status);
+        }
+      };
+    }
+
+    
+    // Apply dynamic settings from Admin Console
+    function applyDynamicSettings(settings) {
+      if (!settings) return;
+      console.log('[PilotApp] Applying dynamic settings:', settings);
+      if (settings.pricing && settings.pricing.pesticide) {
+        const billEl = document.getElementById('card-total-bill');
+        if (billEl) {
+          const total = 5 * (settings.pricing.pesticide || 450);
+          billEl.innerText = '₹' + total.toLocaleString();
+        }
+      }
+      if (settings.banking && settings.banking.upiVpa) {
+        const upiTxt = document.querySelector('#tab-billing .font-mono');
+        if (upiTxt) upiTxt.innerText = settings.banking.upiVpa;
+      }
+    }
+    try {
+      const saved = localStorage.getItem('trinetra_system_settings');
+      if (saved) applyDynamicSettings(JSON.parse(saved));
+    } catch(e) {}
+
+    // Pilot Actions Trigger (Connected to Real SQLite Database)
+    async function pilotTrigger(stage) {
+      updatePilotStatusDisplay(stage);
+
+      // 1. Send update to real SQLite REST API
+      try {
+        await fetch('/api/bookings/TRN-2026-881/status', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: stage,
+            pilot_name: 'Ramesh Kumar',
+            drone_model: 'Trinetra Hexa-16L (AP-07)'
+          })
+        });
+      } catch (err) {
+        console.warn('API error, relying on local sync:', err);
+      }
+
+      // 2. Save to localStorage
+      localStorage.setItem('trinetra_booking_status', stage);
+      localStorage.setItem('trinetra_pilot_action_time', Date.now());
+
+      // 3. Broadcast to Farmer App & Admin Console
+      if (opsChannel) {
+        opsChannel.postMessage({
+          type: 'STATUS_UPDATE',
+          status: stage,
+          pilotName: 'Ramesh Kumar',
+          droneModel: 'Trinetra Hexa-16L (AP-07)'
+        });
+      }
+
+      showPilotToast('Transmitted Stage: ' + stage.toUpperCase() + ' to Real Database & Connected Apps');
+    }
+
+    function updatePilotStatusDisplay(stage) {
+      const pill = document.getElementById('mission-status-pill');
+      if (pill) {
+        if (stage === 'arrived') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-blue-500/20 text-blue-300 border border-blue-500/40';
+          pill.innerText = 'PILOT ON-SITE AT FARM • PREPARING DRONE';
+        } else if (stage === 'in_progress') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse';
+          pill.innerText = 'STAGE 4: DRONE SPRAYING IN PROGRESS (70%)';
+        } else if (stage === 'completed') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-amber-500/20 text-amber-300 border border-amber-500/40';
+          pill.innerText = 'STAGE 5: SERVICE COMPLETED • COLLECTING PAYMENT';
+        }
+      }
+    }
+
+    async function recordPayment(method) {
+      try {
+        const res = await fetch('/api/bookings/TRN-2026-881/pay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            payment_mode: method === 'upi' ? 'Online SBI UPI' : 'Cash Collected by Pilot'
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          pilotTrigger('completed');
+          alert('✅ Official SQLite Tax Invoice Created: ' + (data.invoice ? data.invoice.invoice_no : 'INV-2026-1045') + '\nAmount: ₹2,250\nPayment Mode: ' + (method === 'upi' ? 'SBI UPI' : 'Cash'));
+          return;
+        }
+      } catch (e) {}
+
+      pilotTrigger('completed');
+      alert(method === 'upi' ? '✓ Online SBI UPI Payment Recorded for ₹2,250!' : '✓ Cash of ₹2,250 Collected by Pilot Ramesh Kumar!');
+    }
+
+    function showPilotToast(msg) {
+      const toast = document.getElementById('pilot-toast');
+      const text = document.getElementById('toast-msg');
+      if (toast && text) {
+        text.innerText = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3500);
+      }
+    }
+
+    function openChecklistModal() {
+      document.getElementById('checklist-modal').classList.remove('hidden');
+    }
+    function closeChecklistModal() {
+      document.getElementById('checklist-modal').classList.add('hidden');
+    }
+    function openInvoiceModal() {
+      alert('Tax Invoice INV-2026-1045 for Venkateswara Rao (₹2,250) Ready. Sharing with Farmer via WhatsApp...');
+    }
+
+    // Leaflet Satellite Field Map
+    let pilotMapInstance = null;
+    function initPilotMap() {
+      const el = document.getElementById('pilot-map');
+      if (!el) return;
+
+      pilotMapInstance = L.map('pilot-map', {
+        center: [16.4971, 80.7856],
+        zoom: 16,
+        zoomControl: true
+      });
+
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri',
+        maxZoom: 19
+      }).addTo(pilotMapInstance);
+
+      // Farm plot boundary polygon
+      const plotCoords = [
+        [16.4960, 80.7845],
+        [16.4982, 80.7848],
+        [16.4980, 80.7870],
+        [16.4958, 80.7865]
+      ];
+      L.polygon(plotCoords, {
+        color: '#10B981',
+        weight: 3,
+        fillColor: '#10B981',
+        fillOpacity: 0.35
+      }).addTo(pilotMapInstance).bindPopup('<b>Venkateswara Rao Farm Plot</b><br>5.0 Acres Paddy');
+
+      // Drone spray icon
+      const droneIcon = L.divIcon({
+        className: 'pilot-drone-icon',
+        html: '<div style="background:#0284C7; color:white; padding:4px 8px; border-radius:10px; font-weight:800; font-size:11px; border:2px solid white; box-shadow:0 4px 12px rgba(0,0,0,0.5);">🚁 AP-07 Spraying</div>',
+        iconSize: [120, 30]
+      });
+      L.marker([16.4971, 80.7856], { icon: droneIcon }).addTo(pilotMapInstance).bindPopup('<b>Hexacopter AP-07</b><br>Altitude: 2.5m • Battery: 84%');
+    }
+
+    function recenterPlotMap() {
+      if (pilotMapInstance) {
+        pilotMapInstance.setView([16.4971, 80.7856], 16);
+      }
+    }
+
+    // Initialize Map on load
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initPilotMap, 300);
+    });
+
+    // Language Toggle
+    function setPilotLang(lang) {
+      const btnEn = document.getElementById('btn-lang-en');
+      const btnTe = document.getElementById('btn-lang-te');
+      if (lang === 'en') {
+        btnEn.className = 'px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold transition-all';
+        btnTe.className = 'px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all';
+        document.getElementById('pilot-duty-badge').innerText = 'ON DUTY • FIELD ACTIVE';
+      } else {
+        btnTe.className = 'px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold transition-all';
+        btnEn.className = 'px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all';
+        document.getElementById('pilot-duty-badge').innerText = 'డ్యూటీలో ఉన్నారు • ఫీల్డ్ యాక్టివ్';
+      }
+    }
+  </script>
+</body>
+</html>

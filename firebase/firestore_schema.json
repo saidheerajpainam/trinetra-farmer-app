@@ -1,0 +1,253 @@
+{
+  "project": "TrinetraFarmerApp",
+  "company": "Trinetra Drones & Robotics",
+  "location": "Vijayawada, Andhra Pradesh - 521151",
+  "helpline": "9502051939",
+  "collections": {
+    "users": [
+      {
+        "_id": "usr_farmer_001",
+        "uid": "usr_farmer_001",
+        "phone": "+919876543210",
+        "name": "వెంకటేశ్వర రావు (Venkateswara Rao)",
+        "village": "కంకిపాడు (Kankipadu)",
+        "mandal": "కంకిపాడు",
+        "district": "కృష్ణా (Krishna)",
+        "role": "farmer",
+        "preferredLanguage": "te",
+        "createdAt": "2026-10-11T06:00:00Z"
+      },
+      {
+        "_id": "usr_admin_001",
+        "uid": "usr_admin_001",
+        "phone": "+919502051939",
+        "name": "Trinetra Ops Admin",
+        "village": "Vijayawada Hub",
+        "mandal": "Vijayawada Urban",
+        "district": "NTR",
+        "role": "admin",
+        "preferredLanguage": "en",
+        "createdAt": "2026-10-11T06:00:00Z"
+      },
+      {
+        "_id": "usr_pilot_001",
+        "uid": "usr_pilot_001",
+        "phone": "+919876543211",
+        "name": "రమేష్ కుమార్ (Ramesh Kumar)",
+        "village": "విజయవాడ",
+        "mandal": "పెనమలూరు",
+        "district": "కృష్ణా",
+        "role": "pilot",
+        "preferredLanguage": "te",
+        "createdAt": "2026-10-11T06:00:00Z"
+      }
+    ],
+    "services": [
+      {
+        "_id": "srv_pesticide",
+        "serviceId": "pesticide",
+        "name_te": "పురుగుమందుల స్ప్రేయింగ్",
+        "name_en": "Pesticide Spraying",
+        "pricePerAcre": 450,
+        "description_te": "అల్ట్రా-లో వాల్యూమ్ ఆటోమేటెడ్ పిచికారీ, సమగ్ర కీటక నివారణ",
+        "description_en": "Ultra-low volume automated spraying for precision pest control",
+        "active": true
+      },
+      {
+        "_id": "srv_nano_urea",
+        "serviceId": "nano_urea",
+        "name_te": "నానో యూరియా & ద్రవ ఎరువులు",
+        "name_en": "Nano Urea & Liquid Fertilizers",
+        "pricePerAcre": 400,
+        "description_te": "మొక్కల ఎదుగుదలకు పోషకాల ఏకరీతి పిచికారీ",
+        "description_en": "Uniform foliage application of nano nutrients and biostimulants",
+        "active": true
+      },
+      {
+        "_id": "srv_fungicide",
+        "serviceId": "fungicide",
+        "name_te": "శిలీంద్ర సంహారిణి స్ప్రేయింగ్",
+        "name_en": "Fungicide Spraying",
+        "pricePerAcre": 450,
+        "description_te": "వరి అగ్గితెగులు, మిరప కొమ్మకుళ్లు నివారణ",
+        "description_en": "Targeted fungus prevention for paddy blast and chilli rot",
+        "active": true
+      },
+      {
+        "_id": "srv_mapping",
+        "serviceId": "mapping",
+        "name_te": "పంట ఆరోగ్యం & సర్వే మ్యాపింగ్",
+        "name_en": "Crop Health & Survey Mapping",
+        "pricePerAcre": 300,
+        "description_te": "మల్టీస్పెక్ట్రల్ కెమెరా డ్రోన్ స్కానింగ్",
+        "description_en": "Multispectral scanning to detect yellowing and plant stress",
+        "active": true
+      }
+    ],
+    "bookings": [
+      {
+        "_id": "TRN-2026-881",
+        "bookingId": "TRN-2026-881",
+        "farmerId": "usr_farmer_001",
+        "farmerName": "వెంకటేశ్వర రావు",
+        "farmerPhone": "+919876543210",
+        "cropType": "paddy",
+        "cropName_te": "వరి",
+        "cropName_en": "Paddy",
+        "acreage": 5.0,
+        "village": "కంకిపాడు",
+        "fieldLandmark": "రామాలయం వెనుక పొలం",
+        "preferredDate": "2026-10-15",
+        "serviceId": "pesticide",
+        "serviceName": "పురుగుమందుల స్ప్రేయింగ్",
+        "status": "awaiting_confirmation",
+        "statusOptions": [
+          "received",
+          "awaiting_confirmation",
+          "pilot_assigned",
+          "in_progress",
+          "completed",
+          "cancelled"
+        ],
+        "quotedPricePerAcre": 450,
+        "totalAmount": 2250,
+        "assignedPilotId": "usr_pilot_001",
+        "assignedPilotName": "రమేష్ కుమార్",
+        "assignedPilotPhone": "+919502051939",
+        "droneModel": "Trinetra Hexa-16L (AP-07)",
+        "paymentStatus": "pending_after_service",
+        "paymentMethod": "cash_or_upi_post_service",
+        "weatherCheckPassed": true,
+        "fieldFeasibilityPassed": true,
+        "createdAt": "2026-10-11T06:10:00Z",
+        "updatedAt": "2026-10-11T06:15:00Z"
+      }
+    ],
+    "pilots": [
+      {
+        "_id": "plt_001",
+        "pilotId": "usr_pilot_001",
+        "name": "రమేష్ కుమార్ (Ramesh Kumar)",
+        "phone": "+919502051939",
+        "dgcaLicenseNo": "RPC-IND-2025-4421",
+        "baseLocation": "Vijayawada",
+        "assignedDrone": "Trinetra Hexa-16L (AP-07)",
+        "activeJobsCount": 1,
+        "status": "available"
+      },
+      {
+        "_id": "plt_002",
+        "pilotId": "usr_pilot_002",
+        "name": "శివారెడ్డి (Siva Reddy)",
+        "phone": "+919502051940",
+        "dgcaLicenseNo": "RPC-IND-2025-4422",
+        "baseLocation": "Kankipadu",
+        "assignedDrone": "Trinetra Hexa-16L (AP-08)",
+        "activeJobsCount": 0,
+        "status": "available"
+      }
+    ],
+    "drones": [
+      {
+        "_id": "drn_ap_07",
+        "droneCode": "AP-07",
+        "model": "Trinetra Hexa-16L",
+        "serialNumber": "TRN-HX16-2025-07",
+        "payloadCapacityLiters": 16.0,
+        "batteryCycles": 142,
+        "totalFlightHours": 118.5,
+        "status": "in_mission",
+        "healthStatus": "good",
+        "lastMaintenanceDate": "2026-09-28",
+        "firmware": "v2.8.4-agro"
+      },
+      {
+        "_id": "drn_ap_09",
+        "droneCode": "AP-09",
+        "model": "Trinetra Hexa-16L",
+        "serialNumber": "TRN-HX16-2025-09",
+        "payloadCapacityLiters": 16.0,
+        "batteryCycles": 265,
+        "totalFlightHours": 194.0,
+        "status": "available",
+        "healthStatus": "needs_inspection",
+        "lastMaintenanceDate": "2026-08-15",
+        "firmware": "v2.8.4-agro"
+      }
+    ],
+    "telemetry": [
+      {
+        "_id": "tel_trn_881_last",
+        "droneCode": "AP-07",
+        "bookingId": "TRN-2026-881",
+        "farmerId": "usr_farmer_001",
+        "pilotId": "usr_pilot_001",
+        "latitude": 16.4971,
+        "longitude": 80.7856,
+        "altitude_m": 2.5,
+        "groundSpeed_kmh": 18.2,
+        "heading_deg": 45.0,
+        "batteryPercent": 84.0,
+        "batteryVoltage": 22.8,
+        "sprayFlowRate_lpm": 1.8,
+        "sprayActive": true,
+        "satellites": 14,
+        "hdop": 0.8,
+        "cumulativeVerifiedAcres": 3.50,
+        "targetAcres": 5.0,
+        "remainingAcres": 1.50,
+        "coveragePercentage": 70.0,
+        "timestamp": "2026-10-13T06:30:00Z"
+      }
+    ],
+    "crop_analyses": [
+      {
+        "_id": "crop_scan_001",
+        "farmerId": "usr_farmer_001",
+        "cropType": "paddy",
+        "detectedCondition_en": "Rice Blast (Magnaporthe oryzae)",
+        "detectedCondition_te": "వరి అగ్గితెగులు",
+        "confidenceScore": 0.92,
+        "severity": "moderate",
+        "observations_en": "Elliptical spindle-shaped lesions detected on upper leaf blades.",
+        "observations_te": "పై ఆకులపై కండె ఆకారపు మచ్చలు గమనించబడ్డాయి.",
+        "recommendations_en": "Tricyclazole 75% WP @ 0.6g/L ultra-low volume drone spray.",
+        "recommendations_te": "ట్రైసైక్లాజోల్ 75% WP (0.6 గ్రా/లీ) డ్రోన్ ద్వారా పిచికారీ చేయండి.",
+        "disclaimer_en": "Preliminary AI guidance only. Consult your local agricultural extension officer before chemical application.",
+        "disclaimer_te": "హెచ్చరిక: ఇది ప్రాథమిక AI పరిశీలన మాత్రమే. రసాయన పిచికారీ చేయడానికి ముందు వ్యవసాయ అధికారిని సంప్రదించండి.",
+        "createdAt": "2026-10-13T06:00:00Z"
+      }
+    ],
+    "drone_maintenance_logs": [
+      {
+        "_id": "maint_001",
+        "droneCode": "AP-09",
+        "logType": "battery_warning",
+        "batteryCyclesAtLog": 265,
+        "flightHoursAtLog": 194.0,
+        "issueDescription": "AI flagged: LiPo pack cycles (265) exceeded 250 threshold.",
+        "severity": "medium",
+        "aiFlagged": true,
+        "resolved": false,
+        "recordedAt": "2026-10-12T10:00:00Z"
+      }
+    ],
+    "ai_reports": [
+      {
+        "_id": "rep_daily_2026_10_13",
+        "reportType": "daily",
+        "reportDate": "2026-10-13",
+        "totalTargetAcres": 160.0,
+        "totalVerifiedAcres": 148.5,
+        "totalJobsCompleted": 8,
+        "totalActiveDrones": 3,
+        "droneUtilizationHours": 14.8,
+        "estimatedOperatingCost": 18500.0,
+        "totalRevenue": 66825.0,
+        "aiSummary_en": "Operations running at 92.8% spray efficiency across Krishna District. Zero drift alarms.",
+        "aiSummary_te": "కృష్ణా జిల్లాలో ఆపరేషన్లు 92.8% సమర్థతతో నడిచాయి. 148.5 ఎకరాలు పిచికారీ అయ్యాయి."
+      }
+    ]
+  }
+}
+

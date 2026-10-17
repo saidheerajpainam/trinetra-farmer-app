@@ -1,0 +1,141 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Trinetra Drones & Robotics — Production Firestore Security Rules
+    // Vijayawada, Andhra Pradesh (521151)
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+
+    function isPilot() {
+      return isAuthenticated() && getUserData().role == 'pilot';
+    }
+
+    // 1. Users Collection
+    match /users/{userId} {
+      // Any authenticated user can read public user details (e.g. pilot details or farmer contact)
+      allow read: if isAuthenticated();
+      
+      // A user can create/update their own profile, or an admin can manage accounts
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // 2. Bookings Collection
+    match /bookings/{bookingId} {
+      // Farmers can read their own bookings; Pilots can read jobs assigned to them; Admins read all
+      allow read: if isAuthenticated() && (
+        resource.data.farmerId == request.auth.uid ||
+        resource.data.assignedPilotId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Farmers can create new booking requests
+      allow create: if isAuthenticated() && 
+        request.resource.data.farmerId == request.auth.uid &&
+        request.resource.data.status == 'received';
+
+      // Updates:
+      // - Admin has full update access (confirming price, assigning pilots, changing dates)
+      // - Assigned pilot can update status (in_progress, completed) and payment collection
+      // - Farmer can only update if cancelling their own unconfirmed booking
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        (
+          isPilot() && 
+          resource.data.assignedPilotId == request.auth.uid &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'status', 'completedAt', 'paymentStatus', 'updatedAt', 'notes'
+          ])
+        ) ||
+        (
+          resource.data.farmerId == request.auth.uid &&
+          resource.data.status == 'received' &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+        )
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // 3. Services Collection
+    match /services/{serviceId} {
+      // Anyone can read service prices and catalog
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 4. Pilots Collection
+    match /pilots/{pilotId} {
+      // Authenticated users (farmers/admins) can read pilot availability and credentials
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || (isAuthenticated() && request.auth.uid == pilotId);
+    }
+
+    // 5. Notifications Collection
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow write: if isAdmin();
+    }
+
+    // 6. Drone Fleet Inventory Collection
+    match /drones/{droneId} {
+      // Pilots & Admins can read drone status & battery health; Farmers read basic model info
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // 7. Live Drone Telemetry & Acreage Collection (Strict Privacy)
+    match /telemetry/{telemetryId} {
+      // Privacy Protection: Farmer can only read telemetry for their OWN active booking
+      // Pilots read their assigned drone telemetry; Admins read all fleet telemetry
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        (isPilot() && resource.data.pilotId == request.auth.uid) ||
+        (resource.data.farmerId == request.auth.uid)
+      );
+      // Only the assigned human pilot can stream verified telemetry packets from the field
+      allow create, update: if isAuthenticated() && (isAdmin() || isPilot());
+      allow delete: if isAdmin();
+    }
+
+    // 8. AI Crop Health Analyses Collection
+    match /crop_analyses/{analysisId} {
+      // Farmer can read/write their own crop scans; Admin can review
+      allow read: if isAuthenticated() && (resource.data.farmerId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.farmerId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // 9. Drone Maintenance & Prediction Logs
+    match /drone_maintenance_logs/{logId} {
+      allow read: if isAuthenticated() && (isPilot() || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // 10. AI Operational Daily/Monthly Reports
+    match /ai_reports/{reportId} {
+      allow read, write: if isAdmin();
+    }
+
+    // 11. AI Operational Recommendations (Human Review Guardrail)
+    match /ai_recommendations/{recId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+  }
+}

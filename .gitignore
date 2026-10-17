@@ -1,0 +1,36 @@
+# Environment Secrets & Credentials
+.env
+.env.local
+.env.*
+*.jks
+*.keystore
+key.properties
+*.log
+
+# Database Files
+trinetra.db
+trinetra.db-wal
+trinetra.db-shm
+*.bak
+
+# Node & Package Managers
+node_modules/
+npm-debug.log*
+
+# Android & Flutter Build Output
+*.apk
+*.aab
+trinetra_mobile_bundle/build/
+trinetra_mobile_bundle/.dart_tool/
+trinetra_mobile_bundle/android/.gradle/
+trinetra_mobile_bundle/android/app/build/
+trinetra_mobile_bundle/android/local.properties
+trinetra_mobile_bundle/android/key.properties
+trinetra_mobile_bundle/android/app/*.jks
+trinetra_mobile_bundle/android/app/*.keystore
+.gradle/
+build/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
