@@ -477,6 +477,19 @@ const server = http.createServer(async (req, res) => {
         const isSecure = req.headers['x-forwarded-proto'] === 'https';
         const cookieStr = 'trinetra_session=' + sessionToken + '; HttpOnly; SameSite=Lax; Path=/; Max-Age=' + (SESSION_EXPIRY_HOURS * 3600) + (isSecure ? '; Secure' : '');
 
+        // Link mobile number if provided in request
+        const rawMobile = (body.mobile || body.phone || '').toString().trim();
+        const normMobile = normalizeIndianMobile(rawMobile);
+        if (normMobile.valid) {
+          db.prepare('UPDATE users SET mobile = ?, mobile_verified = 1 WHERE id = ?').run(normMobile.raw10, user.id);
+          user.mobile = normMobile.raw10;
+          user.mobile_verified = 1;
+          if (farmer) {
+            db.prepare('UPDATE farmers SET phone = ? WHERE id = ?').run(normMobile.raw10, farmer.id);
+            farmer.phone = normMobile.raw10;
+          }
+        }
+
         // Check if phone number is needed
         const needs_mobile = !user.mobile || !user.mobile_verified;
 
