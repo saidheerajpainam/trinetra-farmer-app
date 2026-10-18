@@ -304,6 +304,10 @@
             <button onclick="quickDemoLogin()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-98 text-slate-950 font-black text-xs rounded-2xl shadow-xs flex items-center justify-center gap-2 border border-amber-400 transition-all">
               <span>⚡ తక్షణ డెమో లాగిన్ (1-Tap Instant Demo)</span>
             </button>
+
+            <button onclick="goToScreen(3)" class="w-full py-2.5 bg-emerald-800 hover:bg-emerald-900 active:scale-98 text-white font-bold text-xs rounded-2xl shadow-sm flex items-center justify-center gap-2 transition-all">
+              <span>🏠</span> <span id="s1-btn-home">హోమ్ డ్యాష్‌బోర్డ్‌కు వెళ్ళండి (Back to Home)</span>
+            </button>
           </div>
         </div>
       </section>
@@ -1847,6 +1851,9 @@
       }
 
       document.getElementById('screen-canvas').scrollTop = 0;
+    }
+    window.goToScreen = goToScreen;
+    function _orig_after_scroll() {
 
       // Handle map invalidation / initialization
       if (screenNumber === 4) {
@@ -1960,6 +1967,8 @@
         if (s1Pill4) s1Pill4.innerText = "Save Time & Water";
         if (s1Empower) s1Empower.innerText = "Empowering Farmers with Technology";
         if (s1BtnStart) s1BtnStart.innerText = "Start Drone Booking →";
+        const s1BtnHome = document.getElementById("s1-btn-home");
+        if (s1BtnHome) s1BtnHome.innerText = "Go to Home Dashboard (Home)";
       } else {
         if (s1HeroTitle) s1HeroTitle.innerText = "రైతు చేతుల్లో అత్యాధునిక సాంకేతికత";
         if (s1HeroSub) s1HeroSub.innerText = "ఆరోగ్యకరమైన పంటలు & మెరుగైన రేపటి కోసం డ్రోన్ సేవలు";
@@ -1970,6 +1979,8 @@
         if (s1Pill4) s1Pill4.innerText = "సమయం & నీటి ఆదా";
         if (s1Empower) s1Empower.innerText = "సాంకేతికతతో రైతన్నకు సాధికారత";
         if (s1BtnStart) s1BtnStart.innerText = "👉 డ్రోన్ బుకింగ్ ప్రారంభించండి (Start Booking)";
+        const s1BtnHome = document.getElementById("s1-btn-home");
+        if (s1BtnHome) s1BtnHome.innerText = "🏠 హోమ్ డ్యాష్‌బోర్డ్‌కు వెళ్ళండి (Back to Home)";
       }
 
       // Screen 2: Login Translations (Photo 2)
@@ -2275,7 +2286,7 @@
       const textSocialContinue = document.getElementById('text-social-continue');
       const textNewFarmer = document.getElementById('text-new-farmer');
       const textRegisterLink = document.getElementById('text-register-link');
-      const inputPhone = document.getElementById('input-phone');
+      // inputPhone already declared above
       const inputPassword = document.getElementById('input-password');
 
       if (loginTagline) loginTagline.innerText = lang === 'en' ? 'Smart Solutions for Smart Farming' : 'స్మార్ట్ వ్యవసాయానికి స్మార్ట్ పరిష్కారాలు';
@@ -2632,6 +2643,7 @@
     }
 
     async function startOtpFlow() {
+      window.startOtpFlow = startOtpFlow;
       hideOtpError();
       const p1 = document.getElementById('input-phone');
       const p2 = document.getElementById('input-phone-reg');
@@ -3274,6 +3286,7 @@
 
     // Login completion: 1. Verify OTP -> 2. Register/Load Farmer -> 3. Show Dashboard
     async function completeLogin() {
+      window.completeLogin = completeLogin;
       hideOtpError();
       const p1 = document.getElementById('input-phone');
       const p2 = document.getElementById('input-phone-reg');
