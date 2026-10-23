@@ -106,6 +106,8 @@ CREATE TABLE IF NOT EXISTS bookings (
             'pending', 'confirmed', 'pilot_assigned',
             'in_progress', 'completed', 'cancelled'
         )),
+    latitude REAL,
+    longitude REAL,
     farmer_notes TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,

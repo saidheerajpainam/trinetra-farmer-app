@@ -79,6 +79,10 @@ CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(session_token);
 CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
 `);
 
+// Auto-migration: ensure bookings table has latitude & longitude columns
+try { db.exec("ALTER TABLE bookings ADD COLUMN latitude REAL;"); } catch (e) {}
+try { db.exec("ALTER TABLE bookings ADD COLUMN longitude REAL;"); } catch (e) {}
+
 // Ensure default services exist
 const defaultServices = [
   { name: 'Agriculture Drone Spraying', desc: 'Precision ultra-low volume crop spraying using hexacopter drones', price: 500 },
@@ -935,6 +939,8 @@ const server = http.createServer(async (req, res) => {
 
       let sql = `
         SELECT b.*,
+               COALESCE(b.latitude, fm.latitude, 16.4971) as latitude,
+               COALESCE(b.longitude, fm.longitude, 80.7856) as longitude,
                f.full_name as farmer_name,
                u.mobile as phone,
                s.service_name,
@@ -945,6 +951,7 @@ const server = http.createServer(async (req, res) => {
         JOIN farmers f ON f.id = b.farmer_id
         JOIN users u ON u.id = f.user_id
         JOIN services s ON s.id = b.service_id
+        LEFT JOIN farms fm ON fm.id = b.farm_id
         LEFT JOIN pilots p ON p.id = b.pilot_id
         LEFT JOIN users pu ON pu.id = p.user_id
         WHERE 1=1
@@ -974,6 +981,8 @@ const server = http.createServer(async (req, res) => {
       const idOrCode = pathname.split('/').pop();
       const booking = db.prepare(`
         SELECT b.*,
+               COALESCE(b.latitude, fm.latitude, 16.4971) as latitude,
+               COALESCE(b.longitude, fm.longitude, 80.7856) as longitude,
                f.full_name as farmer_name,
                u.mobile as phone,
                s.service_name,
@@ -984,6 +993,7 @@ const server = http.createServer(async (req, res) => {
         JOIN farmers f ON f.id = b.farmer_id
         JOIN users u ON u.id = f.user_id
         JOIN services s ON s.id = b.service_id
+        LEFT JOIN farms fm ON fm.id = b.farm_id
         LEFT JOIN pilots p ON p.id = b.pilot_id
         LEFT JOIN users pu ON pu.id = p.user_id
         WHERE b.id = ? OR b.booking_code = ?
