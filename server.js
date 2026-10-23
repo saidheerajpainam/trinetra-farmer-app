@@ -221,6 +221,19 @@ function serveStatic(req, res, filePath) {
     return res.end('403 Forbidden');
   }
 
+  // Auto-resolve directory / index.html or missing .html extension
+  try {
+    if (fs.existsSync(resolvedPath)) {
+      const st = fs.statSync(resolvedPath);
+      if (st.isDirectory()) {
+        const idxPath = path.join(resolvedPath, 'index.html');
+        if (fs.existsSync(idxPath)) resolvedPath = idxPath;
+      }
+    } else if (fs.existsSync(resolvedPath + '.html')) {
+      resolvedPath = resolvedPath + '.html';
+    }
+  } catch (e) {}
+
   fs.stat(resolvedPath, (err, stats) => {
     if (err || !stats.isFile()) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });

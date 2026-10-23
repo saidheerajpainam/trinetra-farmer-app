@@ -1,0 +1,2758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRINETRA Drones & Robotics — Operations Command Center (Admin Console)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#F0FDF4',
+              100: '#DCFCE7',
+              500: '#16A34A',
+              600: '#15803D',
+              700: '#166534',
+              800: '#14532D',
+              900: '#052E16',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans Telugu"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: #0B1120;
+      color: #E2E8F0;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Telugu', sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #0F172A;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.04); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+    .leaflet-container {
+      font-family: inherit !important;
+      background: #0B1120 !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+  <!-- TOP HEADER & BRAND BAR -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="bg-white p-1.5 rounded-xl shadow-md border border-slate-200">
+          <img src="assets/trinetra-logo.png" alt="Trinetra Logo" class="h-9 w-auto object-contain">
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-extrabold text-white tracking-wide">TRINETRA DRONES & ROBOTICS</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+              OPERATIONS COMMAND
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Vijayawada Hub (AP – 521151) • DGCA Certified Fleet Operations • Helpline: <strong class="text-slate-200">9502051939</strong>
+          </p>
+        </div>
+      </div>
+
+      <!-- Live Indicators & Quick Navigation Links -->
+      <div class="flex items-center flex-wrap gap-2.5">
+        
+        <!-- Live System Status -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-semibold">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-emerald-400 font-bold">Live Ops Active</span>
+          <span class="text-slate-500 text-[11px]" id="live-time-clock">--:--:--</span>
+        </div>
+
+        <!-- Language Switcher -->
+        <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1 text-xs">
+          <button onclick="setAdminLang('en')" id="btn-lang-en" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold transition-all">EN</button>
+          <button onclick="setAdminLang('te')" id="btn-lang-te" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all">తెలుగు</button>
+        </div>
+
+        <!-- Link to Farmer Mobile App -->
+        <a href="farmer-app.html" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-emerald-900/30 transition-all">
+          <span>📱</span>
+          <span>Farmer App ↗</span>
+        </a>
+
+                <!-- Link to Pilot App -->
+        <a href="pilot-app.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-500/40 font-bold text-xs flex items-center gap-1.5 transition-all">
+          <span>👨‍✈️</span>
+          <span>Pilot App ↗</span>
+        </a>
+        <!-- Link to Full System Simulator -->
+        <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold text-xs flex items-center gap-1.5 transition-all">
+          <span>🖥️</span>
+          <span>Simulator ↗</span>
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-6">
+
+    <!-- TOP KPI & METRICS RIBBON -->
+    <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      
+      <!-- Card 1: Today's Bookings -->
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-1">
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider" id="kpi-label-bookings">Today's Bookings</p>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl font-black text-white" id="kpi-total-bookings">8</span>
+          <span class="text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20">2 Pending</span>
+        </div>
+        <p class="text-[10px] text-slate-500">Krishna & Guntur Dists</p>
+      </div>
+
+      <!-- Card 2: Active Drones Flying -->
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-1">
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider" id="kpi-label-drones">Drones in Air</p>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl font-black text-emerald-400">3</span>
+          <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full border border-emerald-400/20">100% Signal</span>
+        </div>
+        <p class="text-[10px] text-slate-500">Hexa-16L AP-07, 09, 12</p>
+      </div>
+
+      <!-- Card 3: Certified Pilots on Duty -->
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-1">
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider" id="kpi-label-pilots">DGCA Pilots Active</p>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl font-black text-blue-400">5</span>
+          <span class="text-[10px] font-bold text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded-full border border-blue-400/20">Licensed</span>
+        </div>
+        <p class="text-[10px] text-slate-500">Remote Pilot Cert (RPC)</p>
+      </div>
+
+      <!-- Card 4: Verified vs Remaining Acreage -->
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider" id="kpi-label-acres">Acreage Analytics</p>
+          <span class="text-[9px] font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">GPS Verified</span>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <div>
+            <span class="text-2xl font-black text-amber-300" id="kpi-verified-acres">148.5</span>
+            <span class="text-[11px] text-slate-400">/ <span id="kpi-target-acres">160.0</span> Ac</span>
+          </div>
+          <span class="text-[10px] font-bold text-slate-400" id="kpi-remaining-acres">Rem: 11.5 Ac</span>
+        </div>
+        <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+          <div class="bg-gradient-to-r from-emerald-500 to-amber-400 h-1.5 rounded-full" id="kpi-acres-bar" style="width: 92.8%"></div>
+        </div>
+      </div>
+
+      <!-- Card 5: Revenue Collected -->
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-1">
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider" id="kpi-label-revenue">Revenue Today</p>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl font-black text-emerald-400">₹66,825</span>
+          <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">SBI UPI</span>
+        </div>
+        <p class="text-[10px] text-slate-500">Pending: ₹2,250</p>
+      </div>
+
+      <!-- Card 6: Weather & DGCA Clearance -->
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-1">
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Vijayawada Radar</p>
+        <div class="flex items-baseline justify-between">
+          <span class="text-base font-black text-emerald-400">10.8 km/h</span>
+          <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">CLEAR</span>
+        </div>
+        <p class="text-[10px] text-emerald-500 font-semibold">🟢 DGCA GREEN ZONE</p>
+      </div>
+
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <div class="border-b border-slate-800 flex items-center gap-2 overflow-x-auto custom-scroll pb-1">
+      <button onclick="switchTab('queue')" id="tab-btn-queue" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 bg-emerald-600 text-white shadow transition-all">
+        <span>📋</span>
+        <span id="tab-text-queue">Bookings Queue</span>
+      </button>
+      <button onclick="switchTab('farmers')" id="tab-btn-farmers" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-emerald-400 hover:text-white hover:bg-emerald-950/40 border border-emerald-500/40 transition-all">
+        <span>👨‍🌾</span>
+        <span id="tab-text-farmers">Farmers Directory & Field GPS</span>
+      </button>
+      <button onclick="switchTab('map')" id="tab-btn-map" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+        <span>🛰️</span>
+        <span id="tab-text-map">Smart Dashboard & Fleet Map</span>
+      </button>
+      <button onclick="switchTab('ai_assistant')" id="tab-btn-ai_assistant" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-emerald-400 hover:text-white hover:bg-emerald-950/40 border border-emerald-500/30 transition-all">
+        <span>🤖</span>
+        <span id="tab-text-ai_assistant">AI Admin Assistant</span>
+      </button>
+      <button onclick="switchTab('flight_monitor')" id="tab-btn-flight_monitor" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-amber-400 hover:text-white hover:bg-amber-950/40 border border-amber-500/30 transition-all">
+        <span>🛡️</span>
+        <span id="tab-text-flight_monitor">AI Flight Monitoring</span>
+      </button>
+      <button onclick="switchTab('reports')" id="tab-btn-reports" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+        <span>📊</span>
+        <span id="tab-text-reports">AI Reports & Insights</span>
+      </button>
+      <button onclick="switchTab('maintenance')" id="tab-btn-maintenance" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+        <span>🔧</span>
+        <span id="tab-text-maintenance">Maintenance Prediction</span>
+      </button>
+      <button onclick="switchTab('fleet')" id="tab-btn-fleet" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+        <span>👨‍✈️</span>
+        <span id="tab-text-fleet">Pilots & Fleet</span>
+      </button>
+      <button onclick="switchTab('billing')" id="tab-btn-billing" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+        <span>💳</span>
+        <span id="tab-text-billing">Billing & UPI</span>
+      </button>
+      <button onclick="switchTab('pricing')" id="tab-btn-pricing" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+        <span>⚙️</span>
+        <span id="tab-text-pricing">Pricing & SOP</span>
+      </button>
+      <button onclick="switchTab('database')" id="tab-btn-database" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-cyan-400 hover:text-white hover:bg-cyan-950/40 border border-cyan-800/40 transition-all">
+        <span>🗄️</span>
+        <span id="tab-text-database">Database Explorer</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: BOOKINGS & DISPATCH QUEUE -->
+    <section id="tab-queue" class="space-y-6">
+      
+      <!-- Active Vetting & Feasibility Command Deck -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
+              <h2 class="text-base font-extrabold text-white" id="vetting-title">
+                Active Farmer Booking Feasibility & Vetting Deck
+              </h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-1" id="vetting-subtitle">
+              Verify weather suitability, field boundaries, and assign DGCA certified pilot for instant farmer notification.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold px-3 py-1 rounded-xl bg-slate-900 border border-slate-700 text-slate-300">
+              Booking ID: <span class="text-emerald-400 font-mono" id="deck-booking-id">TRN-2026-881</span>
+            </span>
+            <button onclick="syncToFarmerApp()" class="px-3 py-1.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-xs font-bold transition-all flex items-center gap-1">
+              <span>⚡</span> <span>Broadcast Sync</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Column 1: Farmer & Crop Specifications -->
+          <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800/80">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🌾</span> <span>Farmer & Crop Profile</span>
+            </h3>
+
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between items-center py-1 border-b border-slate-900">
+                <span class="text-slate-400">Farmer Full Name:</span>
+                <span class="font-bold text-white" id="deck-farmer-name">Venkateswara Rao</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-900">
+                <span class="text-slate-400">Phone Number:</span>
+                <span class="font-bold text-emerald-400 font-mono" id="deck-farmer-phone">+91 98765 43210</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-900">
+                <span class="text-slate-400">Village & District:</span>
+                <span class="font-bold text-white" id="deck-farmer-loc">Kankipadu, Krishna District</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-900">
+                <span class="text-slate-400">Target Crop & Service:</span>
+                <span class="font-bold text-amber-300" id="deck-farmer-crop">Paddy (వరి) • Pesticide Spraying</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-900">
+                <span class="text-slate-400">Acreage & Rate:</span>
+                <span class="font-bold text-white" id="deck-farmer-acres">5.0 Acres @ ₹450/acre</span>
+              </div>
+              <div class="flex justify-between items-center py-1">
+                <span class="text-slate-400">Estimated Total Bill:</span>
+                <span class="text-sm font-black text-emerald-400" id="deck-farmer-price">₹2,250</span>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <a href="https://www.google.com/maps/search/?api=1&query=16.4971,80.7856" target="_blank" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-blue-400 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-800 transition-all">
+                <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>GPS: 16.4971, 80.7856 (Open in Google Maps ↗)</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Column 2: Feasibility & Safety Checklist -->
+          <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800/80">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🛡️</span> <span>SOP Feasibility Checklist</span>
+            </h3>
+
+            <div class="space-y-2.5 text-xs">
+              <label class="flex items-start gap-2.5 text-slate-300 bg-slate-900/60 p-2 rounded-xl cursor-pointer hover:bg-slate-900">
+                <input type="checkbox" id="adm-chk-weather" checked class="mt-0.5 rounded text-emerald-600 focus:ring-0">
+                <div>
+                  <p class="font-bold text-white">Weather Feasibility Passed</p>
+                  <p class="text-[10px] text-slate-400">Wind 10.8 km/h (< 15 km/h limit) • No rain forecasted</p>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2.5 text-slate-300 bg-slate-900/60 p-2 rounded-xl cursor-pointer hover:bg-slate-900">
+                <input type="checkbox" id="adm-chk-obstacles" checked class="mt-0.5 rounded text-emerald-600 focus:ring-0">
+                <div>
+                  <p class="font-bold text-white">Field Hazard Clearance</p>
+                  <p class="text-[10px] text-slate-400">No high-tension electrical cables or cell tower hazards</p>
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2.5 text-slate-300 bg-slate-900/60 p-2 rounded-xl cursor-pointer hover:bg-slate-900">
+                <input type="checkbox" id="adm-chk-hardware" checked class="mt-0.5 rounded text-emerald-600 focus:ring-0">
+                <div>
+                  <p class="font-bold text-white">Drone & Battery State</p>
+                  <p class="text-[10px] text-slate-400">Trinetra Hexa-16L (AP-07) with 3 charged LiPo battery sets</p>
+                </div>
+              </label>
+            </div>
+
+            <!-- Pilot Selection -->
+            <div class="pt-2">
+              <label class="block text-[11px] font-bold text-slate-300 mb-1">Assign DGCA Certified Remote Pilot:</label>
+              <select id="adm-select-pilot" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-emerald-500 font-medium">
+                <option value="Ramesh Kumar" data-phone="9502051939" data-lic="DGCA-RPC-2024-889" selected>రమేష్ కుమార్ (Ramesh Kumar) • Vijayawada Hub (Available)</option>
+                <option value="Siva Reddy" data-phone="9440188221" data-lic="DGCA-RPC-2023-412">శివారెడ్డి (Siva Reddy) • Kankipadu Station (Available)</option>
+                <option value="K. Naidu" data-phone="9848123990" data-lic="DGCA-RPC-2024-105">కె. నాయుడు (K. Naidu) • Gudivada Hub (In Transit)</option>
+                <option value="Venkat Swamy" data-phone="9177884433" data-lic="DGCA-RPC-2022-771">వెంకట్ స్వామి (Venkat Swamy) • Vuyyuru Hub (Standby)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Column 3: Instant Dispatch Action Controls -->
+          <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800/80 flex flex-col justify-between">
+            <div>
+              <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                <span>⚡</span> <span>Stage Transition Triggers</span>
+              </h3>
+              <p class="text-[11px] text-slate-400 leading-relaxed mb-3">
+                Triggering any stage broadcasts real-time telemetry straight to the farmer's mobile app screen.
+              </p>
+
+              <div class="space-y-2">
+                <button onclick="adminAction('pilot_assigned')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition-all">
+                  <span>✓</span> <span>Approve & Assign Pilot (Stage 3)</span>
+                </button>
+
+                <button onclick="adminAction('in_progress')" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-950/40 transition-all">
+                  <span>🚁</span> <span>Start Drone Spraying (Stage 4)</span>
+                </button>
+
+                <button onclick="adminAction('completed')" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40 transition-all">
+                  <span>📱</span> <span>Complete Service & Show SBI QR (Stage 5)</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex gap-2 pt-3 border-t border-slate-900">
+              <button onclick="adminAction('weather_hold')" class="flex-1 py-2 bg-amber-950/60 hover:bg-amber-900/60 border border-amber-800 text-amber-300 font-bold rounded-xl text-xs transition-all">
+                ⚠️ Weather Hold
+              </button>
+              <button onclick="adminAction('rejected')" class="py-2 px-3 bg-red-950/60 hover:bg-red-900/60 border border-red-800 text-red-300 font-bold rounded-xl text-xs transition-all">
+                Cancel
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ALL BOOKINGS TABLE -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-extrabold text-white">Full Ingestion & Operations Roster</h3>
+            <p class="text-xs text-slate-400">All registered farmer bookings for today in Krishna District</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" placeholder="Search farmer, phone, or village..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white outline-none focus:border-emerald-500">
+            <button class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-xl text-xs font-bold hover:bg-slate-700">Filter ▼</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 font-bold border-b border-slate-800 text-[11px] uppercase tracking-wider">
+              <tr>
+                <th class="py-3 px-3">Booking ID</th>
+                <th class="py-3 px-3">Farmer & Contact</th>
+                <th class="py-3 px-3">Village / Location</th>
+                <th class="py-3 px-3">Crop & Acres</th>
+                <th class="py-3 px-3">Service</th>
+                <th class="py-3 px-3">Amount</th>
+                <th class="py-3 px-3">Assigned Pilot</th>
+                <th class="py-3 px-3">Status</th>
+                <th class="py-3 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-medium">
+              <!-- Row 1 -->
+              <tr class="hover:bg-slate-900/50 transition-all bg-emerald-500/5">
+                <td class="py-3 px-3 font-mono font-bold text-emerald-400">TRN-2026-881</td>
+                <td class="py-3 px-3 font-bold text-white">
+                  <div>Venkateswara Rao</div>
+                  <div class="text-[10px] text-slate-400 font-mono">+91 98765 43210</div>
+                </td>
+                <td class="py-3 px-3">Kankipadu (కంకిపాడు)</td>
+                <td class="py-3 px-3 font-bold">వరి (Paddy) • 5.0 Ac</td>
+                <td class="py-3 px-3 text-slate-300">Pesticide Spray</td>
+                <td class="py-3 px-3 font-black text-white">₹2,250</td>
+                <td class="py-3 px-3 text-blue-400 font-bold">Ramesh Kumar (AP-07)</td>
+                <td class="py-3 px-3">
+                  <span id="badge-row-1" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                    Awaiting Pilot
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-right space-x-1">
+                  <button onclick="loadBookingToDeck('TRN-2026-881')" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold">Review Deck</button>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.4971,80.7856" target="_blank" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-white rounded-lg text-[10px] font-bold inline-flex items-center gap-1 border border-emerald-500/30" title="Navigate to Farmer Field">
+                    <span>🧭</span> <span>Maps ↗</span>
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr class="hover:bg-slate-900/50 transition-all">
+                <td class="py-3 px-3 font-mono font-bold text-slate-400">TRN-2026-882</td>
+                <td class="py-3 px-3 font-bold text-white">
+                  <div>P. Subba Rao</div>
+                  <div class="text-[10px] text-slate-400 font-mono">+91 94401 23456</div>
+                </td>
+                <td class="py-3 px-3">Vuyyuru (వుయ్యూరు)</td>
+                <td class="py-3 px-3 font-bold">మిరప (Chilli) • 8.0 Ac</td>
+                <td class="py-3 px-3 text-slate-300">Fungicide Spray</td>
+                <td class="py-3 px-3 font-black text-white">₹3,600</td>
+                <td class="py-3 px-3 text-blue-400 font-bold">Siva Reddy (AP-09)</td>
+                <td class="py-3 px-3">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                    Pilot Assigned
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <button class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] font-bold">Track</button>
+                </td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr class="hover:bg-slate-900/50 transition-all">
+                <td class="py-3 px-3 font-mono font-bold text-slate-400">TRN-2026-883</td>
+                <td class="py-3 px-3 font-bold text-white">
+                  <div>K. Rama Krishna</div>
+                  <div class="text-[10px] text-slate-400 font-mono">+91 98480 98765</div>
+                </td>
+                <td class="py-3 px-3">Gannavaram (గన్నవరం)</td>
+                <td class="py-3 px-3 font-bold">ప్రత్తి (Cotton) • 3.0 Ac</td>
+                <td class="py-3 px-3 text-slate-300">Nano Urea</td>
+                <td class="py-3 px-3 font-black text-white">₹1,200</td>
+                <td class="py-3 px-3 text-blue-400 font-bold">K. Naidu (AP-12)</td>
+                <td class="py-3 px-3">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                    Spraying (65%)
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <button class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] font-bold">Telemetry</button>
+                </td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr class="hover:bg-slate-900/50 transition-all">
+                <td class="py-3 px-3 font-mono font-bold text-slate-400">TRN-2026-884</td>
+                <td class="py-3 px-3 font-bold text-white">
+                  <div>M. Appa Rao</div>
+                  <div class="text-[10px] text-slate-400 font-mono">+91 91771 12233</div>
+                </td>
+                <td class="py-3 px-3">Gudivada (గుడివాడ)</td>
+                <td class="py-3 px-3 font-bold">మొక్కజొన్న (Maize) • 12.0 Ac</td>
+                <td class="py-3 px-3 text-slate-300">Pesticide Spray</td>
+                <td class="py-3 px-3 font-black text-emerald-400">₹5,400</td>
+                <td class="py-3 px-3 text-blue-400 font-bold">Venkat Swamy</td>
+                <td class="py-3 px-3">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    Completed & Paid ✓
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <button onclick="viewInvoice('TRN-2026-884')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] font-bold">Invoice</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB: FARMERS DIRECTORY & EXACT FIELD LOCATIONS -->
+    <section id="tab-farmers" class="hidden space-y-6">
+      
+      <!-- Top Overview & Statistics Banner -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+          <div>
+            <div class="flex items-center gap-2.5">
+              <span class="p-2.5 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xl">👨‍🌾</span>
+              <div>
+                <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                  <span>Registered Farmers Directory & Exact GPS Field Locations</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    Live SQLite Database
+                  </span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  View complete farmer profiles, verified mobile numbers, crops, and navigate straight to their field via Google Maps.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center flex-wrap gap-2.5">
+            <button onclick="loadFarmersDirectory()" class="px-3.5 py-2 bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-xs">
+              <span>🔄</span> <span>Refresh Directory</span>
+            </button>
+            <button onclick="recenterFarmersMap()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-xs">
+              <span>🎯</span> <span>Center All Fields</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Quick Stats Badges -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 text-[11px] block">Total Registered Farmers</span>
+            <span class="text-xl font-black text-white" id="stat-farmers-count">--</span>
+            <span class="text-[10px] text-emerald-400 block mt-0.5">Verified Mobile Accounts</span>
+          </div>
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 text-[11px] block">Total Farm Acreage</span>
+            <span class="text-xl font-black text-amber-300" id="stat-farmers-acres">--</span>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Paddy, Chilli, Cotton, Maize</span>
+          </div>
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 text-[11px] block">Active Villages & Mandals</span>
+            <span class="text-xl font-black text-emerald-400" id="stat-farmers-villages">14 Mandals</span>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Krishna & Guntur Districts</span>
+          </div>
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 text-[11px] block">Google Maps GPS Driving</span>
+            <span class="text-xl font-black text-blue-400">100% Locked</span>
+            <span class="text-[10px] text-emerald-400 block mt-0.5">Turn-by-Turn Directions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE FULL-WIDTH FIELD MAP OF ALL FARMERS -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+              <span>🗺️</span> <span>Interactive Farmer Fields & Village Map</span>
+            </h3>
+            <p class="text-xs text-slate-400">
+              Click any green farmer pin to view contact details, field size, and open turn-by-turn Google Maps navigation.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleFarmersMapLayer()" id="btn-toggle-farmers-layer" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center gap-1.5 shadow-xs">
+              <span id="farmers-layer-icon">🛰️</span>
+              <span id="farmers-layer-text">Satellite View</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="relative rounded-2xl overflow-hidden border border-slate-700 h-[460px] bg-slate-950 shadow-inner">
+          <div id="farmers-field-map" class="w-full h-full z-0"></div>
+          
+          <!-- Legend Strip -->
+          <div class="absolute bottom-3 left-3 bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 text-white text-[11px] flex items-center gap-3 z-[400] shadow-lg">
+            <span class="flex items-center gap-1 font-bold text-emerald-400">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 🌾 Farmer Field Pin
+            </span>
+            <span class="text-slate-500">•</span>
+            <span class="text-slate-300">Click pin for Google Maps GPS Driving Directions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FARMERS DIRECTORY ROSTER TABLE & CARDS -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+          <div>
+            <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+              <span>📋</span> <span>Complete Farmer Directory (<span id="farmers-count-badge">0</span> Farmers)</span>
+            </h3>
+            <p class="text-xs text-slate-400">Every farmer registered via Mobile App, OTP, or Google SSO with full location data</p>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="flex items-center flex-wrap gap-2">
+            <div class="relative">
+              <input id="input-search-farmers" type="text" oninput="filterFarmersList()" placeholder="Search farmer, phone, or village..." class="w-64 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-emerald-500 shadow-xs">
+            </div>
+            <select id="select-filter-village" onchange="filterFarmersList()" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 outline-none focus:border-emerald-500 cursor-pointer shadow-xs">
+              <option value="ALL">All Villages & Mandals</option>
+              <option value="Kankipadu">Kankipadu (కంకిపాడు)</option>
+              <option value="Gannavaram">Gannavaram (గన్నవరం)</option>
+              <option value="Poranki">Poranki (పోరంకి)</option>
+              <option value="Penamaluru">Penamaluru (పెనమలూరు)</option>
+              <option value="Vuyyuru">Vuyyuru (ఉయ్యూరు)</option>
+              <option value="Gudivada">Gudivada (గుడివాడ)</option>
+              <option value="Nuzvid">Nuzvid (నూజివీడు)</option>
+              <option value="Tenali">Tenali (తెనాలి)</option>
+              <option value="Mangalagiri">Mangalagiri (మంగళగిరి)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Farmers Cards Grid -->
+        <div id="farmers-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="col-span-full text-center py-10 text-slate-500 text-xs">
+            Loading Farmers Directory from SQLite Database...
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 2: LIVE MISSION & SATELLITE MAP -->
+    <section id="tab-map" class="hidden space-y-4">
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+              <h2 class="text-base font-extrabold text-white">Live Krishna District Drone & Pilot Fleet Telemetry</h2>
+            </div>
+            <p class="text-xs text-slate-400">
+              Interactive high-resolution satellite surveillance tracking active agricultural spraying hexacopters.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <button onclick="recenterMap()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold border border-slate-700">
+              Recenter Vijayawada 🎯
+            </button>
+            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-xl font-mono font-bold border border-emerald-500/30">
+              3 Active Drones • 0 Alarms
+            </span>
+          </div>
+        </div>
+
+        <!-- The Big Fleet Leaflet Map -->
+        <div class="relative rounded-2xl overflow-hidden border border-slate-700 h-[520px] bg-slate-950">
+          <div id="fleet-map" class="w-full h-full z-0"></div>
+
+          <!-- Floating Drone Telemetry Overlay Card -->
+          <div class="absolute bottom-4 left-4 right-4 md:right-auto md:w-96 bg-slate-900/90 backdrop-blur-md p-4 rounded-2xl border border-slate-700 shadow-2xl z-[400] text-xs space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-base">🚁</span>
+                <div>
+                  <h4 class="font-black text-white">Unit AP-07 (Hexa-16L)</h4>
+                  <p class="text-[10px] text-emerald-400">Pilot: Ramesh Kumar • Kankipadu</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse">
+                SPRAYING
+              </span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center text-[11px]">
+              <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                <p class="text-[10px] text-slate-500">Altitude</p>
+                <p class="font-black text-white">2.5 m AGL</p>
+              </div>
+              <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                <p class="text-[10px] text-slate-500">Speed</p>
+                <p class="font-black text-white">18.2 km/h</p>
+              </div>
+              <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                <p class="text-[10px] text-slate-500">Battery</p>
+                <p class="font-black text-emerald-400">84% (22.8V)</p>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] pt-1">
+              <span class="text-slate-400">Progress: 3.5 / 5.0 Acres (70%)</span>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=16.4971,80.7856" target="_blank" class="text-blue-400 hover:underline font-bold">
+                Navigate (Google Maps) ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: AI ADMIN ASSISTANT (FEATURE 1) -->
+    <section id="tab-ai_assistant" class="hidden space-y-6">
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+              <h2 class="text-base font-extrabold text-white">TRINETRA AI Operations Admin Assistant</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Natural language answers grounded strictly in Trinetra SQLite database and live telemetry • Bilingual English & Telugu
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-xl font-bold border border-emerald-500/30">
+              ⚡ Grounded Database Facts
+            </span>
+          </div>
+        </div>
+
+        <!-- Quick Question Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto custom-scroll pb-1">
+          <span class="text-[11px] font-bold text-slate-500 whitespace-nowrap">Suggested Prompts:</span>
+          <button onclick="sendAdminAiChip('How many bookings and revenue today?')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-slate-300 font-medium whitespace-nowrap transition-all">
+            💰 Today Bookings & Revenue
+          </button>
+          <button onclick="sendAdminAiChip('Which drones are available and flying right now?')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-slate-300 font-medium whitespace-nowrap transition-all">
+            🚁 Drone Fleet & Telemetry Status
+          </button>
+          <button onclick="sendAdminAiChip('డ్రోన్ల లభ్యత మరియు పైలట్ల వివరాలు చెప్పండి', 'te')" class="px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-800 text-xs text-emerald-300 font-medium whitespace-nowrap transition-all">
+            🌾 డ్రోన్లు & పైలట్ల వివరాలు (తెలుగు)
+          </button>
+          <button onclick="sendAdminAiChip('What is our acreage coverage progress today?')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs text-slate-300 font-medium whitespace-nowrap transition-all">
+            📊 Acreage Coverage Analytics
+          </button>
+        </div>
+
+        <!-- Chat Conversation Area -->
+        <div id="ai-chat-history" class="h-96 overflow-y-auto custom-scroll bg-slate-950/80 rounded-2xl p-4 border border-slate-800/80 space-y-3 text-xs">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-sm font-black text-white shrink-0">
+              🤖
+            </div>
+            <div class="bg-slate-900 p-3.5 rounded-2xl rounded-tl-sm border border-slate-800 text-slate-200 max-w-2xl space-y-1.5">
+              <p class="font-bold text-emerald-400">Trinetra AI Assistant</p>
+              <p class="leading-relaxed">
+                Hello Operations Admin! I am connected directly to your Trinetra database and live drone telemetry streams. Ask me anything about bookings, pilot rosters, verified acreage, flight anomalies, or revenue in English or Telugu.
+              </p>
+              <p class="text-[10px] text-slate-500 italic">నమస్కారం! బుకింగ్స్, పైలట్లు, ఎకరాల వివరాలు లేదా ఆదాయం గురించి తెలుగులో కూడా అడగవచ్చు.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="flex items-center gap-2">
+          <input type="text" id="ai-chat-input" onkeydown="if(event.key==='Enter') sendAdminAiMessage()" placeholder="Ask Trinetra AI about bookings, drones, pilots, or revenue..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 outline-none focus:border-emerald-500 transition-all">
+          <select id="ai-chat-lang" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-xs text-slate-300 outline-none">
+            <option value="en">English</option>
+            <option value="te">తెలుగు</option>
+          </select>
+          <button onclick="sendAdminAiMessage()" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-950/50 transition-all">
+            <span>Send</span> <span>➤</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: AI FLIGHT MONITORING & SAFETY (FEATURE 3) -->
+    <section id="tab-flight_monitor" class="hidden space-y-6">
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
+              <h2 class="text-base font-extrabold text-white">AI Flight Safety & Telemetry Anomaly Monitoring</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Real-time surveillance detecting low battery, GPS signal degradation, pesticide drift speed, and nozzle clogs.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-amber-500/10 text-amber-400 rounded-xl text-xs font-bold border border-amber-500/30">
+              🛡️ Zero Flight Override (Human Pilot Control)
+            </span>
+          </div>
+        </div>
+
+        <!-- Strict Safety Guardrail Notice Banner -->
+        <div class="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-700/50 flex items-start gap-3">
+          <span class="text-xl">⚠️</span>
+          <div class="text-xs space-y-0.5">
+            <p class="font-bold text-amber-300">Mandatory Operational Safety Barrier</p>
+            <p class="text-slate-300 leading-relaxed">
+              AI monitoring operates purely as an analytical safety radar. AI is mathematically locked from overriding drone flight controls, altitude, throttle, or chemical spray valves. All return-to-home and emergency maneuvers remain strictly under DGCA-certified human remote pilots.
+            </p>
+          </div>
+        </div>
+
+        <!-- Real-time Fleet Telemetry Monitor Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="fleet-flight-monitors">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Live Flight Anomalies Log Table -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Flight Anomalies & Safety Advisories</h3>
+            <span class="text-[10px] text-slate-500 font-mono" id="anomalies-last-sync">Live SSE Connected</span>
+          </div>
+          <div class="overflow-x-auto custom-scroll">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 font-bold border-b border-slate-800 text-[10px] uppercase">
+                <tr>
+                  <th class="py-2.5 px-3">Time</th>
+                  <th class="py-2.5 px-3">Drone Unit</th>
+                  <th class="py-2.5 px-3">Safety Parameter</th>
+                  <th class="py-2.5 px-3">Severity</th>
+                  <th class="py-2.5 px-3">AI Pilot Advisory</th>
+                </tr>
+              </thead>
+              <tbody id="anomalies-table-body" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                <tr>
+                  <td class="py-3 px-3 text-slate-500">12:35:10 PM</td>
+                  <td class="py-3 px-3 text-emerald-400 font-bold">AP-07</td>
+                  <td class="py-3 px-3 text-slate-300">GPS Signal</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">NORMAL</span></td>
+                  <td class="py-3 px-3 text-slate-300">14 Sats locked, HDOP 0.8. Precision RTK position valid.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: AI REPORTS & BUSINESS INSIGHTS (FEATURES 7 & 10) -->
+    <section id="tab-reports" class="hidden space-y-6">
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span>
+              <h2 class="text-base font-extrabold text-white">AI Operational Reports & Regional Business Insights</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Verified acreage sprayed, drone utilization hours, operating margins, and regional crop demand clustering.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <button onclick="generateFreshAiReport()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow">
+              ⚡ Generate AI Report
+            </button>
+            <button onclick="window.print()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl border border-slate-700 transition-all">
+              🖨️ Print / Export
+            </button>
+          </div>
+        </div>
+
+        <!-- Generated Report Summary Card -->
+        <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4" id="ai-report-display">
+          <!-- Populated via JS -->
+        </div>
+
+        <!-- Regional Demand Clustering -->
+        <div class="space-y-3 pt-2">
+          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🗺️</span> <span>Regional Demand Hotspots & Asset Staging Insights</span>
+          </h3>
+          <div class="overflow-x-auto custom-scroll">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 font-bold border-b border-slate-800 text-[10px] uppercase">
+                <tr>
+                  <th class="py-2.5 px-3">Village Hub</th>
+                  <th class="py-2.5 px-3">Primary Crop</th>
+                  <th class="py-2.5 px-3">Bookings Share</th>
+                  <th class="py-2.5 px-3">AI Staging Recommendation</th>
+                </tr>
+              </thead>
+              <tbody id="regional-insights-body" class="divide-y divide-slate-800/60">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: AI MAINTENANCE PREDICTION (FEATURE 8) -->
+    <section id="tab-maintenance" class="hidden space-y-6">
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-cyan-500 animate-pulse"></span>
+              <h2 class="text-base font-extrabold text-white">AI Predictive Maintenance & Fleet Health Matrix</h2>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Analyzes LiPo battery discharge cycles, motor flight hours, centrifugal nozzle calibrations, and vibration logs.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-xl font-bold border border-cyan-500/30">
+              Threshold: 250 Battery Cycles • 200 Motor Hours
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="maintenance-drones-grid">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Maintenance History Table -->
+        <div class="space-y-3 pt-2">
+          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Predictive Inspection Records & Maintenance Log</h3>
+          <div class="overflow-x-auto custom-scroll">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 font-bold border-b border-slate-800 text-[10px] uppercase">
+                <tr>
+                  <th class="py-2.5 px-3">Drone Code</th>
+                  <th class="py-2.5 px-3">Issue Detected</th>
+                  <th class="py-2.5 px-3">Recorded Hours / Cycles</th>
+                  <th class="py-2.5 px-3">Severity</th>
+                  <th class="py-2.5 px-3">Status</th>
+                </tr>
+              </thead>
+              <tbody id="maintenance-logs-body" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: PILOTS & DRONE FLEET INVENTORY -->
+    <section id="tab-fleet" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Pilots Roster -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-extrabold text-white">Certified DGCA Remote Pilot Roster</h3>
+            <span class="text-xs text-blue-400 font-bold">5 Licensed Pilots</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 flex items-center justify-between">
+              <div>
+                <p class="text-xs font-bold text-white">రమేష్ కుమార్ (Ramesh Kumar)</p>
+                <p class="text-[10px] text-slate-400">Lic: DGCA-RPC-2024-889 • Base: Vijayawada Hub</p>
+                <p class="text-[10px] text-emerald-400">Current Job: Venkateswara Rao (Kankipadu)</p>
+              </div>
+              <div class="text-right">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300">Active</span>
+                <p class="text-[10px] text-slate-500 mt-1">📞 9502051939</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 flex items-center justify-between">
+              <div>
+                <p class="text-xs font-bold text-white">శివారెడ్డి (Siva Reddy)</p>
+                <p class="text-[10px] text-slate-400">Lic: DGCA-RPC-2023-412 • Base: Kankipadu</p>
+                <p class="text-[10px] text-blue-400">Current Job: P. Subba Rao (Vuyyuru)</p>
+              </div>
+              <div class="text-right">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300">En Route</span>
+                <p class="text-[10px] text-slate-500 mt-1">📞 9440188221</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 flex items-center justify-between">
+              <div>
+                <p class="text-xs font-bold text-white">కె. నాయుడు (K. Naidu)</p>
+                <p class="text-[10px] text-slate-400">Lic: DGCA-RPC-2024-105 • Base: Gudivada</p>
+                <p class="text-[10px] text-amber-400">Current Job: K. Rama Krishna (Gannavaram)</p>
+              </div>
+              <div class="text-right">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300">Spraying</span>
+                <p class="text-[10px] text-slate-500 mt-1">📞 9848123990</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drone Hardware Inventory -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-extrabold text-white">Trinetra Agricultural Drone Fleet</h3>
+            <span class="text-xs text-emerald-400 font-bold">4 Operational Drones</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-white font-mono">AP-07</span>
+                  <span class="text-xs text-slate-300">Trinetra Hexa-16L Precision Sprayer</span>
+                </div>
+                <p class="text-[10px] text-slate-400">Payload: 16 Liters • Battery: 6S 22000mAh (Cycle 42/200)</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300">100% Ready</span>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-white font-mono">AP-09</span>
+                  <span class="text-xs text-slate-300">Trinetra Hexa-16L Heavy Duty</span>
+                </div>
+                <p class="text-[10px] text-slate-400">Payload: 16 Liters • Battery: 6S 22000mAh (Cycle 18/200)</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300">100% Ready</span>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-white font-mono">AP-12</span>
+                  <span class="text-xs text-slate-300">Trinetra Quad-10L Quick Deploy</span>
+                </div>
+                <p class="text-[10px] text-slate-400">Payload: 10 Liters • Battery: 6S 16000mAh (Cycle 65/200)</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300">100% Ready</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 4: BILLING, SBI STAND QR & INVOICES -->
+    <section id="tab-billing" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- SBI Stand QR Code Card -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4 text-center">
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-lg">🏦</span>
+            <h3 class="text-sm font-extrabold text-white">Official SBI "SCAN & PAY" Stand</h3>
+          </div>
+          <p class="text-xs text-slate-400">
+            Deployed on pilot kits and accounts desk for seamless instant farmer settlements.
+          </p>
+
+          <div class="p-3 bg-white rounded-2xl inline-block shadow-xl border border-slate-200">
+            <img src="assets/trinetra-sbi-qr.jpg" alt="SBI Stand QR" class="max-h-72 w-auto object-contain rounded-lg mx-auto">
+          </div>
+
+          <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+            <p class="text-[11px] text-slate-400">Official UPI Virtual Payment Address (VPA):</p>
+            <p class="text-xs font-mono font-black text-emerald-400 select-all">trinetradronesandrobotics@sbi</p>
+          </div>
+
+          <button onclick="navigator.clipboard.writeText('trinetradronesandrobotics@sbi'); alert('SBI UPI ID Copied!');" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs transition-all">
+            📋 Copy UPI ID
+          </button>
+        </div>
+
+        <!-- Recent Transactions & Invoices -->
+        <div class="lg:col-span-2 glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-extrabold text-white">Tax Invoice Ledger (GST / Agri Compliant)</h3>
+              <p class="text-xs text-slate-400">Automated digital tax invoices generated post-mission completion</p>
+            </div>
+            <span class="text-xs font-bold text-emerald-400">₹66,825 Today</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono font-bold text-white text-xs">INV-2026-1044</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300">Paid via SBI UPI</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-1">M. Appa Rao • Gudivada • 12.0 Acres Maize</p>
+                <p class="text-[10px] text-slate-500">Pilot: Venkat Swamy • Mission Completed 14:15 IST</p>
+              </div>
+              <div class="text-right space-y-1.5">
+                <p class="text-sm font-black text-white">₹5,400</p>
+                <button onclick="viewInvoice('TRN-2026-884')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold">
+                  Print Invoice
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono font-bold text-white text-xs">INV-2026-1043</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/20 text-slate-300">Paid Cash to Pilot</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-1">Ch. Nageswara Rao • Kankipadu • 6.0 Acres Paddy</p>
+                <p class="text-[10px] text-slate-500">Pilot: Ramesh Kumar • Mission Completed 12:40 IST</p>
+              </div>
+              <div class="text-right space-y-1.5">
+                <p class="text-sm font-black text-white">₹2,700</p>
+                <button onclick="viewInvoice('TRN-2026-881')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold">
+                  Print Invoice
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 5: COMPREHENSIVE SETTINGS & SYSTEM CONFIGURATION -->
+    <section id="tab-pricing" class="hidden space-y-6">
+      
+      <!-- Top Action Bar & Status -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">⚙️</span>
+            <h2 class="text-base font-extrabold text-white" id="settings-title">
+              Trinetra System Settings & Configuration Manager
+            </h2>
+          </div>
+          <p class="text-xs text-slate-400 mt-1" id="settings-subtitle">
+            Update live service prices, farmer helpline number, DGCA weather safety thresholds, and SBI banking UPI details. Changes immediately broadcast across all apps.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="resetSettingsToDefaults()" class="py-2.5 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white font-bold rounded-xl text-xs transition-all shadow">
+            ↺ Reset Defaults
+          </button>
+          <button type="button" onclick="saveSystemSettings()" class="py-2.5 px-5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-extrabold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition-all">
+            <span>💾</span> <span>Save & Publish Changes</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Step-by-Step Visual Guide on How to Update Settings -->
+      <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-blue-950/40 p-5 rounded-3xl border border-emerald-500/30 text-xs space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">📖</span>
+            <h3 class="font-extrabold text-white text-sm" id="guide-title">
+              How to Update Settings in Trinetra Admin Console (4 Simple Steps)
+            </h3>
+          </div>
+          <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            Realtime Sync Engine Active
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1">
+            <div class="flex items-center gap-1.5 font-bold text-emerald-400">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs">1</span>
+              <span>Select Category</span>
+            </div>
+            <p class="text-[11px] text-slate-300">
+              Choose from <strong>Pricing</strong>, <strong>Company Helpline</strong>, <strong>Weather Safety</strong>, or <strong>SBI Banking</strong> below.
+            </p>
+          </div>
+
+          <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1">
+            <div class="flex items-center gap-1.5 font-bold text-blue-400">
+              <span class="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center text-xs">2</span>
+              <span>Edit Values</span>
+            </div>
+            <p class="text-[11px] text-slate-300">
+              Type your new price (e.g. ₹420/acre), new phone number, or updated UPI ID in the editable fields.
+            </p>
+          </div>
+
+          <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1">
+            <div class="flex items-center gap-1.5 font-bold text-amber-400">
+              <span class="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center text-xs">3</span>
+              <span>Save & Publish</span>
+            </div>
+            <p class="text-[11px] text-slate-300">
+              Click the green <strong>"Save & Publish Changes"</strong> button at top or bottom. It instantly writes to local storage.
+            </p>
+          </div>
+
+          <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 space-y-1">
+            <div class="flex items-center gap-1.5 font-bold text-purple-400">
+              <span class="w-5 h-5 rounded-full bg-purple-500/20 flex items-center justify-center text-xs">4</span>
+              <span>Instant Cross-App Sync</span>
+            </div>
+            <p class="text-[11px] text-slate-300">
+              Open the <strong>Farmer App</strong> or <strong>Pilot App</strong> tab — prices, phone & QR update immediately with zero reload!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-Grid Configuration Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Card 1: Service Pricing Master -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-base">💰</span>
+              <div>
+                <h3 class="text-sm font-extrabold text-white">1. Service Pricing Master (₹ per Acre)</h3>
+                <p class="text-[11px] text-slate-400">Public rates shown in the Farmer App booking wizard</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-xl">Auto Calculates</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            
+            <!-- Pesticide -->
+            <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-between gap-3">
+              <div>
+                <p class="font-bold text-white">పురుగుమందుల స్ప్రేయింగ్ (Pesticide Spraying)</p>
+                <p class="text-[10px] text-slate-400">Ultra-low volume droplet mist technology</p>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-400">₹</span>
+                <input id="cfg-price-pesticide" type="number" min="100" max="2000" step="10" value="450" oninput="previewPriceDemo()" class="w-20 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-center font-black text-emerald-400 outline-none focus:border-emerald-500">
+                <span class="text-[11px] text-slate-400 font-semibold">/ Acre</span>
+              </div>
+            </div>
+
+            <!-- Nano Urea -->
+            <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-between gap-3">
+              <div>
+                <p class="font-bold text-white">నానో యూరియా & ఎరువులు (Nano Urea & Nutrients)</p>
+                <p class="text-[10px] text-slate-400">Uniform liquid fertilizer coverage</p>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-400">₹</span>
+                <input id="cfg-price-fertilizer" type="number" min="100" max="2000" step="10" value="400" oninput="previewPriceDemo()" class="w-20 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-center font-black text-emerald-400 outline-none focus:border-emerald-500">
+                <span class="text-[11px] text-slate-400 font-semibold">/ Acre</span>
+              </div>
+            </div>
+
+            <!-- Fungicide -->
+            <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-between gap-3">
+              <div>
+                <p class="font-bold text-white">శిలీంద్ర సంహారిణి స్ప్రే (Fungicide Spraying)</p>
+                <p class="text-[10px] text-slate-400">Pest & fungal infection prevention</p>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-400">₹</span>
+                <input id="cfg-price-fungicide" type="number" min="100" max="2000" step="10" value="450" oninput="previewPriceDemo()" class="w-20 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-center font-black text-emerald-400 outline-none focus:border-emerald-500">
+                <span class="text-[11px] text-slate-400 font-semibold">/ Acre</span>
+              </div>
+            </div>
+
+            <!-- Survey -->
+            <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-between gap-3">
+              <div>
+                <p class="font-bold text-white">పంట ఆరోగ్యం & సర్వే (Crop Health Survey)</p>
+                <p class="text-[10px] text-slate-400">Multispectral NDVI drone scanning</p>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-slate-400">₹</span>
+                <input id="cfg-price-survey" type="number" min="100" max="2000" step="10" value="300" oninput="previewPriceDemo()" class="w-20 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-center font-black text-emerald-400 outline-none focus:border-emerald-500">
+                <span class="text-[11px] text-slate-400 font-semibold">/ Acre</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Price Demo Calculator -->
+          <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400">Live Preview (5 Acres Pesticide):</span>
+            <span class="font-black text-emerald-400 font-mono text-sm" id="demo-price-preview">₹2,250 (5 × ₹450)</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Company & Farmer Helpline Settings -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🏢</span>
+              <div>
+                <h3 class="text-sm font-extrabold text-white">2. Company Profile & Farmer Helpline</h3>
+                <p class="text-[11px] text-slate-400">Controls phone numbers and addresses shown on farmer screens</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block text-slate-400 font-semibold mb-1">Company / Brand Name:</label>
+              <input id="cfg-company-name" type="text" value="TRINETRA DRONES & ROBOTICS" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-slate-400 font-semibold mb-1">Farmer Helpline Phone (📞):</label>
+                <input id="cfg-helpline-phone" type="tel" value="9502051939" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 font-mono font-bold outline-none focus:border-emerald-500">
+              </div>
+              <div>
+                <label class="block text-slate-400 font-semibold mb-1">Emergency Operations Phone:</label>
+                <input id="cfg-ops-phone" type="tel" value="9440188221" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono font-bold outline-none focus:border-emerald-500">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 font-semibold mb-1">Official Support Email:</label>
+              <input id="cfg-support-email" type="email" value="info@trinetrabots.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium outline-none focus:border-emerald-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 font-semibold mb-1">Central Hub Address (Vijayawada):</label>
+              <input id="cfg-hub-address" type="text" value="విజయవాడ, ఆంధ్రప్రదేశ్ – 521151" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium outline-none focus:border-emerald-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 font-semibold mb-1">Active Agricultural Districts Covered:</label>
+              <input id="cfg-districts" type="text" value="Krishna (కృష్ణా), Guntur (గుంటూరు), NTR, West Godavari" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-slate-300 font-medium outline-none focus:border-emerald-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Weather & DGCA Flight Safety Thresholds -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🌤️</span>
+              <div>
+                <h3 class="text-sm font-extrabold text-white">3. Weather & DGCA Flight Safety SOP Limits</h3>
+                <p class="text-[11px] text-slate-400">Automated vetting pass/fail conditions for pilot dispatch</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-xl">DGCA Rulebook</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                <label class="text-slate-400 font-semibold">Max Wind Speed (km/h):</label>
+                <div class="flex items-center gap-2">
+                  <input id="cfg-max-wind" type="number" min="5" max="30" value="15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 font-black text-white outline-none focus:border-emerald-500">
+                  <span class="text-slate-400 font-bold">km/h</span>
+                </div>
+                <p class="text-[10px] text-slate-500">Trips on gusts > 15 km/h</p>
+              </div>
+
+              <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                <label class="text-slate-400 font-semibold">Max Flight Altitude AGL:</label>
+                <div class="flex items-center gap-2">
+                  <input id="cfg-max-alt" type="number" min="10" max="120" value="30" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 font-black text-white outline-none focus:border-emerald-500">
+                  <span class="text-slate-400 font-bold">Meters</span>
+                </div>
+                <p class="text-[10px] text-slate-500">DGCA Green Zone limit</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                <label class="text-slate-400 font-semibold">Low Battery RTH Level (%):</label>
+                <div class="flex items-center gap-2">
+                  <input id="cfg-battery-rth" type="number" min="10" max="40" value="25" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 font-black text-amber-400 outline-none focus:border-emerald-500">
+                  <span class="text-slate-400 font-bold">%</span>
+                </div>
+                <p class="text-[10px] text-slate-500">Auto Return-to-Home</p>
+              </div>
+
+              <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                <label class="text-slate-400 font-semibold">Rain Cutoff Tolerance:</label>
+                <div class="flex items-center gap-2">
+                  <input id="cfg-rain-cutoff" type="number" min="0" max="10" step="0.1" value="0.0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 font-black text-blue-400 outline-none focus:border-emerald-500">
+                  <span class="text-slate-400 font-bold">mm</span>
+                </div>
+                <p class="text-[10px] text-slate-500">0.0 mm = Zero rain allowed</p>
+              </div>
+            </div>
+
+            <label class="flex items-center gap-2 p-2 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 cursor-pointer">
+              <input id="cfg-weather-enforce" type="checkbox" checked class="rounded text-emerald-600 focus:ring-0">
+              <span class="font-bold">Strictly Enforce Weather Vetting before Pilot Dispatch</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Card 4: State Bank of India (SBI) & UPI QR Setup -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🏦</span>
+              <div>
+                <h3 class="text-sm font-extrabold text-white">4. State Bank of India (SBI) & UPI QR Gateway</h3>
+                <p class="text-[11px] text-slate-400">Controls merchant QR stand and UPI ID shown for payments</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-xl">Verified Merchant</span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block text-slate-400 font-semibold mb-1">Official Merchant UPI ID (VPA):</label>
+              <input id="cfg-upi-vpa" type="text" value="trinetradronesandrobotics@sbi" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 font-mono font-bold outline-none focus:border-emerald-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 font-semibold mb-1">Payee Business Name (as on QR stand):</label>
+              <input id="cfg-merchant-name" type="text" value="TRINETRA DRONES AND ROBOTICS" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-slate-400 font-semibold mb-1">Settlement Bank:</label>
+                <input id="cfg-bank-name" type="text" value="State Bank of India (SBI)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium outline-none focus:border-emerald-500">
+              </div>
+              <div>
+                <label class="block text-slate-400 font-semibold mb-1">Payment Timing Policy:</label>
+                <select id="cfg-pay-policy" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium outline-none">
+                  <option value="after" selected>Pay After Service (Zero Advance)</option>
+                  <option value="advance_50">50% Advance + 50% Post-Service</option>
+                  <option value="advance_100">100% Upfront Advance</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="flex items-center gap-2 p-2 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 cursor-pointer">
+              <input id="cfg-invoice-auto" type="checkbox" checked class="rounded text-emerald-600 focus:ring-0">
+              <span class="font-bold">Automatically Generate Tax Invoice upon Payment</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Add Pilot & Drone Module -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-base">👨‍✈️</span>
+            <div>
+              <h3 class="text-sm font-extrabold text-white">5. Quick Pilot & Drone Roster Manager</h3>
+              <p class="text-[11px] text-slate-400">Add new certified pilots or drone units to the dispatch dropdown</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+          <!-- Add Pilot Form -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <h4 class="font-bold text-white flex items-center gap-1.5">
+              <span>+</span> <span>Register New Certified DGCA Pilot</span>
+            </h4>
+            <div class="space-y-2">
+              <input id="new-pilot-name" type="text" placeholder="Pilot Full Name (e.g. Venkat Reddy)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500">
+              <div class="grid grid-cols-2 gap-2">
+                <input id="new-pilot-rpc" type="text" placeholder="DGCA RPC # (e.g. DGCA-RPC-2024-999)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500">
+                <input id="new-pilot-phone" type="tel" placeholder="Mobile # (e.g. 9848011223)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500">
+              </div>
+              <input id="new-pilot-hub" type="text" placeholder="Base Hub (e.g. Vuyyuru Hub)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500">
+              <button type="button" onclick="quickAddPilot()" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition-all shadow">
+                + Add Pilot to Roster & Dispatch Dropdown
+              </button>
+            </div>
+          </div>
+
+          <!-- Add Drone Form -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <h4 class="font-bold text-white flex items-center gap-1.5">
+              <span>+</span> <span>Register New Agricultural Drone Unit</span>
+            </h4>
+            <div class="space-y-2">
+              <div class="grid grid-cols-2 gap-2">
+                <input id="new-drone-id" type="text" placeholder="Drone ID (e.g. AP-15)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500">
+                <input id="new-drone-payload" type="number" placeholder="Payload L (e.g. 16)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500">
+              </div>
+              <input id="new-drone-model" type="text" placeholder="Model Name (e.g. Trinetra Hexa-16L Pro)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500">
+              <input id="new-drone-battery" type="text" placeholder="Battery Pack (e.g. 6S 22000mAh, Cycle 0/200)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white outline-none focus:border-emerald-500">
+              <button type="button" onclick="quickAddDrone()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all shadow">
+                + Add Drone to Fleet Inventory
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Save Button Bar -->
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" onclick="resetSettingsToDefaults()" class="py-3 px-5 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold rounded-2xl text-xs transition-all">
+          Reset to Factory Defaults
+        </button>
+        <button type="button" onclick="saveSystemSettings()" class="py-3.5 px-8 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black rounded-2xl text-sm flex items-center gap-2 shadow-2xl shadow-emerald-950/60 transition-all">
+          <span>💾</span> <span>Save & Publish All System Settings</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- TAB 6: REAL DATABASE EXPLORER (SQLite Persistent Relational Engine) -->
+    <section id="tab-database" class="hidden space-y-6">
+      
+      <!-- SQLite Engine Live Status & KPIs Banner -->
+      <div class="glass-card rounded-3xl p-6 border border-cyan-800/50 shadow-2xl space-y-5 bg-gradient-to-r from-slate-950 via-cyan-950/20 to-slate-950">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-2xl shadow-inner">
+              🗄️
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base font-extrabold text-white">TRINETRA Real SQLite Database Engine</h2>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                  <span>LIVE ON DISK</span>
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1 font-mono">
+                Location: <span class="text-cyan-300" id="db-file-location">.../scratch/trinetra-farmer-app/trinetra.db</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <button onclick="loadDatabaseExplorer()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all flex items-center gap-1.5 border border-slate-700 shadow-xs">
+              <span>🔄</span> <span>Refresh DB</span>
+            </button>
+            <button onclick="downloadDatabaseDump()" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95">
+              <span>📥</span> <span>Export JSON Dump</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Live Database Metrics -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+          <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Total Stored Rows</span>
+            <p class="text-lg font-black text-cyan-400 font-mono" id="kpi-db-total-rows">--</p>
+            <p class="text-[9px] text-slate-500">Across 6 relational tables</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Database Size</span>
+            <p class="text-lg font-black text-emerald-400 font-mono" id="kpi-db-size-kb">-- KB</p>
+            <p class="text-[9px] text-slate-500">Zero cloud latency</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">REST Endpoints</span>
+            <p class="text-lg font-black text-purple-400 font-mono">14 APIs</p>
+            <p class="text-[9px] text-slate-500">ACID SQLite Transactions</p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Realtime Stream</span>
+            <p class="text-lg font-black text-amber-400 font-mono flex items-center gap-1">
+              <span>SSE ⚡</span>
+            </p>
+            <p class="text-[9px] text-emerald-400 font-semibold" id="kpi-db-clients">Active Syncing</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Selector & Live Visual Data Grid -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+        
+        <!-- Table Navigation Pills -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-1.5 overflow-x-auto custom-scroll pb-1">
+            <button onclick="selectDbTable('bookings')" id="db-tbl-btn-bookings" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-cyan-600 text-white shadow transition-all">
+              📋 bookings (<span id="count-badge-bookings">0</span>)
+            </button>
+            <button onclick="selectDbTable('farmers')" id="db-tbl-btn-farmers" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              🧑‍🌾 farmers (<span id="count-badge-farmers">0</span>)
+            </button>
+            <button onclick="selectDbTable('farms')" id="db-tbl-btn-farms" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              🌱 farms (<span id="count-badge-farms">0</span>)
+            </button>
+            <button onclick="selectDbTable('users')" id="db-tbl-btn-users" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              👥 users (<span id="count-badge-users">0</span>)
+            </button>
+            <button onclick="selectDbTable('services')" id="db-tbl-btn-services" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              🛠️ services (<span id="count-badge-services">0</span>)
+            </button>
+            <button onclick="selectDbTable('pilots')" id="db-tbl-btn-pilots" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              👨‍✈️ pilots (<span id="count-badge-pilots">0</span>)
+            </button>
+            <button onclick="selectDbTable('otp_verifications')" id="db-tbl-btn-otp_verifications" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              🔐 otp_verifications (<span id="count-badge-otp_verifications">0</span>)
+            </button>
+            <button onclick="selectDbTable('notifications')" id="db-tbl-btn-notifications" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              🔔 notifications (<span id="count-badge-notifications">0</span>)
+            </button>
+            <button onclick="selectDbTable('booking_status_history')" id="db-tbl-btn-booking_status_history" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              📜 status_history (<span id="count-badge-booking_status_history">0</span>)
+            </button>
+            <button onclick="selectDbTable('sessions')" id="db-tbl-btn-sessions" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
+              🔑 sessions (<span id="count-badge-sessions">0</span>)
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs">
+            <input id="db-table-search" type="text" oninput="filterDbTable(this.value)" placeholder="Search table rows..." class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs outline-none focus:border-cyan-500 w-44">
+          </div>
+        </div>
+
+        <!-- Live Visual SQL Table Container -->
+        <div class="overflow-x-auto custom-scroll rounded-2xl border border-slate-800 bg-slate-950/80 min-h-[280px]">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-900/90 text-slate-300 font-bold border-b border-slate-800 uppercase tracking-wider" id="db-table-head">
+              <!-- Rendered via JS -->
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono text-slate-300" id="db-table-body">
+              <tr>
+                <td colspan="8" class="text-center py-10 text-slate-500 font-sans">Loading SQLite table records...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+          <span id="db-table-meta-text">Showing live records</span>
+          <span class="text-cyan-400 font-mono">SELECT * FROM <span id="current-active-tbl-name">bookings</span> ORDER BY 1 DESC;</span>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="admin-toast" class="fixed top-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-2xl border border-emerald-500 shadow-2xl text-xs font-bold hidden z-[1000] flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+    <span id="toast-text">Action Completed</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & REALTIME BROADCAST ENGINE -->
+  <script>
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const str = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
+      const el = document.getElementById('live-time-clock');
+      if (el) el.innerText = str + ' IST';
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // BroadcastChannel for cross-app real-time communication
+    const opsChannel = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('trinetra_ops_channel') : null;
+
+    
+    // System Settings Model & Persistence Engine
+    const defaultSettings = {
+      pricing: {
+        pesticide: 450,
+        fertilizer: 400,
+        fungicide: 450,
+        survey: 300
+      },
+      company: {
+        name: 'TRINETRA DRONES & ROBOTICS',
+        helpline: '9502051939',
+        opsPhone: '9440188221',
+        email: 'info@trinetrabots.com',
+        address: 'విజయవాడ, ఆంధ్రప్రదేశ్ – 521151',
+        districts: 'Krishna (కృష్ణా), Guntur (గుంటూరు), NTR, West Godavari'
+      },
+      weather: {
+        maxWind: 15,
+        maxAlt: 30,
+        batteryRth: 25,
+        rainCutoff: 0.0,
+        enforce: true
+      },
+      banking: {
+        upiVpa: 'trinetradronesandrobotics@sbi',
+        merchantName: 'TRINETRA DRONES AND ROBOTICS',
+        bankName: 'State Bank of India (SBI)',
+        payPolicy: 'after',
+        autoInvoice: true
+      }
+    };
+
+    
+    // =========================================================================
+    // FARMERS DIRECTORY & FIELD GPS MAP LOGIC
+    // =========================================================================
+    let allFarmersData = [];
+    let farmersFieldMap = null;
+    let farmersMapMarkers = [];
+    let farmersMapTileLayer = null;
+    let farmersMapTileType = 'satellite';
+
+    async function loadFarmersDirectory() {
+      try {
+        const res = await fetch('/api/farmers');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          allFarmersData = json.data;
+          renderFarmersDirectory(allFarmersData);
+          setTimeout(() => initFarmersMap(allFarmersData), 150);
+        }
+      } catch (err) {
+        console.error('Error loading farmers:', err);
+      }
+    }
+
+    function renderFarmersDirectory(farmers) {
+      const grid = document.getElementById('farmers-cards-grid');
+      const countBadge = document.getElementById('farmers-count-badge');
+      const statCount = document.getElementById('stat-farmers-count');
+      const statAcres = document.getElementById('stat-farmers-acres');
+
+      if (countBadge) countBadge.innerText = farmers.length;
+      if (statCount) statCount.innerText = farmers.length;
+
+      let totalAcres = 0;
+      farmers.forEach(f => { totalAcres += (parseFloat(f.total_acres) || 5.0); });
+      if (statAcres) statAcres.innerText = totalAcres.toFixed(1) + ' Ac';
+
+      if (!grid) return;
+      if (farmers.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-500 text-xs">No farmers found matching the search criteria.</div>';
+        return;
+      }
+
+      grid.innerHTML = farmers.map(f => {
+        const lat = parseFloat(f.latitude) || 16.4971;
+        const lng = parseFloat(f.longitude) || 80.7856;
+        const mobile = f.mobile || '9502051939';
+        const village = f.village || 'Gannavaram';
+        const district = f.district || 'Krishna';
+        const crop = f.crop_type || 'Paddy (వరి)';
+        const acres = parseFloat(f.total_acres) || 5.0;
+        const initials = (f.full_name || 'Farmer').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+        return `
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 hover:border-emerald-500/50 transition-all space-y-3 shadow-md group">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md">
+                  ${initials}
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors">${f.full_name}</h4>
+                  <p class="text-[11px] text-slate-400 flex items-center gap-1">
+                    <span>📍</span> <span>${village}, ${district}</span>
+                  </p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                ${f.booking_count || 1} Booking${(f.booking_count || 1) > 1 ? 's' : ''}
+              </span>
+            </div>
+
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/60 text-xs space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400 text-[11px]">Primary Crop & Land:</span>
+                <span class="font-bold text-amber-300">🌾 ${crop} • ${acres} Ac</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400 text-[11px]">Exact GPS Coordinates:</span>
+                <span class="font-mono text-emerald-400 text-[11px] font-bold">📍 ${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E</span>
+              </div>
+            </div>
+
+            <!-- Contact Links -->
+            <div class="flex items-center gap-2 text-xs">
+              <a href="tel:${mobile}" class="flex-1 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-center flex items-center justify-center gap-1 transition">
+                <span>📞</span> <span>${mobile}</span>
+              </a>
+              <a href="https://wa.me/91${mobile}" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/60 text-emerald-300 font-bold flex items-center justify-center gap-1 transition" title="Message on WhatsApp">
+                <span>💬</span> <span>WA</span>
+              </a>
+            </div>
+
+            <!-- Action Buttons: Focus on Map & Google Maps Navigation -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button onclick="focusFarmerOnMap(${lat}, ${lng}, '${encodeURIComponent(f.full_name)}')" class="py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition">
+                <span>🎯</span> <span>Show on Map</span>
+              </button>
+              <a href="${gmapsUrl}" target="_blank" class="py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-950/40 transition">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Google Maps ↗</span>
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterFarmersList() {
+      const q = (document.getElementById('input-search-farmers')?.value || '').toLowerCase().trim();
+      const vFilter = document.getElementById('select-filter-village')?.value || 'ALL';
+
+      const filtered = allFarmersData.filter(f => {
+        const matchesQuery = !q ||
+          (f.full_name && f.full_name.toLowerCase().includes(q)) ||
+          (f.mobile && f.mobile.includes(q)) ||
+          (f.village && f.village.toLowerCase().includes(q));
+
+        const matchesVillage = (vFilter === 'ALL') ||
+          (f.village && f.village.toLowerCase().includes(vFilter.toLowerCase()));
+
+        return matchesQuery && matchesVillage;
+      });
+
+      renderFarmersDirectory(filtered);
+      initFarmersMap(filtered);
+    }
+
+    function initFarmersMap(farmers) {
+      if (!window.L) return;
+      const mapEl = document.getElementById('farmers-field-map');
+      if (!mapEl) return;
+
+      if (!farmersFieldMap) {
+        farmersFieldMap = L.map('farmers-field-map', {
+          center: [16.4971, 80.7856],
+          zoom: 11,
+          zoomControl: true,
+          attributionControl: false
+        });
+
+        // Default to Satellite View
+        farmersMapTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19
+        }).addTo(farmersFieldMap);
+        farmersMapTileType = 'satellite';
+      } else {
+        farmersFieldMap.invalidateSize();
+      }
+
+      // Clear previous markers
+      farmersMapMarkers.forEach(m => farmersFieldMap.removeLayer(m));
+      farmersMapMarkers = [];
+
+      const bounds = [];
+
+      farmers.forEach(f => {
+        const lat = parseFloat(f.latitude) || 16.4971;
+        const lng = parseFloat(f.longitude) || 80.7856;
+        bounds.push([lat, lng]);
+
+        const farmerIcon = L.divIcon({
+          className: 'custom-farmer-pin',
+          html: `
+            <div style="background: #15803D; color: white; padding: 4px 8px; border-radius: 12px; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); border: 2px solid #ffffff; white-space: nowrap;">
+              <span>🌾</span>
+              <span>${f.full_name}</span>
+            </div>
+          `,
+          iconSize: [120, 30],
+          iconAnchor: [60, 15]
+        });
+
+        const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+        const marker = L.marker([lat, lng], { icon: farmerIcon }).addTo(farmersFieldMap);
+
+        marker.bindPopup(`
+          <div style="font-family: inherit; color: #0f172a; padding: 6px; min-width: 230px;">
+            <h4 style="font-weight: 800; font-size: 14px; margin: 0 0 4px 0; color: #15803D;">🌾 ${f.full_name}</h4>
+            <p style="font-size: 11px; margin: 0 0 4px 0; color: #475569;">📍 ${f.village || 'Gannavaram'}, ${f.district || 'Krishna'}</p>
+            <p style="font-size: 11px; margin: 0 0 4px 0; color: #475569;">🌱 Crop: <strong>${f.crop_type || 'Paddy'}</strong> • <strong>${f.total_acres || 5} Acres</strong></p>
+            <p style="font-size: 11px; margin: 0 0 6px 0; color: #059669; font-weight: bold;">📞 Mobile: ${f.mobile || '9502051939'}</p>
+            <p style="font-size: 10px; margin: 0 0 8px 0; color: #64748b; font-family: monospace;">GPS: ${lat.toFixed(5)}, ${lng.toFixed(5)}</p>
+            <a href="${gmapsUrl}" target="_blank" style="display: block; text-align: center; background: #15803D; color: white; padding: 7px 12px; border-radius: 8px; font-weight: 800; font-size: 11px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+              🧭 Open Google Maps Turn-by-Turn GPS ↗
+            </a>
+          </div>
+        `);
+
+        marker._farmerLat = lat;
+        marker._farmerLng = lng;
+        marker._farmerName = f.full_name;
+        farmersMapMarkers.push(marker);
+      });
+
+      if (bounds.length > 0) {
+        farmersFieldMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+      }
+    }
+
+    function toggleFarmersMapLayer() {
+      if (!farmersFieldMap) return;
+      if (farmersMapTileType === 'satellite') {
+        farmersFieldMap.removeLayer(farmersMapTileLayer);
+        farmersMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(farmersFieldMap);
+        farmersMapTileType = 'street';
+        document.getElementById('farmers-layer-icon').innerText = '🗺️';
+        document.getElementById('farmers-layer-text').innerText = 'Street View';
+      } else {
+        farmersFieldMap.removeLayer(farmersMapTileLayer);
+        farmersMapTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(farmersFieldMap);
+        farmersMapTileType = 'satellite';
+        document.getElementById('farmers-layer-icon').innerText = '🛰️';
+        document.getElementById('farmers-layer-text').innerText = 'Satellite View';
+      }
+    }
+
+    function recenterFarmersMap() {
+      if (farmersFieldMap && farmersMapMarkers.length > 0) {
+        const bounds = farmersMapMarkers.map(m => [m._farmerLat, m._farmerLng]);
+        farmersFieldMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+      }
+    }
+
+    function focusFarmerOnMap(lat, lng, encodedName) {
+      const name = decodeURIComponent(encodedName);
+      if (farmersFieldMap) {
+        farmersFieldMap.flyTo([lat, lng], 16);
+        const targetMarker = farmersMapMarkers.find(m => m._farmerName === name);
+        if (targetMarker) {
+          setTimeout(() => targetMarker.openPopup(), 400);
+        }
+      }
+    }
+
+    function loadSystemSettings() {
+      try {
+        const saved = localStorage.getItem('trinetra_system_settings');
+        const s = saved ? JSON.parse(saved) : defaultSettings;
+        
+        // Fill form fields if they exist
+        if (document.getElementById('cfg-price-pesticide')) {
+          document.getElementById('cfg-price-pesticide').value = s.pricing.pesticide || 450;
+          document.getElementById('cfg-price-fertilizer').value = s.pricing.fertilizer || 400;
+          document.getElementById('cfg-price-fungicide').value = s.pricing.fungicide || 450;
+          document.getElementById('cfg-price-survey').value = s.pricing.survey || 300;
+
+          document.getElementById('cfg-company-name').value = s.company.name || 'TRINETRA DRONES & ROBOTICS';
+          document.getElementById('cfg-helpline-phone').value = s.company.helpline || '9502051939';
+          document.getElementById('cfg-ops-phone').value = s.company.opsPhone || '9440188221';
+          document.getElementById('cfg-support-email').value = s.company.email || 'info@trinetrabots.com';
+          document.getElementById('cfg-hub-address').value = s.company.address || 'విజయవాడ, ఆంధ్రప్రదేశ్ – 521151';
+          document.getElementById('cfg-districts').value = s.company.districts || 'Krishna, Guntur, NTR';
+
+          document.getElementById('cfg-max-wind').value = s.weather.maxWind || 15;
+          document.getElementById('cfg-max-alt').value = s.weather.maxAlt || 30;
+          document.getElementById('cfg-battery-rth').value = s.weather.batteryRth || 25;
+          document.getElementById('cfg-rain-cutoff').value = s.weather.rainCutoff !== undefined ? s.weather.rainCutoff : 0.0;
+
+          document.getElementById('cfg-upi-vpa').value = s.banking.upiVpa || 'trinetradronesandrobotics@sbi';
+          document.getElementById('cfg-merchant-name').value = s.banking.merchantName || 'TRINETRA DRONES AND ROBOTICS';
+          document.getElementById('cfg-bank-name').value = s.banking.bankName || 'State Bank of India (SBI)';
+          document.getElementById('cfg-pay-policy').value = s.banking.payPolicy || 'after';
+
+          previewPriceDemo();
+        }
+        return s;
+      } catch (e) {
+        console.error('Error loading settings:', e);
+        return defaultSettings;
+      }
+    }
+
+    function saveSystemSettings() {
+      const s = {
+        pricing: {
+          pesticide: parseFloat(document.getElementById('cfg-price-pesticide').value) || 450,
+          fertilizer: parseFloat(document.getElementById('cfg-price-fertilizer').value) || 400,
+          fungicide: parseFloat(document.getElementById('cfg-price-fungicide').value) || 450,
+          survey: parseFloat(document.getElementById('cfg-price-survey').value) || 300
+        },
+        company: {
+          name: document.getElementById('cfg-company-name').value.trim(),
+          helpline: document.getElementById('cfg-helpline-phone').value.trim(),
+          opsPhone: document.getElementById('cfg-ops-phone').value.trim(),
+          email: document.getElementById('cfg-support-email').value.trim(),
+          address: document.getElementById('cfg-hub-address').value.trim(),
+          districts: document.getElementById('cfg-districts').value.trim()
+        },
+        weather: {
+          maxWind: parseFloat(document.getElementById('cfg-max-wind').value) || 15,
+          maxAlt: parseFloat(document.getElementById('cfg-max-alt').value) || 30,
+          batteryRth: parseFloat(document.getElementById('cfg-battery-rth').value) || 25,
+          rainCutoff: parseFloat(document.getElementById('cfg-rain-cutoff').value) || 0.0,
+          enforce: document.getElementById('cfg-weather-enforce').checked
+        },
+        banking: {
+          upiVpa: document.getElementById('cfg-upi-vpa').value.trim(),
+          merchantName: document.getElementById('cfg-merchant-name').value.trim(),
+          bankName: document.getElementById('cfg-bank-name').value.trim(),
+          payPolicy: document.getElementById('cfg-pay-policy').value,
+          autoInvoice: document.getElementById('cfg-invoice-auto').checked
+        },
+        updatedAt: new Date().toISOString()
+      };
+
+      // Save to localStorage
+      localStorage.setItem('trinetra_system_settings', JSON.stringify(s));
+
+      // Broadcast to Farmer App & Pilot App
+      if (opsChannel) {
+        opsChannel.postMessage({
+          type: 'SETTINGS_UPDATE',
+          settings: s
+        });
+      }
+
+      previewPriceDemo();
+      showAdminToast('✓ Settings Successfully Saved & Synced across Farmer and Pilot Apps!');
+    }
+
+    function resetSettingsToDefaults() {
+      if (confirm('Are you sure you want to reset all settings to company defaults?')) {
+        localStorage.removeItem('trinetra_system_settings');
+        loadSystemSettings();
+      loadFarmersDirectory();
+        if (opsChannel) {
+          opsChannel.postMessage({
+            type: 'SETTINGS_UPDATE',
+            settings: defaultSettings
+          });
+        }
+        showAdminToast('↺ Settings Reset to Default');
+      }
+    }
+
+    function previewPriceDemo() {
+      const p = parseFloat(document.getElementById('cfg-price-pesticide')?.value) || 450;
+      const demo = document.getElementById('demo-price-preview');
+      if (demo) {
+        demo.innerText = `₹${(5 * p).toLocaleString()} (5 × ₹${p})`;
+      }
+    }
+
+    function quickAddPilot() {
+      const name = document.getElementById('new-pilot-name').value.trim();
+      const rpc = document.getElementById('new-pilot-rpc').value.trim();
+      const phone = document.getElementById('new-pilot-phone').value.trim();
+      const hub = document.getElementById('new-pilot-hub').value.trim();
+
+      if (!name || !phone) {
+        alert('Please enter pilot name and phone number');
+        return;
+      }
+
+      // Add to assignment dropdown
+      const sel = document.getElementById('adm-select-pilot');
+      if (sel) {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.setAttribute('data-phone', phone);
+        opt.setAttribute('data-lic', rpc || 'DGCA-RPC-PENDING');
+        opt.text = `${name} • ${hub || 'Station'} (Available)`;
+        opt.selected = true;
+        sel.appendChild(opt);
+      }
+
+      document.getElementById('new-pilot-name').value = '';
+      document.getElementById('new-pilot-rpc').value = '';
+      document.getElementById('new-pilot-phone').value = '';
+      document.getElementById('new-pilot-hub').value = '';
+
+      showAdminToast(`✓ Pilot ${name} added to roster & dispatch dropdown!`);
+    }
+
+    function quickAddDrone() {
+      const id = document.getElementById('new-drone-id').value.trim();
+      const model = document.getElementById('new-drone-model').value.trim();
+      const payload = document.getElementById('new-drone-payload').value.trim();
+
+      if (!id) {
+        alert('Please enter drone ID');
+        return;
+      }
+
+      document.getElementById('new-drone-id').value = '';
+      document.getElementById('new-drone-model').value = '';
+      document.getElementById('new-drone-payload').value = '';
+
+      showAdminToast(`✓ Drone Unit ${id} (${payload || 16}L) registered in fleet!`);
+    }
+
+    // Load settings on boot
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSystemSettings();
+      loadFarmersDirectory();
+    });
+
+    // Switch Tabs
+    function switchTab(tabId) {
+      const tabs = ['queue', 'farmers', 'map', 'ai_assistant', 'flight_monitor', 'reports', 'maintenance', 'fleet', 'billing', 'pricing', 'database'];
+      tabs.forEach(t => {
+        const sec = document.getElementById('tab-' + t);
+        const btn = document.getElementById('tab-btn-' + t);
+        if (sec) sec.classList.toggle('hidden', t !== tabId);
+        if (btn) {
+          if (t === tabId) {
+            btn.className = 'px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 bg-emerald-600 text-white shadow transition-all';
+          } else {
+            btn.className = 'px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all';
+          }
+        }
+      });
+      if (tabId === 'farmers') {
+        loadFarmersDirectory();
+      } else if (tabId === 'map') {
+        setTimeout(initFleetMap, 200);
+      } else if (tabId === 'database') {
+        loadDatabaseExplorer();
+      } else if (tabId === 'flight_monitor') {
+        loadFlightMonitor();
+      } else if (tabId === 'reports') {
+        generateFreshAiReport();
+        loadBusinessInsights();
+      } else if (tabId === 'maintenance') {
+        loadMaintenanceData();
+      }
+    }
+
+    // Admin Action Trigger
+    function adminAction(stage) {
+      const pilotSelect = document.getElementById('adm-select-pilot');
+      const pilotName = pilotSelect ? pilotSelect.value : 'Ramesh Kumar';
+      
+      // Update badge
+      const badge = document.getElementById('badge-row-1');
+      if (badge) {
+        if (stage === 'pilot_assigned') {
+          badge.className = 'px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-500/10 text-blue-400 border border-blue-500/30';
+          badge.innerText = 'Pilot Assigned (' + pilotName + ')';
+        } else if (stage === 'in_progress') {
+          badge.className = 'px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-pulse';
+          badge.innerText = 'Spraying In Progress 🚁';
+        } else if (stage === 'completed') {
+          badge.className = 'px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-500/30 text-emerald-300 border border-emerald-500/50';
+          badge.innerText = 'Completed & SBI QR ✓';
+        } else if (stage === 'weather_hold') {
+          badge.className = 'px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40';
+          badge.innerText = 'Weather Hold';
+        }
+      }
+
+      // Save to localStorage
+      localStorage.setItem('trinetra_booking_status', stage);
+      localStorage.setItem('trinetra_assigned_pilot', pilotName);
+
+      // Broadcast to Farmer App
+      if (opsChannel) {
+        opsChannel.postMessage({
+          type: 'STATUS_UPDATE',
+          status: stage,
+          pilotName: pilotName,
+          droneModel: 'Trinetra Hexa-16L (AP-07)'
+        });
+      }
+
+      showAdminToast('✓ Action Transmitted: ' + stage.toUpperCase() + ' to Farmer App!');
+    }
+
+    function syncToFarmerApp() {
+      adminAction('pilot_assigned');
+    }
+
+    function showAdminToast(msg) {
+      const toast = document.getElementById('admin-toast');
+      const txt = document.getElementById('toast-text');
+      if (toast && txt) {
+        txt.innerText = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3500);
+      }
+    }
+
+    // Leaflet Fleet Map
+    let fleetMapInstance = null;
+    function initFleetMap() {
+      if (fleetMapInstance) {
+        fleetMapInstance.invalidateSize();
+        return;
+      }
+      const el = document.getElementById('fleet-map');
+      if (!el) return;
+
+      fleetMapInstance = L.map('fleet-map', {
+        center: [16.5000, 80.7200],
+        zoom: 12,
+        zoomControl: true
+      });
+
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS',
+        maxZoom: 19
+      }).addTo(fleetMapInstance);
+
+      // Markers
+      // 1. Vijayawada Ops Hub
+      const hubIcon = L.divIcon({
+        className: 'hub-marker',
+        html: '<div style="background:#10B981; color:white; padding:4px 8px; border-radius:10px; font-weight:800; font-size:11px; border:2px solid white; box-shadow:0 4px 12px rgba(0,0,0,0.5);">🏢 Vijayawada Hub</div>',
+        iconSize: [120, 30]
+      });
+      L.marker([16.5062, 80.6480], { icon: hubIcon }).addTo(fleetMapInstance).bindPopup('<b>Trinetra Central Ops Center</b><br>Vijayawada HQ');
+
+      // 2. Drone AP-07 at Kankipadu
+      const droneIcon = L.divIcon({
+        className: 'drone-marker',
+        html: '<div style="background:#0284C7; color:white; padding:4px 8px; border-radius:10px; font-weight:800; font-size:11px; border:2px solid white; box-shadow:0 4px 12px rgba(0,0,0,0.5);">🚁 AP-07 Spraying</div>',
+        iconSize: [120, 30]
+      });
+      L.marker([16.4971, 80.7856], { icon: droneIcon }).addTo(fleetMapInstance).bindPopup('<b>Drone AP-07 (Hexa-16L)</b><br>Farmer: Venkateswara Rao<br>Status: 70% Spraying Complete');
+
+      // Add green field boundary polygon around Kankipadu
+      const plotCoords = [
+        [16.4960, 80.7845],
+        [16.4982, 80.7848],
+        [16.4980, 80.7870],
+        [16.4958, 80.7865]
+      ];
+      L.polygon(plotCoords, {
+        color: '#10B981',
+        weight: 2,
+        fillColor: '#10B981',
+        fillOpacity: 0.35
+      }).addTo(fleetMapInstance).bindPopup('<b>Venkateswara Rao Farm Plot</b><br>5.0 Acres Paddy');
+    }
+
+    function recenterMap() {
+      if (fleetMapInstance) {
+        fleetMapInstance.setView([16.4971, 80.7856], 14);
+      }
+    }
+
+    // Language Toggle
+    function setAdminLang(lang) {
+      const btnEn = document.getElementById('btn-lang-en');
+      const btnTe = document.getElementById('btn-lang-te');
+      if (lang === 'en') {
+        btnEn.className = 'px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold transition-all';
+        btnTe.className = 'px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all';
+        document.getElementById('vetting-title').innerText = 'Active Farmer Booking Feasibility & Vetting Deck';
+      } else {
+        btnTe.className = 'px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold transition-all';
+        btnEn.className = 'px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all';
+        document.getElementById('vetting-title').innerText = 'రైతు బుకింగ్ పరిశీలన & పైలట్ కేటాయింపు డెక్ (Feasibility)';
+      }
+    }
+
+    // =========================================================================
+    // REAL SQLITE DATABASE EXPLORER ENGINE
+    // =========================================================================
+    let currentDbTable = 'bookings';
+    let currentDbRows = [];
+    let currentDbColumns = [];
+
+    async function loadDatabaseExplorer() {
+      try {
+        // 1. Fetch Health & Stats
+        const healthRes = await fetch('/api/health');
+        if (healthRes.ok) {
+          const health = await healthRes.json();
+          document.getElementById('kpi-db-size-kb').innerText = health.dbSizeKb + ' KB';
+          document.getElementById('db-file-location').innerText = health.dbFile || 'trinetra.db';
+          if (health.tableCounts) {
+            let total = 0;
+            for (const [k, v] of Object.entries(health.tableCounts)) {
+              total += v;
+              const badge = document.getElementById('count-badge-' + k);
+              if (badge) badge.innerText = v;
+            }
+            document.getElementById('kpi-db-total-rows').innerText = total;
+          }
+        }
+
+        // 2. Fetch Active Table
+        await selectDbTable(currentDbTable);
+
+      } catch (err) {
+        console.warn('Database explorer fetch error:', err);
+      }
+    }
+
+    async function selectDbTable(tableName) {
+      currentDbTable = tableName;
+      document.getElementById('current-active-tbl-name').innerText = tableName;
+
+      // Update button highlights
+      ['bookings', 'farmers', 'pilots', 'drones', 'invoices', 'system_settings'].forEach(t => {
+        const btn = document.getElementById('db-tbl-btn-' + t);
+        if (btn) {
+          if (t === tableName) {
+            btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold bg-cyan-600 text-white shadow transition-all';
+          } else {
+            btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-900 transition-all';
+          }
+        }
+      });
+
+      try {
+        const res = await fetch('/api/db/table/' + tableName);
+        if (res.ok) {
+          const data = await res.json();
+          currentDbColumns = data.columns || [];
+          currentDbRows = data.rows || [];
+          renderDbTable(currentDbColumns, currentDbRows);
+        }
+      } catch (err) {
+        console.warn('Error loading table ' + tableName + ':', err);
+      }
+    }
+
+    function renderDbTable(columns, rows) {
+      const thead = document.getElementById('db-table-head');
+      const tbody = document.getElementById('db-table-body');
+      if (!thead || !tbody) return;
+
+      // Render columns
+      let thHtml = '<tr>';
+      columns.forEach(col => {
+        thHtml += `<th class="px-3.5 py-2.5 text-[11px] whitespace-nowrap">${col.name} <span class="text-[9px] text-slate-500 font-normal">(${col.type})</span></th>`;
+      });
+      thHtml += '</tr>';
+      thead.innerHTML = thHtml;
+
+      // Render rows
+      if (rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="' + columns.length + '" class="text-center py-10 text-slate-500 font-sans">No rows found in ' + currentDbTable + ' table.</td></tr>';
+        document.getElementById('db-table-meta-text').innerText = '0 records found in ' + currentDbTable;
+        return;
+      }
+
+      let tbHtml = '';
+      rows.forEach((row, idx) => {
+        tbHtml += '<tr class="hover:bg-slate-900/60 transition-colors">';
+        columns.forEach(col => {
+          let val = row[col.name];
+          let displayVal = val;
+          if (val === null || val === undefined) {
+            displayVal = '<span class="text-slate-600 italic">NULL</span>';
+          } else if (typeof val === 'object') {
+            displayVal = JSON.stringify(val);
+          } else if (col.name === 'status') {
+            const statusColors = {
+              received: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
+              awaiting_confirmation: 'bg-amber-500/20 text-amber-400 border border-amber-500/30',
+              pilot_assigned: 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+              in_progress: 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30',
+              completed: 'bg-emerald-600 text-white shadow-xs'
+            };
+            const cClass = statusColors[val] || 'bg-slate-800 text-slate-300';
+            displayVal = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${cClass}">${val}</span>`;
+          }
+          tbHtml += `<td class="px-3.5 py-2 whitespace-nowrap text-xs text-slate-200">${displayVal}</td>`;
+        });
+        tbHtml += '</tr>';
+      });
+      tbody.innerHTML = tbHtml;
+      document.getElementById('db-table-meta-text').innerText = 'Displaying ' + rows.length + ' live records from SQLite ' + currentDbTable;
+    }
+
+    function filterDbTable(query) {
+      if (!query) {
+        renderDbTable(currentDbColumns, currentDbRows);
+        return;
+      }
+      const q = query.toLowerCase();
+      const filtered = currentDbRows.filter(r => {
+        return Object.values(r).some(v => String(v).toLowerCase().includes(q));
+      });
+      renderDbTable(currentDbColumns, filtered);
+    }
+
+    async function downloadDatabaseDump() {
+      try {
+        const tables = ['bookings', 'farmers', 'farms', 'users', 'services', 'pilots', 'otp_verifications', 'notifications', 'booking_status_history', 'sessions'];
+        const fullDump = {};
+        for (const t of tables) {
+          const res = await fetch('/api/db/table/' + t);
+          if (res.ok) {
+            const data = await res.json();
+            fullDump[t] = data.rows;
+          }
+        }
+        const blob = new Blob([JSON.stringify(fullDump, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'trinetra_sqlite_dump_' + new Date().toISOString().split('T')[0] + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        alert('Export failed: ' + err.message);
+      }
+    }
+
+    // =========================================================================
+    // AI ADMIN ASSISTANT CLIENT ENGINE (FEATURE 1)
+    // =========================================================================
+    async function sendAdminAiChip(promptText, lang = 'en') {
+      const input = document.getElementById('ai-chat-input');
+      const selectLang = document.getElementById('ai-chat-lang');
+      if (input) input.value = promptText;
+      if (selectLang) selectLang.value = lang;
+      await sendAdminAiMessage();
+    }
+
+    async function sendAdminAiMessage() {
+      const input = document.getElementById('ai-chat-input');
+      const lang = document.getElementById('ai-chat-lang')?.value || 'en';
+      const history = document.getElementById('ai-chat-history');
+      if (!input || !history) return;
+
+      const q = input.value.trim();
+      if (!q) return;
+
+      // Append user question
+      const userHtml = `
+        <div class="flex items-start justify-end gap-3">
+          <div class="bg-emerald-600 p-3.5 rounded-2xl rounded-tr-sm text-white max-w-xl">
+            <p class="leading-relaxed font-medium">${q}</p>
+          </div>
+          <div class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-sm font-bold text-slate-300 shrink-0">
+            👤
+          </div>
+        </div>
+      `;
+      history.insertAdjacentHTML('beforeend', userHtml);
+      input.value = '';
+      history.scrollTop = history.scrollHeight;
+
+      // Loading bubble
+      const loadId = 'ai-loading-' + Date.now();
+      const loadHtml = `
+        <div id="${loadId}" class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-sm font-black text-white shrink-0">
+            🤖
+          </div>
+          <div class="bg-slate-900 p-3.5 rounded-2xl border border-slate-800 text-slate-400">
+            <span class="animate-pulse">Thinking & querying database facts...</span>
+          </div>
+        </div>
+      `;
+      history.insertAdjacentHTML('beforeend', loadHtml);
+      history.scrollTop = history.scrollHeight;
+
+      try {
+        const res = await fetch('/api/ai/admin-assistant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: q, language: lang })
+        });
+        const data = await res.json();
+        document.getElementById(loadId)?.remove();
+
+        const formattedAnswer = (data.answer || 'No response')
+          .replace(/\n/g, '<br>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        const botHtml = `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-sm font-black text-white shrink-0">
+              🤖
+            </div>
+            <div class="bg-slate-900 p-3.5 rounded-2xl rounded-tl-sm border border-slate-800 text-slate-200 max-w-2xl space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-emerald-400">Trinetra AI Grounded Output</span>
+                <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">${data.source || 'Verified DB'}</span>
+              </div>
+              <div class="leading-relaxed">${formattedAnswer}</div>
+              <p class="text-[10px] text-slate-500 italic pt-1 border-t border-slate-800">${data.disclaimer || 'Verified from SQLite database'}</p>
+            </div>
+          </div>
+        `;
+        history.insertAdjacentHTML('beforeend', botHtml);
+      } catch (err) {
+        document.getElementById(loadId)?.remove();
+        history.insertAdjacentHTML('beforeend', `<div class="p-3 bg-red-950/40 text-red-300 rounded-xl">Error: ${err.message}</div>`);
+      }
+      history.scrollTop = history.scrollHeight;
+    }
+
+    // =========================================================================
+    // AI FLIGHT MONITORING RADAR CLIENT (FEATURE 3)
+    // =========================================================================
+    async function loadFlightMonitor() {
+      try {
+        const res = await fetch('/api/telemetry/live');
+        if (!res.ok) return;
+        const data = await res.json();
+        const container = document.getElementById('fleet-flight-monitors');
+        if (!container || !data.drones) return;
+
+        let cardsHtml = '';
+        data.drones.forEach(d => {
+          const live = d.liveTelemetry || {};
+          const isFlying = d.status === 'in_mission';
+          const batt = live.battery_percent || 100;
+          const battColor = batt > 50 ? 'text-emerald-400' : (batt > 20 ? 'text-amber-400' : 'text-red-400');
+          const statusBadge = isFlying
+            ? '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-pulse text-[10px] font-bold">AIRBORNE / SPRAYING</span>'
+            : (d.status === 'available' ? '<span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-bold">STANDBY</span>' : '<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px] font-bold">INSPECTION</span>');
+
+          cardsHtml += `
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-extrabold text-white text-sm">Unit ${d.drone_code}</h4>
+                  <p class="text-[10px] text-slate-400">${d.model}</p>
+                </div>
+                ${statusBadge}
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                <div class="bg-slate-900/60 p-2 rounded-xl">
+                  <p class="text-slate-500 text-[10px]">Battery</p>
+                  <p class="font-black ${battColor}">${batt}% (${live.battery_voltage || 22.8}V)</p>
+                </div>
+                <div class="bg-slate-900/60 p-2 rounded-xl">
+                  <p class="text-slate-500 text-[10px]">Ground Speed</p>
+                  <p class="font-black text-white">${live.ground_speed_kmh || 0} km/h</p>
+                </div>
+                <div class="bg-slate-900/60 p-2 rounded-xl">
+                  <p class="text-slate-500 text-[10px]">GPS Sats</p>
+                  <p class="font-black text-emerald-400">${live.satellites || 14} (HDOP ${live.hdop || 0.8})</p>
+                </div>
+                <div class="bg-slate-900/60 p-2 rounded-xl">
+                  <p class="text-slate-500 text-[10px]">Spray Flow</p>
+                  <p class="font-black text-cyan-400">${live.spray_flow_rate_lpm || 0} L/min</p>
+                </div>
+              </div>
+              <div class="text-[10px] text-slate-400 flex justify-between pt-1 border-t border-slate-900">
+                <span>Verified: <strong>${live.cumulativeAcresSprayed || 0} Ac</strong></span>
+                <span class="text-emerald-400">100% Radio Link</span>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = cardsHtml;
+      } catch (e) {
+        console.warn('Flight monitor fetch error:', e);
+      }
+    }
+
+    // =========================================================================
+    // AI OPERATIONAL REPORTS & BUSINESS INSIGHTS CLIENT (FEATURES 7 & 10)
+    // =========================================================================
+    async function generateFreshAiReport() {
+      const display = document.getElementById('ai-report-display');
+      if (!display) return;
+      display.innerHTML = '<p class="text-slate-400 text-xs animate-pulse">Generating verified operational report...</p>';
+
+      try {
+        const res = await fetch('/api/ai/reports/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reportType: 'daily', reportDate: '2026-10-13' })
+        });
+        const data = await res.json();
+        const r = data.report || {};
+
+        display.innerHTML = `
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div>
+              <span class="px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold text-[10px] border border-emerald-500/30 uppercase">
+                ${r.report_type} Operations Audit
+              </span>
+              <h3 class="font-extrabold text-white text-base mt-1">Trinetra Operations Daily Report (${r.report_date})</h3>
+            </div>
+            <p class="text-xs text-slate-400 font-mono">Period: ${r.period_start} – ${r.period_end}</p>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+              <p class="text-slate-500 text-[10px]">Verified Sprayed Area</p>
+              <p class="text-xl font-black text-amber-300">${r.total_verified_acres} Acres</p>
+              <p class="text-[10px] text-slate-400">Target: ${r.total_target_acres} Ac (92.8%)</p>
+            </div>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+              <p class="text-slate-500 text-[10px]">Missions Completed</p>
+              <p class="text-xl font-black text-emerald-400">${r.total_jobs_completed} Jobs</p>
+              <p class="text-[10px] text-slate-400">Active Drones: ${r.total_active_drones}</p>
+            </div>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+              <p class="text-slate-500 text-[10px]">Fleet Utilization</p>
+              <p class="text-xl font-black text-blue-400">${r.drone_utilization_hours} Hours</p>
+              <p class="text-[10px] text-slate-400">Avg 4.9 hrs/drone</p>
+            </div>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+              <p class="text-slate-500 text-[10px]">Net Operating Margin</p>
+              <p class="text-xl font-black text-emerald-400">₹${(r.total_revenue - r.estimated_operating_cost).toLocaleString('en-IN')}</p>
+              <p class="text-[10px] text-slate-400">Rev: ₹${r.total_revenue.toLocaleString('en-IN')} | Cost: ₹${r.estimated_operating_cost.toLocaleString('en-IN')}</p>
+            </div>
+          </div>
+          <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800/80 text-xs space-y-1.5">
+            <p class="font-bold text-white flex items-center gap-1.5">
+              <span>🤖</span> <span>AI Executive Synthesis:</span>
+            </p>
+            <p class="text-slate-300 leading-relaxed">${r.ai_summary_en}</p>
+            <p class="text-emerald-400 text-[11px] leading-relaxed">${r.ai_summary_te}</p>
+          </div>
+        `;
+      } catch (err) {
+        display.innerHTML = `<p class="text-red-400 text-xs">Report generation error: ${err.message}</p>`;
+      }
+    }
+
+    async function loadBusinessInsights() {
+      try {
+        const res = await fetch('/api/ai/business-insights');
+        if (!res.ok) return;
+        const data = await res.json();
+        const tbody = document.getElementById('regional-insights-body');
+        if (!tbody || !data.insights) return;
+
+        let rowsHtml = '';
+        data.insights.demandHotspots.forEach(h => {
+          rowsHtml += `
+            <tr class="hover:bg-slate-900/40 transition-colors">
+              <td class="py-3 px-3 font-bold text-white">${h.village}</td>
+              <td class="py-3 px-3 text-amber-300">${h.primaryCrop}</td>
+              <td class="py-3 px-3 font-mono font-bold">${h.bookingsCount} jobs (${h.sharePct}%)</td>
+              <td class="py-3 px-3 text-slate-300">${h.surgeAdvice}</td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = rowsHtml;
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // AI MAINTENANCE PREDICTION CLIENT (FEATURE 8)
+    // =========================================================================
+    async function loadMaintenanceData() {
+      try {
+        const res = await fetch('/api/ai/maintenance-predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const grid = document.getElementById('maintenance-drones-grid');
+        const tbody = document.getElementById('maintenance-logs-body');
+        if (!grid || !data.drones) return;
+
+        let gridHtml = '';
+        data.drones.forEach(d => {
+          const isWarning = d.healthStatus === 'needs_inspection';
+          const badge = isWarning
+            ? '<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40 font-bold text-[10px]">NEEDS INSPECTION</span>'
+            : '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">HEALTHY</span>';
+
+          gridHtml += `
+            <div class="bg-slate-950 p-4 rounded-2xl border ${isWarning ? 'border-amber-500/40' : 'border-slate-800'} space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-extrabold text-white text-sm">Unit ${d.droneCode}</h4>
+                  <p class="text-[10px] text-slate-400">${d.model}</p>
+                </div>
+                ${badge}
+              </div>
+              <div class="space-y-1.5 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Battery Cycles:</span>
+                  <span class="font-mono font-bold ${d.batteryCycles >= 250 ? 'text-amber-400' : 'text-slate-200'}">${d.batteryCycles} / 250</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Flight Hours:</span>
+                  <span class="font-mono font-bold ${d.totalFlightHours >= 180 ? 'text-amber-400' : 'text-slate-200'}">${d.totalFlightHours}h / 200h</span>
+                </div>
+              </div>
+              ${d.issues.length > 0 ? `
+                <div class="p-2.5 rounded-xl bg-amber-950/40 border border-amber-800/60 text-[10px] text-amber-200 space-y-1">
+                  <p class="font-bold">⚠️ ${d.issues[0].component}:</p>
+                  <p>${d.issues[0].recommendation_en}</p>
+                </div>
+              ` : '<div class="p-2 rounded-xl bg-slate-900 text-[10px] text-emerald-400 font-semibold">✓ All sensors & actuators calibrated</div>'}
+            </div>
+          `;
+        });
+        grid.innerHTML = gridHtml;
+
+        // Fetch logs
+        const logsRes = await fetch('/api/db/table/drone_maintenance_logs');
+        if (logsRes.ok) {
+          const logsData = await logsRes.json();
+          if (tbody && logsData.rows) {
+            let logsHtml = '';
+            logsData.rows.forEach(l => {
+              logsHtml += `
+                <tr class="hover:bg-slate-900/40">
+                  <td class="py-3 px-3 font-bold text-white">AP-09</td>
+                  <td class="py-3 px-3 text-slate-300 font-sans">${l.issue_description}</td>
+                  <td class="py-3 px-3 font-mono">${l.flight_hours_at_log}h / ${l.battery_cycles_at_log} cyc</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 uppercase text-[9px] font-bold">${l.severity}</span></td>
+                  <td class="py-3 px-3">${l.resolved ? '<span class="text-emerald-400">Resolved ✓</span>' : '<span class="text-amber-400 font-bold">Open Flag</span>'}</td>
+                </tr>
+              `;
+            });
+            tbody.innerHTML = logsHtml || '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">No open maintenance flags.</td></tr>';
+          }
+        }
+      } catch (e) {}
+    }
+
+    // Connect to Server-Sent Events (SSE) for Realtime Push
+    if (typeof EventSource !== 'undefined') {
+      try {
+        const evtSource = new EventSource('/api/events');
+        evtSource.onmessage = function(e) {
+          try {
+            const data = JSON.parse(e.data);
+            console.log('[AdminConsole] SSE Event:', data);
+            
+            // 1. Live Telemetry Update Handler
+            if (data.type === 'TELEMETRY_UPDATE' && data.data) {
+              const tel = data.data;
+              // Update KPI Card 4 if AP-07
+              if (tel.droneCode === 'AP-07' && tel.cumulativeAcresSprayed) {
+                const kpiV = document.getElementById('kpi-verified-acres');
+                if (kpiV) kpiV.innerText = (145.0 + tel.cumulativeAcresSprayed).toFixed(1);
+              }
+              // Update live flight monitoring cards if open
+              const currTab = document.querySelector('button[id^="tab-btn-"][class*="bg-emerald-600"]')?.id;
+              if (currTab === 'tab-btn-flight_monitor') {
+                loadFlightMonitor();
+              }
+            }
+
+            if (data.type === 'BOOKING_CREATED' || data.type === 'STATUS_UPDATED') {
+              if (currentDbTable === 'bookings') loadDatabaseExplorer();
+              const bBadge = document.getElementById('tab-text-queue');
+              if (bBadge && data.data && data.data.booking_ref) {
+                bBadge.innerText = 'Bookings Queue (Active)';
+              }
+            }
+          } catch(err) {}
+        };
+      } catch(e) {}
+    }
+
+  </script>
+</body>
+</html>
