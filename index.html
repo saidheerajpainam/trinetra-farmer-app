@@ -166,9 +166,6 @@
       <a href="tel:9502051939" class="px-2.5 py-1 rounded-lg bg-white text-emerald-800 text-xs font-black flex items-center gap-1 shadow-xs hover:bg-emerald-50 transition" title="Call Helpline">
         <span>📞</span> <span class="text-[10px]">హెల్ప్‌లైన్</span>
       </a>
-      <a href="admin.html" class="px-2 py-1 rounded-lg bg-emerald-950/50 hover:bg-emerald-900 text-emerald-200 border border-emerald-400/40 text-xs font-bold flex items-center gap-1 shadow-xs transition" title="Open Admin Portal">
-        <span>🛡️</span> <span class="text-[10px]">అడ్మిన్</span>
-      </a>
     </div>
   </header>
 
@@ -663,25 +660,6 @@
               </div>
               <span class="text-xs font-bold text-[#0D6E53] bg-[#E8F8F5] px-3.5 py-1.5 rounded-xl shrink-0 flex items-center justify-center shadow-xs ml-2">సహాయం</span>
             </button>
-
-            <!-- 6. Admin Portal & Farmers Directory Card -->
-            <a href="admin.html" class="w-full text-left p-4 sm:p-4.5 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 border-2 border-emerald-500/50 hover:border-emerald-400 shadow-md active:scale-99 transition-all flex items-center justify-between group block">
-              <div class="flex items-center gap-3.5 min-w-0">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl shrink-0 shadow-inner border border-emerald-500/30">
-                  🛡️
-                </div>
-                <div class="min-w-0">
-                  <div class="flex items-center gap-2">
-                    <h4 class="text-sm sm:text-[15px] font-bold text-white tracking-tight leading-snug">Admin Console & Field GPS</h4>
-                    <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">ADMIN</span>
-                  </div>
-                  <p class="text-xs text-slate-300 mt-0.5 leading-snug">రైతుల వివరాలు, పంటలు & గూగుల్ మ్యాప్స్ టర్న్-బై-టర్న్ డైరెక్షన్స్</p>
-                </div>
-              </div>
-              <span class="text-xs font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-3.5 py-1.5 rounded-xl shrink-0 flex items-center gap-1 shadow-xs ml-2">
-                <span>ఓపెన్</span> <span>↗</span>
-              </span>
-            </a>
 
           </div>
         </section>
@@ -2001,42 +1979,9 @@
       }
     }
 
-    // Role switcher
+    // Role switcher (Dedicated Farmer App)
     function setRole(role) {
-      state.role = role;
-      
-      const fBtn = document.getElementById('role-farmer-btn');
-      const aBtn = document.getElementById('role-admin-btn');
-      const pBtn = document.getElementById('role-pilot-btn');
-
-      fBtn.className = 'px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white';
-      aBtn.className = 'px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white';
-      pBtn.className = 'px-3 py-1.5 rounded-lg transition-all text-slate-400 hover:text-white';
-
-      const adminPanel = document.getElementById('admin-panel-content');
-      const pilotPanel = document.getElementById('pilot-panel-content');
-      const title = document.getElementById('control-panel-title');
-      const desc = document.getElementById('control-panel-desc');
-
-      if (role === 'farmer') {
-        fBtn.className = 'px-3 py-1.5 rounded-lg transition-all bg-brand-600 text-white shadow';
-        adminPanel.classList.remove('hidden');
-        pilotPanel.classList.add('hidden');
-        title.innerHTML = '🛡️ TRINETRA ఆపరేషన్స్ ప్యానెల్ (Admin Panel Active)';
-        desc.innerText = 'మీరు రైతు దృక్కోణంలో యాప్‌ను వాడుతున్నారు. పక్కన ఉన్న అడ్మిన్ కంట్రోల్స్ ద్వారా బుకింగ్ ధృవీకరణ చేసి రైతు స్క్రీన్‌పై లైవ్ మార్పులు చూడండి.';
-      } else if (role === 'admin') {
-        aBtn.className = 'px-3 py-1.5 rounded-lg transition-all bg-amber-600 text-white shadow';
-        adminPanel.classList.remove('hidden');
-        pilotPanel.classList.add('hidden');
-        title.innerHTML = '🛡️ త్రినేత్ర అడ్మిన్ కంట్రోల్ రూమ్ (Admin Console)';
-        desc.innerText = 'అడ్మిన్ రైతు పంపిన అభ్యర్థనలను సమీక్షించి, వాతావరణం పరిశీలించి, ధరకు ఆమోదం తెలిపి పైలట్‌ను కేటాయిస్తారు.';
-      } else if (role === 'pilot') {
-        pBtn.className = 'px-3 py-1.5 rounded-lg transition-all bg-blue-600 text-white shadow';
-        adminPanel.classList.add('hidden');
-        pilotPanel.classList.remove('hidden');
-        title.innerHTML = '👨‍✈️ త్రినేత్ర పైలట్ కన్సోల్ (Pilot Console)';
-        desc.innerText = 'కేటాయించబడిన పైలట్ ఇక్కడి నుంచి స్ప్రేయింగ్ ప్రారంభించడం మరియు పూర్తి చేయడం వంటి స్టేటస్ అప్‌డేట్లను చేస్తారు.';
-      }
+      state.role = 'farmer';
     }
 
     // Language Toggle
@@ -2469,21 +2414,7 @@
       }
       if (helpCallBtn) helpCallBtn.innerText = lang === 'en' ? 'Call Helpline: 9502051939' : 'హెల్ప్‌లైన్‌కు కాల్ చేయండి: 9502051939';
 
-      // Operations panel text
-      const chkWeather = document.querySelector('#admin-panel-content label:nth-child(1) span');
-      const chkField = document.querySelector('#admin-panel-content label:nth-child(2) span');
-      const chkDrone = document.querySelector('#admin-panel-content label:nth-child(3) span');
-      const adminVettingTitle = document.querySelector('#admin-panel-content .font-bold.text-amber-400');
-      const adminPilotLabel = document.querySelector('#admin-panel-content label.block');
-      const adminConfirmBtn = document.querySelector('#admin-panel-content button:first-of-type span:last-child') || document.querySelector('#admin-panel-content button:first-of-type');
-      const adminCancelBtn = document.querySelector('#admin-panel-content button:last-of-type');
 
-      if (chkWeather) chkWeather.innerText = lang === 'en' ? 'Wind speed < 15 km/h & No rain forecasted (Weather Checked)' : 'గాలి వేగం < 15 km/h మరియు వర్షం సూచన లేదు (Weather Checked)';
-      if (chkField) chkField.innerText = lang === 'en' ? 'No electrical lines / field obstacles (Field Feasible)' : 'పొలంలో విద్యుత్ తీగలు / అడ్డంకులు లేవు (Field Feasible)';
-      if (chkDrone) chkDrone.innerText = lang === 'en' ? '16L Drone & charged batteries ready (Equipment Ready)' : '16L డ్రోన్ & బ్యాటరీలు సిద్ధంగా ఉన్నాయి (Equipment Ready)';
-      if (adminVettingTitle) adminVettingTitle.innerText = lang === 'en' ? 'Admin Review (Stage 2: Weather & Feasibility Check)' : 'అడ్మిన్ పరిశీలన (Stage 2: Weather & Feasibility Check)';
-      if (adminPilotLabel) adminPilotLabel.innerText = lang === 'en' ? 'Assign Certified Pilot:' : 'పైలట్‌ను కేటాయించండి (Assign Certified Pilot):';
-      if (adminCancelBtn) adminCancelBtn.innerText = lang === 'en' ? 'Cancel' : 'రద్దు';
 
       const jumpBarTitle = document.getElementById('jump-bar-title');
       if (jumpBarTitle) jumpBarTitle.innerText = lang === 'en' ? '⚡ Jump to Stage (Test Any Milestone):' : '⚡ ఏ దశకైనా వెళ్ళండి (టెస్ట్ బటన్స్):';

@@ -55,7 +55,6 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
   String _currentUrl = defaultCloudUrl;
   Timer? _autoRetryTimer;
   int _retryCountdown = 0;
-  int _currentTabIndex = 0;
 
   @override
   void initState() {
@@ -85,7 +84,6 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
           },
           onPageStarted: (String url) {
             _autoRetryTimer?.cancel();
-            _updateTabFromUrl(url);
             setState(() {
               _hasError = false;
               _loadingProgress = 0;
@@ -195,33 +193,6 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
   }
 
   
-  void _updateTabFromUrl(String url) {
-    final lower = url.toLowerCase();
-    if (lower.contains('admin')) {
-      if (_currentTabIndex != 1) setState(() => _currentTabIndex = 1);
-    } else if (lower.contains('pilot')) {
-      if (_currentTabIndex != 2) setState(() => _currentTabIndex = 2);
-    } else {
-      if (_currentTabIndex != 0) setState(() => _currentTabIndex = 0);
-    }
-  }
-
-  void _onTabSelected(int index) {
-    setState(() {
-      _currentTabIndex = index;
-    });
-
-    String targetUrl;
-    if (index == 1) {
-      targetUrl = 'https://trinetra-farmer-app.onrender.com/admin';
-    } else if (index == 2) {
-      targetUrl = 'https://trinetra-farmer-app.onrender.com/pilot';
-    } else {
-      targetUrl = 'https://trinetra-farmer-app.onrender.com/farmer-app.html';
-    }
-
-    _loadAppUrl(targetUrl);
-  }
 
   Future<void> _loadAppUrl(String url, {bool saveToPrefs = true}) async {
     _autoRetryTimer?.cancel();
@@ -374,12 +345,7 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
             ],
           ),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white),
-              tooltip: 'Admin Console & Field GPS',
-              onPressed: () => _onTabSelected(1),
-            ),
-            IconButton(
+IconButton(
               icon: const Icon(Icons.refresh, color: Colors.white),
               tooltip: 'Reload App',
               onPressed: () => _controller.reload(),
@@ -487,30 +453,6 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
                   Color(0xFF22C55E),
                 ),
               ),
-          ],
-        ),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _currentTabIndex,
-          onDestinationSelected: _onTabSelected,
-          backgroundColor: Colors.white,
-          indicatorColor: const Color(0xFFDCFCE7),
-          elevation: 4,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.agriculture_outlined),
-              selectedIcon: Icon(Icons.agriculture, color: Color(0xFF15803D)),
-              label: 'రైతు (Farmer)',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.admin_panel_settings_outlined),
-              selectedIcon: Icon(Icons.admin_panel_settings, color: Color(0xFF15803D)),
-              label: 'అడ్మిన్ (Admin)',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.flight_takeoff_outlined),
-              selectedIcon: Icon(Icons.flight_takeoff, color: Color(0xFF15803D)),
-              label: 'పైలట్ (Pilot)',
-            ),
           ],
         ),
       ),

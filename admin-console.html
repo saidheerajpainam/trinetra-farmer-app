@@ -315,9 +315,9 @@
             </div>
 
             <div class="pt-2">
-              <a href="https://www.google.com/maps/search/?api=1&query=16.4971,80.7856" target="_blank" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-blue-400 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-800 transition-all">
-                <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                <span>GPS: 16.4971, 80.7856 (Open in Google Maps ↗)</span>
+              <a id="deck-gmaps-link" href="https://www.google.com/maps/dir/?api=1&destination=16.4971,80.7856" target="_blank" class="w-full py-2.5 bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 hover:text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-emerald-500/40 shadow-xs transition-all">
+                <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span id="deck-gps-text">GPS: 16.4971, 80.7856 (Turn-by-Turn Google Maps ↗)</span>
               </a>
             </div>
           </div>
@@ -432,97 +432,8 @@
                 <th class="py-3 px-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800/60 font-medium">
-              <!-- Row 1 -->
-              <tr class="hover:bg-slate-900/50 transition-all bg-emerald-500/5">
-                <td class="py-3 px-3 font-mono font-bold text-emerald-400">TRN-2026-881</td>
-                <td class="py-3 px-3 font-bold text-white">
-                  <div>Venkateswara Rao</div>
-                  <div class="text-[10px] text-slate-400 font-mono">+91 98765 43210</div>
-                </td>
-                <td class="py-3 px-3">Kankipadu (కంకిపాడు)</td>
-                <td class="py-3 px-3 font-bold">వరి (Paddy) • 5.0 Ac</td>
-                <td class="py-3 px-3 text-slate-300">Pesticide Spray</td>
-                <td class="py-3 px-3 font-black text-white">₹2,250</td>
-                <td class="py-3 px-3 text-blue-400 font-bold">Ramesh Kumar (AP-07)</td>
-                <td class="py-3 px-3">
-                  <span id="badge-row-1" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                    Awaiting Pilot
-                  </span>
-                </td>
-                <td class="py-3 px-3 text-right space-x-1">
-                  <button onclick="loadBookingToDeck('TRN-2026-881')" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold">Review Deck</button>
-                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.4971,80.7856" target="_blank" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-white rounded-lg text-[10px] font-bold inline-flex items-center gap-1 border border-emerald-500/30" title="Navigate to Farmer Field">
-                    <span>🧭</span> <span>Maps ↗</span>
-                  </a>
-                </td>
-              </tr>
-
-              <!-- Row 2 -->
-              <tr class="hover:bg-slate-900/50 transition-all">
-                <td class="py-3 px-3 font-mono font-bold text-slate-400">TRN-2026-882</td>
-                <td class="py-3 px-3 font-bold text-white">
-                  <div>P. Subba Rao</div>
-                  <div class="text-[10px] text-slate-400 font-mono">+91 94401 23456</div>
-                </td>
-                <td class="py-3 px-3">Vuyyuru (వుయ్యూరు)</td>
-                <td class="py-3 px-3 font-bold">మిరప (Chilli) • 8.0 Ac</td>
-                <td class="py-3 px-3 text-slate-300">Fungicide Spray</td>
-                <td class="py-3 px-3 font-black text-white">₹3,600</td>
-                <td class="py-3 px-3 text-blue-400 font-bold">Siva Reddy (AP-09)</td>
-                <td class="py-3 px-3">
-                  <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-500/10 text-blue-400 border border-blue-500/30">
-                    Pilot Assigned
-                  </span>
-                </td>
-                <td class="py-3 px-3 text-right">
-                  <button class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] font-bold">Track</button>
-                </td>
-              </tr>
-
-              <!-- Row 3 -->
-              <tr class="hover:bg-slate-900/50 transition-all">
-                <td class="py-3 px-3 font-mono font-bold text-slate-400">TRN-2026-883</td>
-                <td class="py-3 px-3 font-bold text-white">
-                  <div>K. Rama Krishna</div>
-                  <div class="text-[10px] text-slate-400 font-mono">+91 98480 98765</div>
-                </td>
-                <td class="py-3 px-3">Gannavaram (గన్నవరం)</td>
-                <td class="py-3 px-3 font-bold">ప్రత్తి (Cotton) • 3.0 Ac</td>
-                <td class="py-3 px-3 text-slate-300">Nano Urea</td>
-                <td class="py-3 px-3 font-black text-white">₹1,200</td>
-                <td class="py-3 px-3 text-blue-400 font-bold">K. Naidu (AP-12)</td>
-                <td class="py-3 px-3">
-                  <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                    Spraying (65%)
-                  </span>
-                </td>
-                <td class="py-3 px-3 text-right">
-                  <button class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] font-bold">Telemetry</button>
-                </td>
-              </tr>
-
-              <!-- Row 4 -->
-              <tr class="hover:bg-slate-900/50 transition-all">
-                <td class="py-3 px-3 font-mono font-bold text-slate-400">TRN-2026-884</td>
-                <td class="py-3 px-3 font-bold text-white">
-                  <div>M. Appa Rao</div>
-                  <div class="text-[10px] text-slate-400 font-mono">+91 91771 12233</div>
-                </td>
-                <td class="py-3 px-3">Gudivada (గుడివాడ)</td>
-                <td class="py-3 px-3 font-bold">మొక్కజొన్న (Maize) • 12.0 Ac</td>
-                <td class="py-3 px-3 text-slate-300">Pesticide Spray</td>
-                <td class="py-3 px-3 font-black text-emerald-400">₹5,400</td>
-                <td class="py-3 px-3 text-blue-400 font-bold">Venkat Swamy</td>
-                <td class="py-3 px-3">
-                  <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                    Completed & Paid ✓
-                  </span>
-                </td>
-                <td class="py-3 px-3 text-right">
-                  <button onclick="viewInvoice('TRN-2026-884')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] font-bold">Invoice</button>
-                </td>
-              </tr>
+            <tbody id="bookings-queue-tbody" class="divide-y divide-slate-800/60 font-medium">
+              <tr><td colspan="9" class="py-10 text-center text-slate-500 text-xs">Loading real bookings from SQLite Database...</td></tr>
             </tbody>
           </table>
         </div>
@@ -1712,7 +1623,135 @@
     let farmersMapTileLayer = null;
     let farmersMapTileType = 'satellite';
 
-    async function loadFarmersDirectory() {
+    async 
+    // =========================================================================
+    // REALTIME SQLITE BOOKINGS QUEUE LOGIC
+    // =========================================================================
+    let allBookingsData = [];
+
+    async function loadRealBookingsQueue() {
+      try {
+        const res = await fetch('/api/bookings');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          allBookingsData = json.data;
+          renderBookingsQueue(allBookingsData);
+          if (allBookingsData.length > 0 && document.getElementById('deck-booking-id')?.innerText === 'TRN-2026-881') {
+            loadBookingToDeck(allBookingsData[0].booking_code || allBookingsData[0].id);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching bookings:', err);
+      }
+    }
+
+    function renderBookingsQueue(bookings) {
+      const tbody = document.getElementById('bookings-queue-tbody');
+      const countBadge = document.getElementById('kpi-total-bookings');
+      const tabTextQueue = document.getElementById('tab-text-queue');
+
+      if (countBadge) countBadge.innerText = bookings.length;
+      if (tabTextQueue) tabTextQueue.innerText = `Bookings Queue (${bookings.length})`;
+
+      if (!tbody) return;
+      if (bookings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="py-10 text-center text-slate-500 text-xs">No bookings found in the database.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = bookings.map(b => {
+        const farmerName = b.farmer_name || 'Farmer';
+        const mobile = b.phone || '9502051939';
+        const village = b.village || 'Kankipadu';
+        const crop = b.crop_type || 'Paddy (వరి)';
+        const acres = parseFloat(b.area_acres || b.farm_area || 5.0).toFixed(1);
+        const amount = '₹' + (parseFloat(b.final_amount || b.estimated_amount || 2250)).toLocaleString();
+        const pilotName = b.pilot_name ? `${b.pilot_name} (${b.drone_code || 'AP-07'})` : 'Unassigned';
+        const lat = parseFloat(b.latitude) || 16.4971;
+        const lng = parseFloat(b.longitude) || 80.7856;
+        const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+        let statusBadge = '';
+        const st = (b.status || 'pending').toLowerCase();
+        if (st === 'pending' || st === 'received' || st === 'awaiting_confirmation') {
+          statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-amber-500/10 text-amber-400 border border-amber-500/30">Awaiting Pilot</span>';
+        } else if (st === 'pilot_assigned') {
+          statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-500/10 text-blue-400 border border-blue-500/30">Pilot Assigned</span>';
+        } else if (st === 'in_progress') {
+          statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-pulse">Spraying In Progress 🚁</span>';
+        } else if (st === 'completed') {
+          statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-500/30 text-emerald-300 border border-emerald-500/50">Completed & Paid ✓</span>';
+        } else if (st === 'cancelled') {
+          statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-red-500/20 text-red-400 border border-red-500/30">Cancelled</span>';
+        } else {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-800 text-slate-300">${st}</span>`;
+        }
+
+        return `
+          <tr class="hover:bg-slate-900/50 transition-all ${st === 'pending' ? 'bg-amber-500/5' : ''}">
+            <td class="py-3 px-3 font-mono font-bold text-emerald-400">${b.booking_code || 'TRN-' + b.id}</td>
+            <td class="py-3 px-3 font-bold text-white">
+              <div>${farmerName}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${mobile}</div>
+            </td>
+            <td class="py-3 px-3">
+              <div>${village}</div>
+              <div class="text-[10px] text-slate-500 font-mono">📍 ${lat.toFixed(4)}, ${lng.toFixed(4)}</div>
+            </td>
+            <td class="py-3 px-3 font-bold">${crop} • ${acres} Ac</td>
+            <td class="py-3 px-3 text-slate-300">${b.service_name || 'Drone Spraying'}</td>
+            <td class="py-3 px-3 font-black text-white">${amount}</td>
+            <td class="py-3 px-3 text-blue-400 font-bold">${pilotName}</td>
+            <td class="py-3 px-3">${statusBadge}</td>
+            <td class="py-3 px-3 text-right space-x-1">
+              <button onclick="loadBookingToDeck('${b.booking_code || b.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold">Review Deck</button>
+              <a href="${gmapsUrl}" target="_blank" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-white rounded-lg text-[10px] font-bold inline-flex items-center gap-1 border border-emerald-500/30" title="Open Turn-by-Turn GPS Directions to Farmer Field">
+                <span>🧭</span> <span>Maps ↗</span>
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function loadBookingToDeck(bookingCode) {
+      const b = allBookingsData.find(item => item.booking_code === bookingCode || String(item.id) === String(bookingCode));
+      if (!b) return;
+
+      const bId = document.getElementById('deck-booking-id');
+      if (bId) bId.innerText = b.booking_code || ('TRN-' + b.id);
+
+      const fName = document.getElementById('deck-farmer-name');
+      if (fName) fName.innerText = b.farmer_name || 'Farmer';
+
+      const fPhone = document.getElementById('deck-farmer-phone');
+      if (fPhone) fPhone.innerText = b.phone || '+91 9502051939';
+
+      const fLoc = document.getElementById('deck-farmer-loc');
+      if (fLoc) fLoc.innerText = `${b.village || 'Kankipadu'}, ${b.district || 'Krishna District'}`;
+
+      const fCrop = document.getElementById('deck-farmer-crop');
+      if (fCrop) fCrop.innerText = `${b.crop_type || 'Paddy'} • ${b.service_name || 'Drone Spraying'}`;
+
+      const fAcres = document.getElementById('deck-farmer-acres');
+      if (fAcres) fAcres.innerText = `${parseFloat(b.area_acres || 5.0).toFixed(1)} Acres @ ₹${b.price_per_acre || 450}/acre`;
+
+      const fPrice = document.getElementById('deck-farmer-price');
+      if (fPrice) fPrice.innerText = `₹${(parseFloat(b.final_amount || b.estimated_amount || 2250)).toLocaleString()}`;
+
+      const lat = parseFloat(b.latitude) || 16.4971;
+      const lng = parseFloat(b.longitude) || 80.7856;
+      const gmapsLink = document.getElementById('deck-gmaps-link');
+      if (gmapsLink) gmapsLink.href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+      const gpsText = document.getElementById('deck-gps-text');
+      if (gpsText) gpsText.innerText = `GPS: ${lat.toFixed(4)}, ${lng.toFixed(4)} (Turn-by-Turn Google Maps ↗)`;
+
+      showAdminToast(`Loaded booking ${b.booking_code} (${b.farmer_name || 'Farmer'}) into Vetting Deck`);
+    }
+    window.loadBookingToDeck = loadBookingToDeck;
+
+    function loadFarmersDirectory() {
       try {
         const res = await fetch('/api/farmers');
         const json = await res.json();
@@ -2029,6 +2068,9 @@
         localStorage.removeItem('trinetra_system_settings');
         loadSystemSettings();
       loadFarmersDirectory();
+      loadRealBookingsQueue();
+      setInterval(loadRealBookingsQueue, 6000);
+      setInterval(loadFarmersDirectory, 12000);
         if (opsChannel) {
           opsChannel.postMessage({
             type: 'SETTINGS_UPDATE',
@@ -2099,6 +2141,9 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadSystemSettings();
       loadFarmersDirectory();
+      loadRealBookingsQueue();
+      setInterval(loadRealBookingsQueue, 6000);
+      setInterval(loadFarmersDirectory, 12000);
     });
 
     // Switch Tabs
@@ -2118,6 +2163,9 @@
       });
       if (tabId === 'farmers') {
         loadFarmersDirectory();
+      loadRealBookingsQueue();
+      setInterval(loadRealBookingsQueue, 6000);
+      setInterval(loadFarmersDirectory, 12000);
       } else if (tabId === 'map') {
         setTimeout(initFleetMap, 200);
       } else if (tabId === 'database') {
@@ -2133,9 +2181,31 @@
     }
 
     // Admin Action Trigger
-    function adminAction(stage) {
+    async function adminAction(stage) {
+      const currentCode = document.getElementById('deck-booking-id')?.innerText || 'TRN-2026-881';
       const pilotSelect = document.getElementById('adm-select-pilot');
       const pilotName = pilotSelect ? pilotSelect.value : 'Ramesh Kumar';
+
+      try {
+        const res = await fetch('/api/bookings/' + currentCode + '/status', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: stage,
+            notes: 'Admin transitioned stage to ' + stage + ' (Pilot: ' + pilotName + ')'
+          })
+        });
+        if (res.ok) {
+          showAdminToast('✓ Booking ' + currentCode + ' updated to ' + stage.toUpperCase() + ' (Broadcasted to Farmer App)');
+          loadRealBookingsQueue();
+          loadFarmersDirectory();
+      loadRealBookingsQueue();
+      setInterval(loadRealBookingsQueue, 6000);
+      setInterval(loadFarmersDirectory, 12000);
+        }
+      } catch (err) {
+        console.error('Error updating status:', err);
+      }
       
       // Update badge
       const badge = document.getElementById('badge-row-1');
@@ -2741,12 +2811,18 @@
               }
             }
 
-            if (data.type === 'BOOKING_CREATED' || data.type === 'STATUS_UPDATED') {
-              if (currentDbTable === 'bookings') loadDatabaseExplorer();
-              const bBadge = document.getElementById('tab-text-queue');
-              if (bBadge && data.data && data.data.booking_ref) {
-                bBadge.innerText = 'Bookings Queue (Active)';
-              }
+            if (data.type === 'BOOKING_CREATED') {
+              loadRealBookingsQueue();
+              loadFarmersDirectory();
+              const fName = data.data?.farmer_name || 'Farmer';
+              const vName = data.data?.village || 'Village';
+              showAdminToast(`🔔 New Booking Received: ${fName} (${vName})`);
+            } else if (data.type === 'STATUS_UPDATED') {
+              loadRealBookingsQueue();
+              loadFarmersDirectory();
+            } else if (data.type === 'FARMER_REGISTERED') {
+              loadFarmersDirectory();
+              showAdminToast(`🔔 New Farmer Profile: ${data.data?.full_name || 'Farmer'}`);
             }
           } catch(err) {}
         };
