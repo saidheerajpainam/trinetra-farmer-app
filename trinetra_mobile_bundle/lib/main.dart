@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,14 +97,18 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
             });
           },
           onNavigationRequest: (NavigationRequest request) {
-            final String url = request.url.toLowerCase();
-            if (url.startsWith('tel:') ||
-                url.startsWith('mailto:') ||
-                url.startsWith('sms:') ||
-                url.startsWith('whatsapp:') ||
-                url.startsWith('intent:') ||
-                url.startsWith('upi:')) {
-              // Block webview navigation to prevent net::ERR_UNKNOWN_URL_SCHEME
+            final String rawUrl = request.url;
+            final String lowerUrl = rawUrl.toLowerCase();
+            if (lowerUrl.startsWith('tel:') ||
+                lowerUrl.startsWith('mailto:') ||
+                lowerUrl.startsWith('sms:') ||
+                lowerUrl.startsWith('whatsapp:') ||
+                lowerUrl.startsWith('upi:') ||
+                lowerUrl.startsWith('geo:') ||
+                lowerUrl.startsWith('intent:') ||
+                lowerUrl.contains('maps.google.com') ||
+                lowerUrl.contains('google.com/maps')) {
+              _launchExternalScheme(rawUrl);
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
@@ -111,9 +116,16 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
           onWebResourceError: (WebResourceError error) {
             final String desc = error.description.toUpperCase();
             final String? errUrl = error.url?.toLowerCase();
-            // Never show full-screen error for external URL schemes like tel:
             if (desc.contains('ERR_UNKNOWN_URL_SCHEME') ||
-                (errUrl != null && (errUrl.startsWith('tel:') || errUrl.startsWith('mailto:')))) {
+                desc.contains('NET::ERR_UNKNOWN_URL_SCHEME') ||
+                (errUrl != null &&
+                    (errUrl.startsWith('tel:') ||
+                     errUrl.startsWith('mailto:') ||
+                     errUrl.startsWith('sms:') ||
+                     errUrl.startsWith('intent:') ||
+                     errUrl.startsWith('geo:') ||
+                     errUrl.startsWith('whatsapp:') ||
+                     errUrl.contains('google.com/maps')))) {
               return;
             }
             if (error.isForMainFrame ?? true) {
@@ -148,6 +160,36 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
         }
       }
     });
+  }
+
+  
+  Future<void> _launchExternalScheme(String rawUrl) async {
+    try {
+      String targetUrl = rawUrl;
+      if (rawUrl.startsWith('intent:')) {
+        final RegExp browserFallback = RegExp(r'browser_fallback_url=([^;]+)');
+        final matchFallback = browserFallback.firstMatch(rawUrl);
+        if (matchFallback != null) {
+          targetUrl = Uri.decodeComponent(matchFallback.group(1)!);
+        } else {
+          final RegExp urlRegex = RegExp(r'intent://([^#]+)');
+          final matchUrl = urlRegex.firstMatch(rawUrl);
+          if (matchUrl != null) {
+            final path = matchUrl.group(1)!;
+            targetUrl = 'https://$path';
+          }
+        }
+      }
+
+      final Uri uri = Uri.parse(targetUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        await launchUrl(uri, mode: LaunchMode.platformDefault);
+      }
+    } catch (e) {
+      debugPrint('[Trinetra] Error launching external URL $rawUrl: $e');
+    }
   }
 
   Future<void> _loadAppUrl(String url, {bool saveToPrefs = true}) async {

@@ -208,7 +208,11 @@
     <div class="border-b border-slate-800 flex items-center gap-2 overflow-x-auto custom-scroll pb-1">
       <button onclick="switchTab('queue')" id="tab-btn-queue" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 bg-emerald-600 text-white shadow transition-all">
         <span>📋</span>
-        <span id="tab-text-queue">Bookings Queue (4)</span>
+        <span id="tab-text-queue">Bookings Queue</span>
+      </button>
+      <button onclick="switchTab('farmers')" id="tab-btn-farmers" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-emerald-400 hover:text-white hover:bg-emerald-950/40 border border-emerald-500/40 transition-all">
+        <span>👨‍🌾</span>
+        <span id="tab-text-farmers">Farmers Directory & Field GPS</span>
       </button>
       <button onclick="switchTab('map')" id="tab-btn-map" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
         <span>🛰️</span>
@@ -448,6 +452,9 @@
                 </td>
                 <td class="py-3 px-3 text-right space-x-1">
                   <button onclick="loadBookingToDeck('TRN-2026-881')" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold">Review Deck</button>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.4971,80.7856" target="_blank" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-white rounded-lg text-[10px] font-bold inline-flex items-center gap-1 border border-emerald-500/30" title="Navigate to Farmer Field">
+                    <span>🧭</span> <span>Maps ↗</span>
+                  </a>
                 </td>
               </tr>
 
@@ -518,6 +525,138 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB: FARMERS DIRECTORY & EXACT FIELD LOCATIONS -->
+    <section id="tab-farmers" class="hidden space-y-6">
+      
+      <!-- Top Overview & Statistics Banner -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+          <div>
+            <div class="flex items-center gap-2.5">
+              <span class="p-2.5 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xl">👨‍🌾</span>
+              <div>
+                <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                  <span>Registered Farmers Directory & Exact GPS Field Locations</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    Live SQLite Database
+                  </span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  View complete farmer profiles, verified mobile numbers, crops, and navigate straight to their field via Google Maps.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center flex-wrap gap-2.5">
+            <button onclick="loadFarmersDirectory()" class="px-3.5 py-2 bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-xs">
+              <span>🔄</span> <span>Refresh Directory</span>
+            </button>
+            <button onclick="recenterFarmersMap()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-xs">
+              <span>🎯</span> <span>Center All Fields</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Quick Stats Badges -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 text-[11px] block">Total Registered Farmers</span>
+            <span class="text-xl font-black text-white" id="stat-farmers-count">--</span>
+            <span class="text-[10px] text-emerald-400 block mt-0.5">Verified Mobile Accounts</span>
+          </div>
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 text-[11px] block">Total Farm Acreage</span>
+            <span class="text-xl font-black text-amber-300" id="stat-farmers-acres">--</span>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Paddy, Chilli, Cotton, Maize</span>
+          </div>
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 text-[11px] block">Active Villages & Mandals</span>
+            <span class="text-xl font-black text-emerald-400" id="stat-farmers-villages">14 Mandals</span>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Krishna & Guntur Districts</span>
+          </div>
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-slate-400 text-[11px] block">Google Maps GPS Driving</span>
+            <span class="text-xl font-black text-blue-400">100% Locked</span>
+            <span class="text-[10px] text-emerald-400 block mt-0.5">Turn-by-Turn Directions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE FULL-WIDTH FIELD MAP OF ALL FARMERS -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+              <span>🗺️</span> <span>Interactive Farmer Fields & Village Map</span>
+            </h3>
+            <p class="text-xs text-slate-400">
+              Click any green farmer pin to view contact details, field size, and open turn-by-turn Google Maps navigation.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleFarmersMapLayer()" id="btn-toggle-farmers-layer" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center gap-1.5 shadow-xs">
+              <span id="farmers-layer-icon">🛰️</span>
+              <span id="farmers-layer-text">Satellite View</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="relative rounded-2xl overflow-hidden border border-slate-700 h-[460px] bg-slate-950 shadow-inner">
+          <div id="farmers-field-map" class="w-full h-full z-0"></div>
+          
+          <!-- Legend Strip -->
+          <div class="absolute bottom-3 left-3 bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 text-white text-[11px] flex items-center gap-3 z-[400] shadow-lg">
+            <span class="flex items-center gap-1 font-bold text-emerald-400">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 🌾 Farmer Field Pin
+            </span>
+            <span class="text-slate-500">•</span>
+            <span class="text-slate-300">Click pin for Google Maps GPS Driving Directions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FARMERS DIRECTORY ROSTER TABLE & CARDS -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
+          <div>
+            <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+              <span>📋</span> <span>Complete Farmer Directory (<span id="farmers-count-badge">0</span> Farmers)</span>
+            </h3>
+            <p class="text-xs text-slate-400">Every farmer registered via Mobile App, OTP, or Google SSO with full location data</p>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="flex items-center flex-wrap gap-2">
+            <div class="relative">
+              <input id="input-search-farmers" type="text" oninput="filterFarmersList()" placeholder="Search farmer, phone, or village..." class="w-64 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-emerald-500 shadow-xs">
+            </div>
+            <select id="select-filter-village" onchange="filterFarmersList()" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 outline-none focus:border-emerald-500 cursor-pointer shadow-xs">
+              <option value="ALL">All Villages & Mandals</option>
+              <option value="Kankipadu">Kankipadu (కంకిపాడు)</option>
+              <option value="Gannavaram">Gannavaram (గన్నవరం)</option>
+              <option value="Poranki">Poranki (పోరంకి)</option>
+              <option value="Penamaluru">Penamaluru (పెనమలూరు)</option>
+              <option value="Vuyyuru">Vuyyuru (ఉయ్యూరు)</option>
+              <option value="Gudivada">Gudivada (గుడివాడ)</option>
+              <option value="Nuzvid">Nuzvid (నూజివీడు)</option>
+              <option value="Tenali">Tenali (తెనాలి)</option>
+              <option value="Mangalagiri">Mangalagiri (మంగళగిరి)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Farmers Cards Grid -->
+        <div id="farmers-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="col-span-full text-center py-10 text-slate-500 text-xs">
+            Loading Farmers Directory from SQLite Database...
+          </div>
         </div>
       </div>
 
@@ -1563,6 +1702,242 @@
       }
     };
 
+    
+    // =========================================================================
+    // FARMERS DIRECTORY & FIELD GPS MAP LOGIC
+    // =========================================================================
+    let allFarmersData = [];
+    let farmersFieldMap = null;
+    let farmersMapMarkers = [];
+    let farmersMapTileLayer = null;
+    let farmersMapTileType = 'satellite';
+
+    async function loadFarmersDirectory() {
+      try {
+        const res = await fetch('/api/farmers');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          allFarmersData = json.data;
+          renderFarmersDirectory(allFarmersData);
+          setTimeout(() => initFarmersMap(allFarmersData), 150);
+        }
+      } catch (err) {
+        console.error('Error loading farmers:', err);
+      }
+    }
+
+    function renderFarmersDirectory(farmers) {
+      const grid = document.getElementById('farmers-cards-grid');
+      const countBadge = document.getElementById('farmers-count-badge');
+      const statCount = document.getElementById('stat-farmers-count');
+      const statAcres = document.getElementById('stat-farmers-acres');
+
+      if (countBadge) countBadge.innerText = farmers.length;
+      if (statCount) statCount.innerText = farmers.length;
+
+      let totalAcres = 0;
+      farmers.forEach(f => { totalAcres += (parseFloat(f.total_acres) || 5.0); });
+      if (statAcres) statAcres.innerText = totalAcres.toFixed(1) + ' Ac';
+
+      if (!grid) return;
+      if (farmers.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center py-12 text-slate-500 text-xs">No farmers found matching the search criteria.</div>';
+        return;
+      }
+
+      grid.innerHTML = farmers.map(f => {
+        const lat = parseFloat(f.latitude) || 16.4971;
+        const lng = parseFloat(f.longitude) || 80.7856;
+        const mobile = f.mobile || '9502051939';
+        const village = f.village || 'Gannavaram';
+        const district = f.district || 'Krishna';
+        const crop = f.crop_type || 'Paddy (వరి)';
+        const acres = parseFloat(f.total_acres) || 5.0;
+        const initials = (f.full_name || 'Farmer').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+        return `
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 hover:border-emerald-500/50 transition-all space-y-3 shadow-md group">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md">
+                  ${initials}
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors">${f.full_name}</h4>
+                  <p class="text-[11px] text-slate-400 flex items-center gap-1">
+                    <span>📍</span> <span>${village}, ${district}</span>
+                  </p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                ${f.booking_count || 1} Booking${(f.booking_count || 1) > 1 ? 's' : ''}
+              </span>
+            </div>
+
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/60 text-xs space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400 text-[11px]">Primary Crop & Land:</span>
+                <span class="font-bold text-amber-300">🌾 ${crop} • ${acres} Ac</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400 text-[11px]">Exact GPS Coordinates:</span>
+                <span class="font-mono text-emerald-400 text-[11px] font-bold">📍 ${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E</span>
+              </div>
+            </div>
+
+            <!-- Contact Links -->
+            <div class="flex items-center gap-2 text-xs">
+              <a href="tel:${mobile}" class="flex-1 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-center flex items-center justify-center gap-1 transition">
+                <span>📞</span> <span>${mobile}</span>
+              </a>
+              <a href="https://wa.me/91${mobile}" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/60 text-emerald-300 font-bold flex items-center justify-center gap-1 transition" title="Message on WhatsApp">
+                <span>💬</span> <span>WA</span>
+              </a>
+            </div>
+
+            <!-- Action Buttons: Focus on Map & Google Maps Navigation -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button onclick="focusFarmerOnMap(${lat}, ${lng}, '${encodeURIComponent(f.full_name)}')" class="py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition">
+                <span>🎯</span> <span>Show on Map</span>
+              </button>
+              <a href="${gmapsUrl}" target="_blank" class="py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-950/40 transition">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Google Maps ↗</span>
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterFarmersList() {
+      const q = (document.getElementById('input-search-farmers')?.value || '').toLowerCase().trim();
+      const vFilter = document.getElementById('select-filter-village')?.value || 'ALL';
+
+      const filtered = allFarmersData.filter(f => {
+        const matchesQuery = !q ||
+          (f.full_name && f.full_name.toLowerCase().includes(q)) ||
+          (f.mobile && f.mobile.includes(q)) ||
+          (f.village && f.village.toLowerCase().includes(q));
+
+        const matchesVillage = (vFilter === 'ALL') ||
+          (f.village && f.village.toLowerCase().includes(vFilter.toLowerCase()));
+
+        return matchesQuery && matchesVillage;
+      });
+
+      renderFarmersDirectory(filtered);
+      initFarmersMap(filtered);
+    }
+
+    function initFarmersMap(farmers) {
+      if (!window.L) return;
+      const mapEl = document.getElementById('farmers-field-map');
+      if (!mapEl) return;
+
+      if (!farmersFieldMap) {
+        farmersFieldMap = L.map('farmers-field-map', {
+          center: [16.4971, 80.7856],
+          zoom: 11,
+          zoomControl: true,
+          attributionControl: false
+        });
+
+        // Default to Satellite View
+        farmersMapTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19
+        }).addTo(farmersFieldMap);
+        farmersMapTileType = 'satellite';
+      } else {
+        farmersFieldMap.invalidateSize();
+      }
+
+      // Clear previous markers
+      farmersMapMarkers.forEach(m => farmersFieldMap.removeLayer(m));
+      farmersMapMarkers = [];
+
+      const bounds = [];
+
+      farmers.forEach(f => {
+        const lat = parseFloat(f.latitude) || 16.4971;
+        const lng = parseFloat(f.longitude) || 80.7856;
+        bounds.push([lat, lng]);
+
+        const farmerIcon = L.divIcon({
+          className: 'custom-farmer-pin',
+          html: `
+            <div style="background: #15803D; color: white; padding: 4px 8px; border-radius: 12px; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); border: 2px solid #ffffff; white-space: nowrap;">
+              <span>🌾</span>
+              <span>${f.full_name}</span>
+            </div>
+          `,
+          iconSize: [120, 30],
+          iconAnchor: [60, 15]
+        });
+
+        const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+        const marker = L.marker([lat, lng], { icon: farmerIcon }).addTo(farmersFieldMap);
+
+        marker.bindPopup(`
+          <div style="font-family: inherit; color: #0f172a; padding: 6px; min-width: 230px;">
+            <h4 style="font-weight: 800; font-size: 14px; margin: 0 0 4px 0; color: #15803D;">🌾 ${f.full_name}</h4>
+            <p style="font-size: 11px; margin: 0 0 4px 0; color: #475569;">📍 ${f.village || 'Gannavaram'}, ${f.district || 'Krishna'}</p>
+            <p style="font-size: 11px; margin: 0 0 4px 0; color: #475569;">🌱 Crop: <strong>${f.crop_type || 'Paddy'}</strong> • <strong>${f.total_acres || 5} Acres</strong></p>
+            <p style="font-size: 11px; margin: 0 0 6px 0; color: #059669; font-weight: bold;">📞 Mobile: ${f.mobile || '9502051939'}</p>
+            <p style="font-size: 10px; margin: 0 0 8px 0; color: #64748b; font-family: monospace;">GPS: ${lat.toFixed(5)}, ${lng.toFixed(5)}</p>
+            <a href="${gmapsUrl}" target="_blank" style="display: block; text-align: center; background: #15803D; color: white; padding: 7px 12px; border-radius: 8px; font-weight: 800; font-size: 11px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+              🧭 Open Google Maps Turn-by-Turn GPS ↗
+            </a>
+          </div>
+        `);
+
+        marker._farmerLat = lat;
+        marker._farmerLng = lng;
+        marker._farmerName = f.full_name;
+        farmersMapMarkers.push(marker);
+      });
+
+      if (bounds.length > 0) {
+        farmersFieldMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+      }
+    }
+
+    function toggleFarmersMapLayer() {
+      if (!farmersFieldMap) return;
+      if (farmersMapTileType === 'satellite') {
+        farmersFieldMap.removeLayer(farmersMapTileLayer);
+        farmersMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(farmersFieldMap);
+        farmersMapTileType = 'street';
+        document.getElementById('farmers-layer-icon').innerText = '🗺️';
+        document.getElementById('farmers-layer-text').innerText = 'Street View';
+      } else {
+        farmersFieldMap.removeLayer(farmersMapTileLayer);
+        farmersMapTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(farmersFieldMap);
+        farmersMapTileType = 'satellite';
+        document.getElementById('farmers-layer-icon').innerText = '🛰️';
+        document.getElementById('farmers-layer-text').innerText = 'Satellite View';
+      }
+    }
+
+    function recenterFarmersMap() {
+      if (farmersFieldMap && farmersMapMarkers.length > 0) {
+        const bounds = farmersMapMarkers.map(m => [m._farmerLat, m._farmerLng]);
+        farmersFieldMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+      }
+    }
+
+    function focusFarmerOnMap(lat, lng, encodedName) {
+      const name = decodeURIComponent(encodedName);
+      if (farmersFieldMap) {
+        farmersFieldMap.flyTo([lat, lng], 16);
+        const targetMarker = farmersMapMarkers.find(m => m._farmerName === name);
+        if (targetMarker) {
+          setTimeout(() => targetMarker.openPopup(), 400);
+        }
+      }
+    }
+
     function loadSystemSettings() {
       try {
         const saved = localStorage.getItem('trinetra_system_settings');
@@ -1653,6 +2028,7 @@
       if (confirm('Are you sure you want to reset all settings to company defaults?')) {
         localStorage.removeItem('trinetra_system_settings');
         loadSystemSettings();
+      loadFarmersDirectory();
         if (opsChannel) {
           opsChannel.postMessage({
             type: 'SETTINGS_UPDATE',
@@ -1722,11 +2098,12 @@
     // Load settings on boot
     window.addEventListener('DOMContentLoaded', () => {
       loadSystemSettings();
+      loadFarmersDirectory();
     });
 
     // Switch Tabs
     function switchTab(tabId) {
-      const tabs = ['queue', 'map', 'ai_assistant', 'flight_monitor', 'reports', 'maintenance', 'fleet', 'billing', 'pricing', 'database'];
+      const tabs = ['queue', 'farmers', 'map', 'ai_assistant', 'flight_monitor', 'reports', 'maintenance', 'fleet', 'billing', 'pricing', 'database'];
       tabs.forEach(t => {
         const sec = document.getElementById('tab-' + t);
         const btn = document.getElementById('tab-btn-' + t);
@@ -1739,7 +2116,9 @@
           }
         }
       });
-      if (tabId === 'map') {
+      if (tabId === 'farmers') {
+        loadFarmersDirectory();
+      } else if (tabId === 'map') {
         setTimeout(initFleetMap, 200);
       } else if (tabId === 'database') {
         loadDatabaseExplorer();

@@ -717,14 +717,46 @@
               </div>
 
               <!-- 3. Enter Village and Field Location -->
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="block text-xs font-bold text-slate-800 mb-1" data-key="label_field_village">3. గ్రామం (Village):</label>
-                  <input id="booking-village" type="text" value="కంకిపాడు (Kankipadu)" class="w-full px-2.5 py-2 text-xs font-semibold rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+              <div class="space-y-2.5 bg-slate-50/80 p-3 rounded-2xl border border-slate-200">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-bold text-slate-800 flex items-center gap-1.5" data-key="label_field_village">
+                    <span>🏘️</span> <span>3. గ్రామం & మండలం (Select Village & Mandal):</span>
+                  </label>
+                  <button type="button" onclick="detectFarmerGps()" class="text-[10px] font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-2 py-1 rounded-lg flex items-center gap-1 transition-all shadow-xs">
+                    <span>🎯</span> <span>నా పొలం GPS లొకేషన్</span>
+                  </button>
                 </div>
+
+                <!-- Dropdown of Krishna & Guntur Villages with Real GPS Coordinates -->
                 <div>
-                  <label class="block text-xs font-bold text-slate-800 mb-1" data-key="label_field_landmark">పొలం ల్యాండ్‌మార్క్ (Landmark):</label>
-                  <input id="booking-landmark" type="text" placeholder="ఉదా: చెరువు గట్టు వద్ద" value="రామాలయం వెనుక పొలం" class="w-full px-2.5 py-2 text-xs font-semibold rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+                  <select id="booking-village-select" onchange="onVillageSelectChange(this.value)" class="w-full px-3 py-2 text-xs font-bold rounded-xl border-2 border-emerald-500/60 bg-white text-slate-900 focus:border-brand-500 outline-none shadow-xs">
+                    <option value="" disabled>-- గ్రామాన్ని ఎంచుకోండి (Choose Village) --</option>
+                    <option value="Kankipadu" data-lat="16.4258" data-lng="80.7583" selected>కంకిపాడు (Kankipadu) — 16.4258° N, 80.7583° E</option>
+                    <option value="Gannavaram" data-lat="16.5434" data-lng="80.8028">గన్నవరం (Gannavaram) — 16.5434° N, 80.8028° E</option>
+                    <option value="Poranki" data-lat="16.4800" data-lng="80.7000">పోరంకి (Poranki) — 16.4800° N, 80.7000° E</option>
+                    <option value="Penamaluru" data-lat="16.4673" data-lng="80.7188">పెనమలూరు (Penamaluru) — 16.4673° N, 80.7188° E</option>
+                    <option value="Vuyyuru" data-lat="16.3688" data-lng="80.8441">ఉయ్యూరు (Vuyyuru) — 16.3688° N, 80.8441° E</option>
+                    <option value="Gudivada" data-lat="16.4410" data-lng="80.9926">గుడివాడ (Gudivada) — 16.4410° N, 80.9926° E</option>
+                    <option value="Nuzvid" data-lat="16.7850" data-lng="80.8468">నూజివీడు (Nuzvid) — 16.7850° N, 80.8468° E</option>
+                    <option value="Tenali" data-lat="16.2437" data-lng="80.6400">తెనాలి (Tenali) — 16.2437° N, 80.6400° E</option>
+                    <option value="Mangalagiri" data-lat="16.4300" data-lng="80.5600">మంగళగిరి (Mangalagiri) — 16.4300° N, 80.5600° E</option>
+                    <option value="Enikepadu" data-lat="16.5186" data-lng="80.6975">ఏనికపాడు (Enikepadu / Vijayawada Rural) — 16.5186° N, 80.6975° E</option>
+                    <option value="Ibrahimpatnam" data-lat="16.5861" data-lng="80.5283">ఇబ్రహీంపట్నం (Ibrahimpatnam) — 16.5861° N, 80.5283° E</option>
+                    <option value="Mylavaram" data-lat="16.7725" data-lng="80.6378">మైలవరం (Mylavaram) — 16.7725° N, 80.6378° E</option>
+                    <option value="Amaravati" data-lat="16.5735" data-lng="80.3575">అమరావతి (Amaravati) — 16.5735° N, 80.3575° E</option>
+                    <option value="Guntur Rural" data-lat="16.3067" data-lng="80.4365">గుంటూరు రూరల్ (Guntur Rural) — 16.3067° N, 80.4365° E</option>
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-700 mb-0.5">గ్రామం పేరు మార్చండి (Edit Village):</label>
+                    <input id="booking-village" type="text" value="కంకిపాడు (Kankipadu)" oninput="state.booking.village = this.value" class="w-full px-2.5 py-1.5 text-xs font-semibold rounded-xl border border-slate-300 focus:border-brand-500 outline-none bg-white">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-700 mb-0.5" data-key="label_field_landmark">పొలం ల్యాండ్‌మార్క్ (Landmark):</label>
+                    <input id="booking-landmark" type="text" placeholder="ఉదా: చెరువు గట్టు వద్ద" value="రామాలయం వెనుక పొలం" oninput="state.booking.landmark = this.value" class="w-full px-2.5 py-1.5 text-xs font-semibold rounded-xl border border-slate-300 focus:border-brand-500 outline-none bg-white">
+                  </div>
                 </div>
               </div>
 
@@ -1754,13 +1786,9 @@
 
     function directDialNumber(number = '9502051939') {
       try {
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = 'tel:' + number;
-        document.body.appendChild(iframe);
-        setTimeout(() => { try { document.body.removeChild(iframe); } catch(e){} }, 2000);
-      } catch(e) {
         window.location.href = 'tel:' + number;
+      } catch(e) {
+        window.open('tel:' + number, '_system');
       }
     }
     window.directDialNumber = directDialNumber;
@@ -3176,7 +3204,9 @@
           preferred_date: state.booking.date,
           preferred_time: '07:30 AM',
           service_type: state.booking.service || 'pesticide',
-          farmer_notes: state.booking.landmark
+          farmer_notes: state.booking.landmark,
+          latitude: state.booking.lat,
+          longitude: state.booking.lng
         };
 
         const res = await fetch('/api/bookings', {
@@ -3987,6 +4017,32 @@
         [centerLat - latDelta, centerLng - lngDelta]
       ];
     }
+
+    
+    function onVillageSelectChange(val) {
+      const sel = document.getElementById('booking-village-select');
+      if (!sel) return;
+      const opt = sel.options[sel.selectedIndex];
+      if (!opt) return;
+      const lat = parseFloat(opt.getAttribute('data-lat'));
+      const lng = parseFloat(opt.getAttribute('data-lng'));
+      const villageText = opt.text.split('—')[0].trim();
+
+      state.booking.village = villageText;
+      const inp = document.getElementById('booking-village');
+      if (inp) inp.value = villageText;
+
+      if (!isNaN(lat) && !isNaN(lng)) {
+        state.booking.lat = parseFloat(lat.toFixed(6));
+        state.booking.lng = parseFloat(lng.toFixed(6));
+        if (plotMap) {
+          plotMap.flyTo([lat, lng], 16);
+          if (plotMarker) plotMarker.setLatLng([lat, lng]);
+          updatePlotCoordinates(lat, lng);
+        }
+      }
+    }
+    window.onVillageSelectChange = onVillageSelectChange;
 
     function initPlotMap() {
       if (!window.L) return;

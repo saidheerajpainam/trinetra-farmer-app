@@ -782,8 +782,13 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/api/farmers' && req.method === 'GET') {
       const rows = db.prepare(`
         SELECT f.*, u.mobile, u.role, u.is_active,
+               COALESCE((SELECT SUM(area_acres) FROM farms WHERE farmer_id = f.id), 5.0) as total_acres,
+               COALESCE((SELECT crop_type FROM farms WHERE farmer_id = f.id ORDER BY id DESC LIMIT 1), 'Paddy') as crop_type,
+               COALESCE((SELECT latitude FROM farms WHERE farmer_id = f.id AND latitude IS NOT NULL ORDER BY id DESC LIMIT 1), 16.4971) as latitude,
+               COALESCE((SELECT longitude FROM farms WHERE farmer_id = f.id AND longitude IS NOT NULL ORDER BY id DESC LIMIT 1), 80.7856) as longitude,
                (SELECT COUNT(*) FROM farms WHERE farmer_id = f.id) as farm_count,
-               (SELECT COUNT(*) FROM bookings WHERE farmer_id = f.id) as booking_count
+               (SELECT COUNT(*) FROM bookings WHERE farmer_id = f.id) as booking_count,
+               (SELECT status FROM bookings WHERE farmer_id = f.id ORDER BY id DESC LIMIT 1) as latest_booking_status
         FROM farmers f
         JOIN users u ON u.id = f.user_id
         ORDER BY f.id DESC
@@ -999,6 +1004,8 @@ const server = http.createServer(async (req, res) => {
       const preferredDate = body.preferred_date || body.scheduled_date || body.date || new Date().toISOString().split('T')[0];
       const preferredTime = body.preferred_time || body.time || '07:30 AM';
       const notes = body.farmer_notes || body.notes || 'Direct request from mobile app';
+      const lat = parseFloat(body.latitude || body.lat || 16.4971);
+      const lng = parseFloat(body.longitude || body.lng || 80.7856);
 
       if (areaAcres <= 0) {
         return sendJson(res, 400, { success: false, error: 'Area in acres must be greater than 0.' });
@@ -1040,9 +1047,9 @@ const server = http.createServer(async (req, res) => {
             farmId = existingFarm.id;
           } else {
             db.prepare(`
-              INSERT INTO farms (farmer_id, farm_name, crop_type, area_acres, village, mandal, district)
-              VALUES (?, ?, ?, ?, ?, ?, ?)
-            `).run(farmerId, farmerName + "'s Field", crop, areaAcres, village, mandal, district);
+              INSERT INTO farms (farmer_id, farm_name, crop_type, area_acres, village, mandal, district, latitude, longitude)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `).run(farmerId, farmerName + "'s Field", crop, areaAcres, village, mandal, district, lat, lng);
             const newFarm = db.prepare('SELECT id FROM farms WHERE farmer_id = ? LIMIT 1').get(farmerId);
             farmId = newFarm ? newFarm.id : null;
           }
@@ -1069,18 +1076,21 @@ const server = http.createServer(async (req, res) => {
             booking_code, farmer_id, farm_id, service_id, pilot_id,
             crop_type, area_acres, village, mandal, district,
             preferred_date, preferred_time, estimated_amount, final_amount,
-            payment_method, payment_status, status, farmer_notes
+            payment_method, payment_status, status, farmer_notes,
+            latitude, longitude
           ) VALUES (
             ?, ?, ?, ?, NULL,
             ?, ?, ?, ?, ?,
             ?, ?, ?, ?,
-            'pay_after_service', 'pending', 'pending', ?
+            'pay_after_service', 'pending', 'pending', ?,
+            ?, ?
           )
         `).run(
           bookingCode, farmerId, farmId, serviceId,
           crop, areaAcres, village, mandal, district,
           preferredDate, preferredTime, estimatedAmount, estimatedAmount,
-          notes
+          notes,
+          lat, lng
         );
 
         const newBooking = db.prepare('SELECT * FROM bookings WHERE booking_code = ?').get(bookingCode);
@@ -1353,6 +1363,9 @@ const server = http.createServer(async (req, res) => {
     // --- O. Serve Static Frontends & Assets ---
     let reqPath = pathname;
     if (reqPath === '/' || reqPath === '') reqPath = '/farmer-app.html';
+    if (reqPath === '/admin' || reqPath === '/admin/' || reqPath === '/admin.html') reqPath = '/admin-console.html';
+    if (reqPath === '/pilot' || reqPath === '/pilot/' || reqPath === '/pilot.html') reqPath = '/pilot-app.html';
+    if (reqPath === '/farmer' || reqPath === '/farmer/' || reqPath === '/app') reqPath = '/farmer-app.html';
     return serveStatic(req, res, reqPath);
 
   } catch (err) {
