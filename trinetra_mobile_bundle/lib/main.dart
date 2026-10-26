@@ -55,6 +55,7 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
   String _currentUrl = defaultCloudUrl;
   Timer? _autoRetryTimer;
   int _retryCountdown = 0;
+  DateTime? _lastBackPressTime;
 
   @override
   void initState() {
@@ -306,11 +307,55 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
+
+        try {
+          // Ask in-app JavaScript router to handle the back press
+          final dynamic jsResult = await _controller.runJavaScriptReturningResult(
+            'window.handleTrinetraBack ? window.handleTrinetraBack() : false;'
+          );
+
+          final String resStr = jsResult?.toString().replaceAll('"', '').trim().toLowerCase() ?? 'false';
+
+          if (resStr == 'true' || resStr == 'confirm_exit') {
+            // Handled inside web app (navigated back to previous screen, closed modal, or showed exit confirmation toast)
+            return;
+          }
+
+          if (resStr == 'exit') {
+            // Confirmed double-back press from home screen
+            SystemNavigator.pop();
+            return;
+          }
+        } catch (e) {
+          debugPrint('[Trinetra] handleTrinetraBack error: $e');
+        }
+
+        // Secondary fallback: WebView history
         if (await _controller.canGoBack()) {
           await _controller.goBack();
-        } else {
-          SystemNavigator.pop();
+          return;
         }
+
+        // Double-tap on root screen to exit safely
+        final now = DateTime.now();
+        if (_lastBackPressTime == null || now.difference(_lastBackPressTime!) > const Duration(seconds: 2)) {
+          _lastBackPressTime = now;
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'యాప్ నుండి నిష్క్రమించడానికి మళ్ళీ బ్యాక్ నొక్కండి (Press back again to exit)',
+                  style: TextStyle(fontSize: 12),
+                ),
+                duration: Duration(seconds: 2),
+                backgroundColor: Color(0xFF1E293B),
+              ),
+            );
+          }
+          return;
+        }
+
+        SystemNavigator.pop();
       },
       child: Scaffold(
         backgroundColor: const Color(0xFF15803D),

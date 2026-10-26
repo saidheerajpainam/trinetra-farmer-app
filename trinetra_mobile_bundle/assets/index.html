@@ -316,7 +316,7 @@
 
           <p class="mt-3 text-xs text-slate-500 font-semibold">
             <span data-key="new_user_prompt">New User?</span> 
-            <button type="button" onclick="goToScreen('screen-login')" class="text-emerald-700 font-black hover:underline" data-key="create_account">Create Account / నమోదు</button>
+            <button type="button" onclick="goToScreen('screen-register')" class="text-emerald-700 font-black hover:underline" data-key="create_account">Create Account / నమోదు</button>
           </p>
         </div>
 
@@ -328,12 +328,165 @@
       </section>
 
       <!-- ============================================================ -->
+      <!-- SCREEN 3B: CREATE ACCOUNT / FARMER REGISTRATION              -->
+      <!-- ============================================================ -->
+      <section id="screen-register" class="screen-view hidden min-h-full flex flex-col justify-between bg-gradient-to-b from-[#F0FDF4] via-white to-[#F0FDF4] p-5 relative pb-8">
+        <div>
+          <!-- Subheader with prominent Back Button -->
+          <div class="flex items-center justify-between mb-3 border-b border-emerald-100 pb-2">
+            <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
+              <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full flex items-center gap-1 shadow-xs">
+              <span>🌾</span> <span data-key="badge_farmer_reg">రైతు నమోదు (Farmer Registration)</span>
+            </span>
+          </div>
+
+          <div class="text-center mb-4">
+            <div class="flex justify-center mb-1">
+              <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-10 w-auto object-contain" onerror="this.src='assets/logo.png'">
+            </div>
+            <h1 class="text-xl font-black text-slate-900" data-key="create_account_title">
+              రైతు ఖాతా నమోదు
+            </h1>
+            <p class="text-xs text-slate-500 font-semibold mt-0.5" data-key="create_account_subtitle">
+              నమోదు చేసుకోండి మరియు తక్షణ డ్రోన్ సేవలను పొందండి
+            </p>
+          </div>
+
+          <!-- Registration Form -->
+          <form id="form-create-account" onsubmit="handleCreateAccount(event)" class="space-y-3 text-left">
+            <!-- Full Name -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_farmer_name">
+                Farmer Full Name / రైతు పూర్తి పేరు *
+              </label>
+              <div class="flex items-center rounded-xl border-2 border-emerald-500/70 bg-white px-3 py-2.5 shadow-xs focus-within:ring-2 focus-within:ring-emerald-500 transition">
+                <span class="text-base mr-2">👨‍🌾</span>
+                <input type="text" id="reg-name" required placeholder="ఉదా: పి. సాయి ధీరజ్ (P. Saidheeraj)" class="w-full text-xs sm:text-sm font-bold text-slate-900 bg-transparent outline-none">
+              </div>
+            </div>
+
+            <!-- Mobile Number -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_mobile_number">
+                Mobile Number / మొబైల్ నంబర్ *
+              </label>
+              <div class="flex items-center rounded-xl border-2 border-emerald-500/70 bg-white px-3 py-2.5 shadow-xs focus-within:ring-2 focus-within:ring-emerald-500 transition">
+                <span class="text-xs font-black text-slate-800 pr-2 border-r border-slate-200 flex items-center gap-1">
+                  <span>🇮🇳</span> <span>+91</span>
+                </span>
+                <input type="tel" id="reg-mobile" maxlength="10" required placeholder="95020 51939" class="w-full pl-3 text-xs sm:text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
+              </div>
+            </div>
+
+            <!-- Village & Mandal (2 cols) -->
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_village">
+                  Village / గ్రామం *
+                </label>
+                <input type="text" id="reg-village" required placeholder="పోరంకి" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_mandal">
+                  Mandal / మండలం *
+                </label>
+                <input type="text" id="reg-mandal" required placeholder="పెనమలూరు" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
+              </div>
+            </div>
+
+            <!-- District Dropdown -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_district">
+                District / జిల్లా (ఆంధ్రప్రదేశ్) *
+              </label>
+              <div class="relative">
+                <select id="reg-district" class="w-full appearance-none rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
+                  <option value="Krishna" selected>Krishna (కృష్ణా)</option>
+                  <option value="NTR">NTR (ఎన్టీఆర్)</option>
+                  <option value="Guntur">Guntur (గుంటూరు)</option>
+                  <option value="Bapatla">Bapatla (బాపట్ల)</option>
+                  <option value="Palnadu">Palnadu (పల్నాడు)</option>
+                  <option value="West Godavari">West Godavari (పశ్చిమ గోదావరి)</option>
+                  <option value="Eluru">Eluru (ఏలూరు)</option>
+                  <option value="East Godavari">East Godavari (తూర్పు గోదావరి)</option>
+                  <option value="Kakinada">Kakinada (కాకినాడ)</option>
+                  <option value="Dr. B.R. Ambedkar Konaseema">Dr. B.R. Ambedkar Konaseema (కోనసీమ)</option>
+                  <option value="Prakasam">Prakasam (ప్రకాశం)</option>
+                  <option value="SPSR Nellore">SPSR Nellore (నెల్లూరు)</option>
+                  <option value="Kurnool">Kurnool (కర్నూలు)</option>
+                  <option value="Nandyal">Nandyal (నంద్యాల)</option>
+                  <option value="Anantapur">Anantapur (అనంతపురం)</option>
+                  <option value="Sri Sathya Sai">Sri Sathya Sai (శ్రీ సత్యసాయి)</option>
+                  <option value="YSR Kadapa">YSR Kadapa (వైఎస్సార్ కడప)</option>
+                  <option value="Annamayya">Annamayya (అన్నమయ్య)</option>
+                  <option value="Chittoor">Chittoor (చిత్తూరు)</option>
+                  <option value="Tirupati">Tirupati (తిరుపతి)</option>
+                  <option value="Visakhapatnam">Visakhapatnam (విశాఖపట్నం)</option>
+                  <option value="Anakapalli">Anakapalli (అనకాపల్లి)</option>
+                  <option value="Vizianagaram">Vizianagaram (విజయనగరం)</option>
+                  <option value="Srikakulam">Srikakulam (శ్రీకాకుళం)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Crop & Acres (2 cols) -->
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_primary_crop">
+                  Primary Crop / పంట *
+                </label>
+                <select id="reg-crop" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
+                  <option value="Paddy" selected>🌾 Paddy (వరి)</option>
+                  <option value="Cotton">🌿 Cotton (పత్తి)</option>
+                  <option value="Chilli">🌶️ Chilli (మిర్చి)</option>
+                  <option value="Maize">🌽 Maize (మొక్కజొన్న)</option>
+                  <option value="Tobacco">🍃 Tobacco (పొగాకు)</option>
+                  <option value="Horticulture">🥭 Horticulture (తోటలు)</option>
+                  <option value="Other">🌱 Other (ఇతరాలు)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_farm_acres">
+                  Land / ఎకరాలు *
+                </label>
+                <input type="number" id="reg-acres" min="0.5" max="100" step="0.5" value="5.0" required placeholder="5.0" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
+              </div>
+            </div>
+
+            <!-- Submit CTA -->
+            <button type="submit" id="btn-submit-register" class="w-full mt-2 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-sm shadow-btn flex items-center justify-center gap-2 transition-all transform active:scale-95">
+              <span>✅</span> <span data-key="btn_create_account_action">Create Account / ఖాతా సృష్టించండి →</span>
+            </button>
+          </form>
+
+          <!-- Back to Login Link -->
+          <div class="text-center mt-3">
+            <p class="text-xs text-slate-500 font-semibold">
+              <span data-key="already_have_account">Already registered?</span> 
+              <button type="button" onclick="goToScreen('screen-login')" class="text-emerald-700 font-black hover:underline" data-key="link_login_here">Login here / లాగిన్ అవ్వండి</button>
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <div class="w-full h-16 rounded-2xl overflow-hidden relative shadow-sm border border-emerald-100">
+            <img src="assets/farm-landscape-bg.jpg" alt="Fields" class="w-full h-full object-cover" onerror="this.src='assets/login-bg.jpg'">
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
       <!-- SCREEN 4: OTP VERIFICATION (EXACT MATCH TO DESIGN 4)          -->
       <!-- ============================================================ -->
       <section id="screen-otp" class="screen-view hidden min-h-full flex flex-col justify-between bg-white p-6 relative">
         <div class="pt-2">
           <div class="flex items-center justify-between mb-4">
-            <button onclick="goToScreen('screen-login')" class="p-2 -ml-2 text-slate-700 hover:text-emerald-700 transition">
+            <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
@@ -801,7 +954,7 @@
       <section id="screen-booking" class="screen-view hidden min-h-full flex flex-col justify-between bg-white p-4 relative pb-20">
         <div class="space-y-4">
           <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
-            <button onclick="goToScreen('screen-dashboard')" class="p-1 -ml-1 text-slate-700 hover:text-emerald-700 transition">
+            <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <h1 class="text-base font-black text-slate-900" data-key="book_drone_service_title">
@@ -985,7 +1138,7 @@
       <section id="screen-tracking" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-50 p-4 relative pb-20">
         <div class="space-y-3.5">
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 bg-white -mx-4 px-4 -mt-4 pt-3">
-            <button onclick="goToScreen('screen-dashboard')" class="p-1 -ml-1 text-slate-700 hover:text-emerald-700 transition">
+            <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <h1 class="text-base font-black text-slate-900" data-key="live_tracking_title">
@@ -1088,7 +1241,7 @@
         <div class="space-y-4">
           <div class="flex items-center justify-between border-b border-slate-200 pb-2 bg-white -mx-4 px-4 -mt-4 pt-3">
             <div class="flex items-center gap-2">
-              <button onclick="goToScreen('screen-tracking')" class="p-1 -ml-1 text-slate-700 hover:text-emerald-700 transition">
+              <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
                 <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
               </button>
               <h1 class="text-base font-black text-slate-900" data-key="spraying_in_progress_title">
@@ -1170,7 +1323,7 @@
       <section id="screen-completed" class="screen-view hidden min-h-full flex flex-col justify-between bg-white p-6 text-center relative pb-20">
         <div class="space-y-4 pt-4">
           <div class="flex items-center justify-start -mt-2 -ml-2 mb-2">
-            <button onclick="goToScreen('screen-dashboard')" class="p-1 text-slate-700 hover:text-emerald-700 transition">
+            <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <span class="text-xs font-bold text-slate-500 pl-1" data-key="lbl_service_summary">Service Summary</span>
@@ -1243,7 +1396,7 @@
       <section id="screen-payment-options" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-50 p-6 relative pb-20">
         <div class="space-y-4">
           <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-            <button onclick="goToScreen('screen-completed')" class="p-1 -ml-2 text-slate-700 hover:text-emerald-700 transition">
+            <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <div class="text-center">
@@ -1311,7 +1464,7 @@
       <section id="screen-upi-qr" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-50 p-6 relative pb-20">
         <div class="space-y-3.5 text-center">
           <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-            <button onclick="goToScreen('screen-payment-options')" class="p-1 -ml-2 text-slate-700 hover:text-emerald-700 transition">
+            <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <h1 class="text-sm font-black text-slate-900" data-key="upi_payment_title">UPI Payment (SBI)</h1>
@@ -1453,7 +1606,7 @@
       <section id="screen-invoice" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-100 p-4 relative pb-20">
         <div class="space-y-4">
           <div class="flex items-center justify-between border-b border-slate-200 pb-2 no-print">
-            <button onclick="goToScreen('screen-dashboard')" class="p-1 -ml-1 text-slate-700 hover:text-emerald-700 transition">
+            <button type="button" onclick="goBack()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 text-slate-700 flex items-center justify-center transition shadow-xs border border-slate-200" title="Back / వెనుకకు">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <h1 class="text-base font-black text-slate-900" data-key="invoice_receipt_title">
@@ -1708,7 +1861,20 @@
         btn_send_otp: 'OTP పంపండి →',
         btn_continue_google: 'గూగుల్ ద్వారా కొనసాగించండి',
         new_user_prompt: 'కొత్త రైతా?',
-        create_account: 'ఖాతా తెరవండి',
+        badge_farmer_reg: 'రైతు నమోదు (Farmer Registration)',
+        create_account_title: 'రైతు ఖాతా నమోదు',
+        create_account_subtitle: 'నమోదు చేసుకోండి మరియు తక్షణ డ్రోన్ సేవలను పొందండి',
+        lbl_farmer_name: 'రైతు పూర్తి పేరు',
+        lbl_village: 'గ్రామం',
+        lbl_mandal: 'మండలం',
+        lbl_district: 'జిల్లా (ఆంధ్రప్రదేశ్)',
+        lbl_primary_crop: 'ప్రధాన పంట',
+        lbl_farm_acres: 'భూమి విస్తీర్ణం (ఎకరాలు)',
+        btn_create_account_action: 'ఖాతా సృష్టించండి →',
+        already_have_account: 'ఇప్పటికే ఖాతా ఉందా?',
+        link_login_here: 'ఇక్కడే లాగిన్ అవ్వండి',
+        btn_back: 'వెనుకకు',
+        create_account: 'ఖాతా తెరవండి / నమోదు',
         enter_otp_title: 'OTP నమోదు చేయండి',
         otp_sent_to: 'మేము 6 అంకెల OTP ని పంపాము:',
         resend_otp_in: 'మళ్ళీ పంపడానికి సమయం:',
@@ -1829,6 +1995,19 @@
         btn_send_otp: 'Send OTP →',
         btn_continue_google: 'Continue with Google',
         new_user_prompt: 'New User?',
+        badge_farmer_reg: 'Farmer Registration',
+        create_account_title: 'Create Farmer Account',
+        create_account_subtitle: 'Register to access precision drone services easily',
+        lbl_farmer_name: 'Farmer Full Name',
+        lbl_village: 'Village',
+        lbl_mandal: 'Mandal',
+        lbl_district: 'District (Andhra Pradesh)',
+        lbl_primary_crop: 'Primary Crop',
+        lbl_farm_acres: 'Farm Land (Acres)',
+        btn_create_account_action: 'Create Account →',
+        already_have_account: 'Already have an account?',
+        link_login_here: 'Login here',
+        btn_back: 'Back',
         create_account: 'Create Account',
         enter_otp_title: 'Enter OTP',
         otp_sent_to: 'We have sent a 6-digit OTP to',
@@ -1936,9 +2115,14 @@
     };
 
     // =========================================================================
-    // NAVIGATION & SCREEN ROUTER
+    // NAVIGATION & SCREEN ROUTER WITH BACK NAVIGATION & HISTORY
     // =========================================================================
     function goToScreen(screenId, addToHistory = true) {
+      // 1. Close overlays / modals when switching screens
+      closeTabOverlay();
+      const soilModal = document.getElementById('soil-health-modal');
+      if (soilModal) soilModal.classList.add('hidden');
+
       const allScreens = document.querySelectorAll('.screen-view');
       allScreens.forEach(s => s.classList.add('hidden'));
 
@@ -1950,6 +2134,13 @@
           state.screenHistory.push(screenId);
         }
 
+        // Push state to browser/webview history for Android back button compatibility
+        try {
+          if (window.history && window.history.pushState) {
+            window.history.pushState({ screen: screenId }, '', '#' + screenId);
+          }
+        } catch(e) {}
+
         if (screenId === 'screen-tracking') {
           setTimeout(initTrackingMap, 200);
         }
@@ -1959,13 +2150,175 @@
     }
 
     function goBack() {
+      // 1. If any modal or tab overlay is open, close it first
+      const openOverlays = document.querySelectorAll('[id^="tab-overlay-"]:not(.hidden)');
+      if (openOverlays.length > 0) {
+        closeTabOverlay();
+        return true;
+      }
+      const soilModal = document.getElementById('soil-health-modal');
+      if (soilModal && !soilModal.classList.contains('hidden')) {
+        soilModal.classList.add('hidden');
+        return true;
+      }
+
+      // 2. Pop previous screen
       if (state.screenHistory.length > 1) {
         state.screenHistory.pop();
         const prev = state.screenHistory[state.screenHistory.length - 1];
         goToScreen(prev, false);
+        return true;
       } else {
-        goToScreen('screen-dashboard', false);
+        // Fallback to home dashboard if on a subscreen
+        if (state.currentScreen !== 'screen-dashboard' && 
+            state.currentScreen !== 'screen-splash' && 
+            state.currentScreen !== 'screen-lang' &&
+            state.currentScreen !== 'screen-login') {
+          goToScreen('screen-dashboard', false);
+          return true;
+        }
+        return false;
       }
+    }
+
+    // Android Hardware & Gesture Back Button Handler
+    let _lastBackTapTime = 0;
+    window.handleTrinetraBack = function() {
+      // 1. Close any open tab overlay
+      const openOverlays = document.querySelectorAll('[id^="tab-overlay-"]:not(.hidden)');
+      if (openOverlays.length > 0) {
+        closeTabOverlay();
+        return true;
+      }
+
+      // 2. Close any open modal
+      const soilModal = document.getElementById('soil-health-modal');
+      if (soilModal && !soilModal.classList.contains('hidden')) {
+        soilModal.classList.add('hidden');
+        return true;
+      }
+
+      // 3. Subscreens: navigate back to previous screen
+      if (state.currentScreen === 'screen-register') {
+        goToScreen('screen-login', false);
+        return true;
+      }
+      if (state.currentScreen === 'screen-otp') {
+        goToScreen('screen-login', false);
+        return true;
+      }
+      if (state.currentScreen !== 'screen-dashboard' &&
+          state.currentScreen !== 'screen-splash' &&
+          state.currentScreen !== 'screen-lang' &&
+          state.currentScreen !== 'screen-login') {
+        goBack();
+        return true;
+      }
+
+      // 4. On Root screen (Dashboard or Login): Double-tap back to exit
+      const now = Date.now();
+      if (_lastBackTapTime && (now - _lastBackTapTime < 2000)) {
+        return "exit";
+      }
+      _lastBackTapTime = now;
+      showToast(state.language === 'te' ? 'యాప్ నుండి నిష్క్రమించడానికి మళ్ళీ బ్యాక్ నొక్కండి' : 'Press back again to exit app');
+      return "confirm_exit";
+    };
+
+    window.addEventListener('popstate', function(e) {
+      if (e.state && e.state.screen) {
+        if (e.state.screen !== state.currentScreen) {
+          goToScreen(e.state.screen, false);
+        }
+      } else {
+        window.handleTrinetraBack();
+      }
+    });
+
+    // =========================================================================
+    // CREATE ACCOUNT / FARMER REGISTRATION HANDLER
+    // =========================================================================
+    async function handleCreateAccount(e) {
+      if (e) e.preventDefault();
+      const nameInput = document.getElementById('reg-name');
+      const mobileInput = document.getElementById('reg-mobile');
+      const villageInput = document.getElementById('reg-village');
+      const mandalInput = document.getElementById('reg-mandal');
+      const districtSelect = document.getElementById('reg-district');
+      const cropSelect = document.getElementById('reg-crop');
+      const acresInput = document.getElementById('reg-acres');
+
+      const name = nameInput ? nameInput.value.trim() : '';
+      const mobile = mobileInput ? mobileInput.value.replace(/\D/g, '') : '';
+      const village = villageInput ? villageInput.value.trim() : 'Poranki';
+      const mandal = mandalInput ? mandalInput.value.trim() : 'Penamaluru';
+      const district = districtSelect ? districtSelect.value : 'Krishna';
+      const crop = cropSelect ? cropSelect.value : 'Paddy';
+      const acres = acresInput ? parseFloat(acresInput.value) || 5.0 : 5.0;
+
+      if (!name) {
+        showToast(state.language === 'te' ? 'దయచేసి రైతు పూర్తి పేరు నమోదు చేయండి' : 'Please enter farmer full name');
+        if (nameInput) nameInput.focus();
+        return;
+      }
+
+      if (mobile.length !== 10) {
+        showToast(state.language === 'te' ? 'దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter valid 10-digit mobile number');
+        if (mobileInput) mobileInput.focus();
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit-register');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳</span> <span>${state.language === 'te' ? 'ఖాతా సృష్టించబడుతోంది...' : 'Creating Account...'}</span>`;
+      }
+
+      // Update in-memory state
+      state.farmer.name = name;
+      state.farmer.phone = mobile;
+      state.farmer.village = village;
+      state.farmer.mandal = mandal;
+      state.farmer.district = district;
+      state.farmer.crop = crop;
+      state.farmer.acres = acres;
+
+      try {
+        localStorage.setItem('trinetra_farmer_profile', JSON.stringify(state.farmer));
+      } catch(err) {}
+
+      updateFarmerProfileDOM();
+
+      // Send to backend SQLite API: POST /api/farmers
+      try {
+        const resp = await fetch('/api/farmers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            full_name: name,
+            mobile: mobile,
+            village: village,
+            mandal: mandal,
+            district: district,
+            crop_type: crop,
+            area_acres: acres
+          })
+        });
+        const resData = await resp.json();
+        console.log('[Register Result]', resData);
+      } catch (netErr) {
+        console.warn('[Register Offline Sync]', netErr);
+      }
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<span>✅</span> <span data-key="btn_create_account_action">${state.language === 'te' ? 'ఖాతా సృష్టించండి →' : 'Create Account →'}</span>`;
+      }
+
+      showToast(state.language === 'te' ? `రైతు ఖాతా సృష్టించబడింది! స్వాగతం, ${name} గారు! 🌾` : `Account created! Welcome, ${name}! 🌾`, 'success');
+
+      // Navigate to Home Dashboard
+      goToScreen('screen-dashboard');
     }
 
     // =========================================================================
