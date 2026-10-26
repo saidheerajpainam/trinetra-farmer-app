@@ -122,15 +122,10 @@
     <!-- Unified In-App Header Bar with Language Switcher & Helpline -->
     <header id="in-app-header" class="w-full bg-[#15803D] text-white px-4 py-3 flex items-center justify-between shadow-sm shrink-0 z-40 transition-all sticky top-0">
       <div class="flex items-center gap-2">
-        <button id="btn-header-back" onclick="goBack()" class="hidden p-1 -ml-1 text-white hover:bg-emerald-600 rounded-full transition-colors">
-          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <div class="flex items-center gap-2">
-          <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-7 w-auto object-contain" onerror="this.src='assets/logo.png'">
-          <div>
-            <h1 id="header-title" class="text-xs font-black tracking-wide leading-tight">TRINETRA DRONES</h1>
-            <p id="header-subtitle" class="text-[9px] text-emerald-100 font-semibold" data-key="header_subtitle">రైతు సేవా కేంద్రం • ఆంధ్రప్రదేశ్</p>
-          </div>
+        <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-7 w-auto object-contain" onerror="this.src='assets/logo.png'">
+        <div>
+          <h1 id="header-title" class="text-xs font-black tracking-wide leading-tight">TRINETRA DRONES</h1>
+          <p id="header-subtitle" class="text-[9px] text-emerald-100 font-semibold" data-key="header_subtitle">రైతు సేవా కేంద్రం • ఆంధ్రప్రదేశ్</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -339,22 +334,22 @@
             <p class="text-xs text-slate-500 font-medium mt-1" data-key="otp_sent_to">
               We have sent a 6-digit OTP to
             </p>
-            <p id="otp-phone-display" class="text-sm font-black text-emerald-800 mt-0.5 tracking-wider">
+            <p id="otp-phone-display" class="text-sm font-black text-emerald-800 mt-0.5 tracking-wider font-mono">
               +91 95020 51939
             </p>
-            <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">
-              Demo OTP: <strong class="font-mono">123456</strong>
-            </span>
+            <button type="button" onclick="fillDemoOtp()" class="inline-flex items-center gap-1.5 mt-2 px-3 py-1.5 rounded-full bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-900 text-xs font-bold shadow-xs transition transform active:scale-95 cursor-pointer" title="Click to auto-fill OTP: 123456">
+              <span>⚡ Click to Auto-Fill OTP:</span> <strong class="font-mono text-emerald-900 underline text-xs">123456</strong>
+            </button>
           </div>
 
           <!-- 6-digit OTP Input Boxes -->
-          <div class="flex justify-center gap-2 mt-6">
-            <input type="text" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="0">
-            <input type="text" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="1">
-            <input type="text" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="2">
-            <input type="text" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="3">
-            <input type="text" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="4">
-            <input type="text" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="5">
+          <div class="flex justify-center gap-2 mt-5">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="0">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="1">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="2">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="3">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="4">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box w-11 h-12 rounded-xl text-center text-lg font-black bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white focus:outline-none transition-all shadow-xs" data-idx="5">
           </div>
 
           <!-- Resend Countdown -->
@@ -1499,8 +1494,8 @@
 
     </main>
 
-    <!-- Global Toast Alert Container -->
-    <div id="toast-container" class="fixed top-12 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none space-y-2 w-11/12 max-w-sm"></div>
+    <!-- Global Toast Alert Container (Cleanly below header) -->
+    <div id="toast-container" class="fixed top-[68px] left-1/2 -translate-x-1/2 z-[9999] pointer-events-none space-y-2 w-11/12 max-w-sm px-2"></div>
 
   </div> <!-- End #app-container -->
 
@@ -1816,13 +1811,6 @@
           state.screenHistory.push(screenId);
         }
 
-        const backBtn = document.getElementById('btn-header-back');
-        if (screenId === 'screen-splash' || screenId === 'screen-dashboard' || screenId === 'screen-login') {
-          if (backBtn) backBtn.classList.add('hidden');
-        } else {
-          if (backBtn) backBtn.classList.remove('hidden');
-        }
-
         if (screenId === 'screen-tracking') {
           setTimeout(initTrackingMap, 200);
         }
@@ -1938,6 +1926,71 @@
       });
     }
 
+    function initOtpInputs() {
+      const boxes = document.querySelectorAll('.otp-box');
+      boxes.forEach((box, idx) => {
+        box.addEventListener('input', (e) => {
+          const val = e.target.value.replace(/[^0-9]/g, '');
+          e.target.value = val ? val[0] : '';
+          syncOtpFromBoxes();
+          if (val && idx < boxes.length - 1) {
+            boxes[idx + 1].focus();
+          }
+          if (state.otp.code.length === 6) {
+            setTimeout(handleVerifyOtp, 250);
+          }
+        });
+
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !box.value && idx > 0) {
+            boxes[idx - 1].focus();
+            boxes[idx - 1].value = '';
+            syncOtpFromBoxes();
+          }
+        });
+
+        box.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+          if (pasted) {
+            const digits = pasted.slice(0, 6);
+            digits.split('').forEach((d, i) => {
+              if (boxes[i]) boxes[i].value = d;
+            });
+            syncOtpFromBoxes();
+            if (state.otp.code.length === 6) {
+              setTimeout(handleVerifyOtp, 250);
+            }
+          }
+        });
+      });
+    }
+
+    function syncOtpFromBoxes() {
+      const boxes = document.querySelectorAll('.otp-box');
+      let code = '';
+      boxes.forEach(b => {
+        code += b.value || '';
+        if (b.value) {
+          b.classList.add('border-emerald-600', 'bg-emerald-50/50');
+        } else {
+          b.classList.remove('border-emerald-600', 'bg-emerald-50/50');
+        }
+      });
+      state.otp.code = code;
+    }
+
+    function fillDemoOtp() {
+      state.otp.code = '123456';
+      const boxes = document.querySelectorAll('.otp-box');
+      boxes.forEach((b, i) => {
+        b.value = state.otp.code[i] || '';
+        b.classList.add('border-emerald-600', 'bg-emerald-50/50');
+      });
+      showToast(state.language === 'te' ? 'Demo OTP నింపబడింది: 123456' : 'Demo OTP Auto-Filled: 123456', 'success');
+      setTimeout(handleVerifyOtp, 350);
+    }
+
     function dialpadPress(digit) {
       if (state.otp.code.length < 6) {
         state.otp.code += digit;
@@ -1994,13 +2047,14 @@
     }
 
     function handleVerifyOtp() {
+      syncOtpFromBoxes();
       const code = state.otp.code;
       if (code.length < 6) {
-        showToast(state.language === 'te' ? 'దయచేసి 6 అంకెల OTP నమోదు చేయండి' : 'Please enter full 6-digit OTP');
+        showToast(state.language === 'te' ? 'దయచేసి 6 అంకెల OTP నమోదు చేయండి (డెమో: 123456)' : 'Please enter full 6-digit OTP (Demo: 123456)', 'warning');
         return;
       }
 
-      showToast(state.language === 'te' ? 'OTP ధృవీకరించబడింది ✓' : 'OTP Verified Successfully ✓');
+      showToast(state.language === 'te' ? 'OTP ధృవీకరించబడింది ✓' : 'OTP Verified Successfully ✓', 'success');
       goToScreen('screen-dashboard');
     }
 
@@ -2465,24 +2519,29 @@
       } catch(err) {}
     }
 
-    function showToast(msg) {
+    function showToast(msg, type = 'info') {
       const container = document.getElementById('toast-container');
       if (!container) return;
+      const isErr = type === 'warning' || type === 'error' || msg.includes('దయచేసి') || msg.includes('Please enter');
+      const icon = isErr ? '⚠️' : '✓';
+      const iconColor = isErr ? 'text-amber-400' : 'text-emerald-400';
       const toast = document.createElement('div');
-      toast.className = 'p-3 bg-slate-900/95 backdrop-blur-md text-white text-xs font-bold rounded-2xl shadow-xl flex items-center justify-between border border-slate-700 animate-bounce pointer-events-auto';
-      toast.innerHTML = `<span>${msg}</span><span class="text-emerald-400 pl-2">✓</span>`;
+      toast.className = 'px-4 py-3 bg-slate-900/95 backdrop-blur-md text-white text-xs font-bold rounded-2xl shadow-2xl flex items-center justify-between border border-slate-700 pointer-events-auto transition-all duration-300 transform translate-y-0 opacity-100';
+      toast.innerHTML = `<span class="flex items-center gap-2"><span>${isErr ? '🔔' : '🌱'}</span><span>${msg}</span></span><span class="${iconColor} pl-2 font-mono text-sm">${icon}</span>`;
       container.appendChild(toast);
       setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.4s';
-        setTimeout(() => toast.remove(), 400);
-      }, 2800);
+        toast.style.transform = 'translateY(-8px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       applyLanguage(state.language);
       selectAppLanguage(state.language);
       calculateBookingTotal();
+      initOtpInputs();
       initRealtimeSync();
 
       setTimeout(() => {
