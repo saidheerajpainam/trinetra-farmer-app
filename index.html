@@ -119,34 +119,38 @@
   <!-- Mobile App Frame Container (Clean layout, no fake status bar) -->
   <div id="app-container" class="w-full max-w-md bg-white min-h-screen flex flex-col shadow-2xl relative overflow-hidden">
     
-    <!-- Unified In-App Header Bar with Language Switcher, Reload, Settings & Helpline -->
-    <header id="in-app-header" class="w-full bg-[#15803D] text-white px-3 py-2 flex items-center justify-between shadow-md shrink-0 z-40 transition-all sticky top-0">
+    <!-- Unified In-App Header Bar with Enlarged, Touch-Friendly Action Icons -->
+    <header id="in-app-header" class="w-full bg-[#15803D] text-white px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between shadow-md shrink-0 z-40 transition-all sticky top-0">
       <!-- Left: Brand Logo & Title (Appears ONCE!) -->
-      <div class="flex items-center gap-2">
-        <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-8 w-auto object-contain drop-shadow-xs" onerror="this.src='assets/logo.png'">
-        <div>
-          <h1 id="header-title" class="text-xs font-black tracking-wide leading-tight">TRINETRA DRONES</h1>
-          <p id="header-subtitle" class="text-[9px] text-emerald-100 font-semibold leading-tight" data-key="header_subtitle">రైతు సేవా కేంద్రం • ఆంధ్రప్రదేశ్</p>
+      <div class="flex items-center gap-2 shrink min-w-0">
+        <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-9 w-auto object-contain drop-shadow-sm shrink-0" onerror="this.src='assets/logo.png'">
+        <div class="min-w-0 truncate">
+          <h1 id="header-title" class="text-xs sm:text-sm font-black tracking-wide leading-tight truncate">TRINETRA DRONES</h1>
+          <p id="header-subtitle" class="text-[9.5px] text-emerald-100 font-bold leading-tight truncate" data-key="header_subtitle">రైతు సేవా కేంద్రం • ఆంధ్రప్రదేశ్</p>
         </div>
       </div>
-      <!-- Right: Action Icons (Language, Reload, Settings, Helpline) -->
-      <div class="flex items-center gap-1.5">
+
+      <!-- Right: Action Icons (Language, Reload, Settings, Helpline) - Enlarged & Highlighted -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-1">
         <!-- Bilingual Language Switcher Button -->
-        <button onclick="toggleLanguage()" class="px-2 py-1 rounded-full bg-emerald-950/40 border border-emerald-400/40 text-[10px] font-bold text-emerald-100 hover:text-white flex items-center gap-0.5 transition shadow-xs" title="Change Language / భాష మార్చండి">
+        <button onclick="toggleLanguage()" class="px-2.5 py-1.5 rounded-full bg-emerald-950/60 hover:bg-emerald-900 border-2 border-emerald-400/50 text-[11px] font-bold text-emerald-100 hover:text-white flex items-center gap-1 transition shadow-xs active:scale-90" title="Change Language / భాష మార్చండి">
           <span id="current-lang-label">తెలుగు</span>
-          <span class="text-[9px] opacity-80">🌐</span>
+          <span class="text-[10px]">🌐</span>
         </button>
-        <!-- Reload / Refresh Button -->
-        <button onclick="reloadApp()" class="p-1.5 rounded-full bg-emerald-950/40 hover:bg-emerald-800 text-white border border-emerald-400/30 transition shadow-xs" title="Refresh / రీలోడ్ చేయండి">
-          <svg class="w-3.5 h-3.5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+
+        <!-- Enlarged Reload / Refresh Button -->
+        <button onclick="reloadApp()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-950/60 hover:bg-emerald-900 active:bg-emerald-800 text-emerald-100 hover:text-white border-2 border-emerald-400/50 flex items-center justify-center transition transform active:scale-90 shadow-sm" title="Refresh App & Cloud Data / రీలోడ్ చేయండి">
+          <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         </button>
-        <!-- Farmer Settings & Profile Edit Button -->
-        <button onclick="openFarmerSettingsModal()" class="p-1.5 rounded-full bg-emerald-950/40 hover:bg-emerald-800 text-white border border-emerald-400/30 transition shadow-xs" title="Farmer Settings & Edit Profile / రైతు సెట్టింగులు">
-          <svg class="w-3.5 h-3.5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+
+        <!-- Enlarged Farmer Settings & Profile Edit Button -->
+        <button onclick="openFarmerSettingsModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-950/60 hover:bg-emerald-900 active:bg-emerald-800 text-emerald-100 hover:text-white border-2 border-emerald-400/50 flex items-center justify-center transition transform active:scale-90 shadow-sm" title="Farmer Settings & Edit Profile / రైతు సెట్టింగులు">
+          <svg class="w-5 h-5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         </button>
-        <!-- Quick Call Helpline -->
-        <a href="tel:9502051939" class="p-1.5 rounded-full bg-white text-emerald-800 shadow-xs hover:bg-emerald-50 transition" title="Call Helpline: 9502051939">
-          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-2.2 2.2a15.053 15.053 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
+
+        <!-- Enlarged Quick Call Helpline Button -->
+        <a href="tel:9502051939" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white hover:bg-emerald-50 active:bg-emerald-100 text-emerald-800 shadow-md flex items-center justify-center transition transform active:scale-90 border-2 border-emerald-200" title="Call Helpline: 9502051939">
+          <svg class="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-2.2 2.2a15.053 15.053 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
         </a>
       </div>
     </header>
