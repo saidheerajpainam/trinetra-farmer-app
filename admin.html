@@ -1623,7 +1623,6 @@
     let farmersMapTileLayer = null;
     let farmersMapTileType = 'satellite';
 
-    async 
     // =========================================================================
     // REALTIME SQLITE BOOKINGS QUEUE LOGIC
     // =========================================================================
@@ -1751,7 +1750,7 @@
     }
     window.loadBookingToDeck = loadBookingToDeck;
 
-    function loadFarmersDirectory() {
+    async function loadFarmersDirectory() {
       try {
         const res = await fetch('/api/farmers');
         const json = await res.json();
@@ -2067,10 +2066,6 @@
       if (confirm('Are you sure you want to reset all settings to company defaults?')) {
         localStorage.removeItem('trinetra_system_settings');
         loadSystemSettings();
-      loadFarmersDirectory();
-      loadRealBookingsQueue();
-      setInterval(loadRealBookingsQueue, 6000);
-      setInterval(loadFarmersDirectory, 12000);
         if (opsChannel) {
           opsChannel.postMessage({
             type: 'SETTINGS_UPDATE',
@@ -2163,9 +2158,6 @@
       });
       if (tabId === 'farmers') {
         loadFarmersDirectory();
-      loadRealBookingsQueue();
-      setInterval(loadRealBookingsQueue, 6000);
-      setInterval(loadFarmersDirectory, 12000);
       } else if (tabId === 'map') {
         setTimeout(initFleetMap, 200);
       } else if (tabId === 'database') {
@@ -2199,9 +2191,6 @@
           showAdminToast('✓ Booking ' + currentCode + ' updated to ' + stage.toUpperCase() + ' (Broadcasted to Farmer App)');
           loadRealBookingsQueue();
           loadFarmersDirectory();
-      loadRealBookingsQueue();
-      setInterval(loadRealBookingsQueue, 6000);
-      setInterval(loadFarmersDirectory, 12000);
         }
       } catch (err) {
         console.error('Error updating status:', err);
