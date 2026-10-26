@@ -100,6 +100,14 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
           onNavigationRequest: (NavigationRequest request) {
             final String rawUrl = request.url;
             final String lowerUrl = rawUrl.toLowerCase();
+            if (lowerUrl == 'trinetra:settings' || lowerUrl == 'action:settings') {
+              _showServerConfigDialog();
+              return NavigationDecision.prevent;
+            }
+            if (lowerUrl == 'trinetra:reload' || lowerUrl == 'action:reload') {
+              _controller.reload();
+              return NavigationDecision.prevent;
+            }
             if (lowerUrl.startsWith('tel:') ||
                 lowerUrl.startsWith('mailto:') ||
                 lowerUrl.startsWith('sms:') ||
@@ -126,6 +134,8 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
                      errUrl.startsWith('intent:') ||
                      errUrl.startsWith('geo:') ||
                      errUrl.startsWith('whatsapp:') ||
+                     errUrl.startsWith('trinetra:') ||
+                     errUrl.startsWith('action:') ||
                      errUrl.contains('google.com/maps')))) {
               return;
             }
@@ -303,65 +313,9 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF15803D),
-          elevation: 2,
-          title: Row(
-            children: [
-              Image.asset(
-                'assets/trinetra-logo.png',
-                width: 32,
-                height: 32,
-                errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.agriculture,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 10),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'TRINETRA DRONES',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                    Text(
-                      'రైతు డ్రోన్ బుకింగ్ యాప్ (Andhra Pradesh)',
-                      style: TextStyle(
-                        color: Color(0xFFBBF7D0),
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          actions: [
-IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.white),
-              tooltip: 'Reload App',
-              onPressed: () async {
-                await _controller.clearCache();
-                _controller.reload();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings, color: Colors.white),
-              tooltip: 'Server Settings',
-              onPressed: _showServerConfigDialog,
-            ),
-          ],
-        ),
-        body: Stack(
+        backgroundColor: const Color(0xFF15803D),
+        body: SafeArea(
+          child: Stack(
           children: [
             if (!_hasError)
               WebViewWidget(controller: _controller)
@@ -443,6 +397,12 @@ IconButton(
                             onPressed: () =>
                                 _loadAppUrl('assets/farmer-app.html', saveToPrefs: false),
                           ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            icon: const Icon(Icons.settings, color: Colors.white70),
+                            tooltip: 'Settings',
+                            onPressed: _showServerConfigDialog,
+                          ),
                         ],
                       ),
                     ],
@@ -458,6 +418,7 @@ IconButton(
                 ),
               ),
           ],
+        ),
         ),
       ),
     );

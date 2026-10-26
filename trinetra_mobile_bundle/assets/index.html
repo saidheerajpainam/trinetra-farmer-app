@@ -54,7 +54,6 @@
     input, textarea, select {
       user-select: text;
     }
-    /* Hide scrollbars */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -62,7 +61,6 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    /* Keyframe animations */
     @keyframes pulse-slow {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.04); opacity: 0.92; }
@@ -86,7 +84,6 @@
     .animate-drone-hover {
       animation: drone-hover 3s infinite ease-in-out;
     }
-    /* Paid stamp design */
     .paid-stamp {
       border: 3.5px solid #16a34a;
       color: #16a34a;
@@ -99,14 +96,9 @@
       letter-spacing: 2px;
       box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
     }
-    /* Print styles for Invoice */
     @media print {
-      body * {
-        visibility: hidden !important;
-      }
-      #printable-invoice, #printable-invoice * {
-        visibility: visible !important;
-      }
+      body * { visibility: hidden !important; }
+      #printable-invoice, #printable-invoice * { visibility: visible !important; }
       #printable-invoice {
         position: absolute !important;
         left: 0 !important;
@@ -118,37 +110,23 @@
         box-shadow: none !important;
         border: none !important;
       }
-      .no-print {
-        display: none !important;
-      }
+      .no-print { display: none !important; }
     }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-900 flex justify-center min-h-screen antialiased select-none sm:py-6">
+<body class="bg-slate-100 text-slate-900 flex justify-center min-h-screen antialiased select-none">
 
-  <!-- Mobile App Frame Container (Pixel-perfect matching user screenshots) -->
-  <div id="app-container" class="w-full max-w-md bg-white min-h-screen sm:min-h-[844px] sm:max-h-[900px] sm:rounded-[36px] flex flex-col shadow-2xl relative overflow-hidden border-slate-800 sm:border-[8px]">
+  <!-- Mobile App Frame Container (Clean layout, no fake status bar) -->
+  <div id="app-container" class="w-full max-w-md bg-white min-h-screen flex flex-col shadow-2xl relative overflow-hidden">
     
-    <!-- Status Bar (iOS/Android Style) -->
-    <div class="w-full bg-[#15803D] text-white px-5 pt-2.5 pb-1 flex items-center justify-between text-[11px] font-semibold shrink-0 z-50">
-      <span>9:41</span>
-      <div class="flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
-        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"/></svg>
-        <div class="w-4 h-2.5 border border-white rounded-[2px] p-0.5 flex items-center">
-          <div class="h-full w-full bg-white rounded-[1px]"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sticky In-App Header Bar with Language Toggle & Helpline (visible on screens except splash) -->
-    <header id="in-app-header" class="hidden w-full bg-[#15803D] text-white px-4 py-2.5 flex items-center justify-between shadow-sm shrink-0 z-40 transition-all">
+    <!-- Unified In-App Header Bar with Language Switcher & Helpline -->
+    <header id="in-app-header" class="w-full bg-[#15803D] text-white px-4 py-3 flex items-center justify-between shadow-sm shrink-0 z-40 transition-all sticky top-0">
       <div class="flex items-center gap-2">
         <button id="btn-header-back" onclick="goBack()" class="hidden p-1 -ml-1 text-white hover:bg-emerald-600 rounded-full transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
         </button>
         <div class="flex items-center gap-2">
-          <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-6 w-auto object-contain" onerror="this.src='assets/logo.png'">
+          <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-7 w-auto object-contain" onerror="this.src='assets/logo.png'">
           <div>
             <h1 id="header-title" class="text-xs font-black tracking-wide leading-tight">TRINETRA DRONES</h1>
             <p id="header-subtitle" class="text-[9px] text-emerald-100 font-semibold" data-key="header_subtitle">రైతు సేవా కేంద్రం • ఆంధ్రప్రదేశ్</p>
@@ -175,12 +153,11 @@
       <!-- SCREEN 1: SPLASH SCREEN (EXACT MATCH TO DESIGN 1)             -->
       <!-- ============================================================ -->
       <section id="screen-splash" class="screen-view min-h-full flex flex-col justify-between bg-gradient-to-b from-[#F0FDF4] via-white to-[#F0FDF4] p-6 text-center relative">
-        <div class="pt-6">
-          <!-- Official Trinetra Logo -->
+        <div class="pt-4">
           <div class="flex justify-center mb-3">
             <img src="assets/trinetra-logo.png" alt="Trinetra Drones & Robotics" class="h-16 w-auto object-contain drop-shadow-sm" onerror="this.src='assets/logo.png'">
           </div>
-          <h2 class="text-xs font-black tracking-widest text-emerald-800 uppercase mb-4">DRONES & ROBOTICS</h2>
+          <h2 class="text-xs font-black tracking-widest text-emerald-800 uppercase mb-3">DRONES & ROBOTICS</h2>
           
           <h1 class="text-3xl font-black text-slate-900 tracking-tight leading-tight">
             <span class="text-emerald-700 block">Smart Farming</span>
@@ -189,10 +166,9 @@
         </div>
 
         <!-- Hero Drone Spraying Photo -->
-        <div class="my-auto py-4 relative flex justify-center">
+        <div class="my-auto py-3 relative flex justify-center">
           <div class="relative w-full max-w-[320px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
             <img src="assets/hero_drone_banner.png" alt="Drone Spraying In Field" class="w-full h-full object-cover" onerror="this.src='assets/splash-hero-banner.jpg'">
-            <!-- Overlay badge -->
             <div class="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-md rounded-xl p-2 text-white text-[11px] font-bold flex items-center justify-between">
               <span>🚁 Hexacopter Spraying</span>
               <span class="text-emerald-400">100% Precision</span>
@@ -201,7 +177,7 @@
         </div>
 
         <!-- 3 Feature Pills -->
-        <div class="space-y-4 pb-4">
+        <div class="space-y-4 pb-2">
           <div class="flex items-center justify-center gap-2">
             <span class="px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center gap-1.5 shadow-xs">
               <span>🌱</span> <span data-key="feature_spraying">Crop Spraying</span>
@@ -218,7 +194,6 @@
             For a Greener, Healthier and More Productive Future
           </p>
 
-          <!-- Get Started Action -->
           <button onclick="goToScreen('screen-lang')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-base shadow-btn flex items-center justify-center gap-2 transition-all transform active:scale-[0.98]">
             <span data-key="btn_get_started">Get Started / ప్రారంభించండి</span>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
@@ -230,7 +205,7 @@
       <!-- SCREEN 2: LANGUAGE SELECTION (EXACT MATCH TO DESIGN 2)        -->
       <!-- ============================================================ -->
       <section id="screen-lang" class="screen-view hidden min-h-full flex flex-col justify-between bg-gradient-to-b from-[#F0FDF4] via-white to-[#F0FDF4] p-6 text-center relative">
-        <div class="pt-4">
+        <div class="pt-2">
           <div class="flex justify-center mb-2">
             <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-12 w-auto object-contain" onerror="this.src='assets/logo.png'">
           </div>
@@ -238,7 +213,7 @@
             Select Language / భాషను ఎంచుకోండి
           </h2>
 
-          <!-- Language Selector Pills (Side-by-Side as in Design) -->
+          <!-- Language Selector Pills (Side-by-Side as in Design 2) -->
           <div class="flex items-center justify-center gap-3 mt-4">
             <button type="button" id="lang-btn-te" onclick="selectAppLanguage('te')" class="px-6 py-2.5 rounded-full font-black text-sm transition-all shadow-md bg-emerald-600 text-white border-2 border-emerald-600 flex items-center gap-1.5">
               <span>✓</span> <span>తెలుగు</span>
@@ -249,10 +224,10 @@
           </div>
         </div>
 
-        <!-- Farmer with Smartphone in Field Visual -->
+        <!-- Farmer with Smartphone in Field Visual (Perfect framing, not cut off) -->
         <div class="my-auto py-2 flex flex-col items-center">
-          <div class="relative w-full max-w-[280px] aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-3">
-            <img src="assets/farmer-hero-art.jpg" alt="Farmer with Drone" class="w-full h-full object-cover" onerror="this.src='assets/login-hero-exact.jpg'">
+          <div class="relative w-full max-w-[280px] h-48 rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-3">
+            <img src="assets/farmer-hero-art.jpg" alt="Farmer with Drone" class="w-full h-full object-cover object-top" onerror="this.src='assets/login-hero-exact.jpg'">
           </div>
           <h3 class="text-sm font-black text-slate-800" data-key="tech_in_fields">
             Technology in Your Fields
@@ -272,7 +247,7 @@
             <span class="w-2 h-2 rounded-full bg-slate-300"></span>
           </div>
 
-          <!-- Big Green Circle Next Button -->
+          <!-- Big Green Circle Next Button (Exact Match) -->
           <button onclick="goToScreen('screen-login')" class="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-btn flex items-center justify-center transition-all transform active:scale-95">
             <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
@@ -336,7 +311,6 @@
           </p>
         </div>
 
-        <!-- Landscape Green Field with Drone Artwork -->
         <div class="pt-2">
           <div class="w-full h-20 rounded-2xl overflow-hidden relative shadow-sm border border-emerald-100">
             <img src="assets/farm-landscape-bg.jpg" alt="Fields" class="w-full h-full object-cover" onerror="this.src='assets/login-bg.jpg'">
@@ -349,7 +323,6 @@
       <!-- ============================================================ -->
       <section id="screen-otp" class="screen-view hidden min-h-full flex flex-col justify-between bg-white p-6 relative">
         <div class="pt-2">
-          <!-- Back button & Share header -->
           <div class="flex items-center justify-between mb-4">
             <button onclick="goToScreen('screen-login')" class="p-2 -ml-2 text-slate-700 hover:text-emerald-700 transition">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
@@ -402,7 +375,7 @@
           </div>
         </div>
 
-        <!-- Custom On-Screen Dialpad (Exact Match to Design 4) -->
+        <!-- Custom On-Screen Dialpad (Exact Match) -->
         <div class="dialpad grid grid-cols-3 gap-2 pt-4 pb-2 border-t border-slate-100">
           <button type="button" onclick="dialpadPress('1')" class="py-3 bg-slate-100 active:bg-emerald-100 rounded-xl text-lg font-bold text-slate-800 transition">1</button>
           <button type="button" onclick="dialpadPress('2')" class="py-3 bg-slate-100 active:bg-emerald-100 rounded-xl text-lg font-bold text-slate-800 transition">2</button>
@@ -420,12 +393,7 @@
           </button>
         </div>
       </section>
-'''
 
-with open(TARGET, "a", encoding="utf-8") as f:
-    f.write(part1)
-
-print("Part 1 appended successfully!")
       <!-- ============================================================ -->
       <!-- SCREEN 5: HOME DASHBOARD (EXACT MATCH TO DESIGN 5)            -->
       <!-- ============================================================ -->
@@ -449,7 +417,6 @@ print("Part 1 appended successfully!")
             </div>
           </div>
 
-          <!-- My Farm Quick Button -->
           <button onclick="openTab('farm')" class="px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center gap-1 shadow-xs hover:bg-emerald-200 transition">
             <span data-key="btn_my_farm">My Farm</span> <span>→</span>
           </button>
@@ -461,7 +428,6 @@ print("Part 1 appended successfully!")
             <div class="absolute -right-4 -bottom-4 w-28 h-28 bg-emerald-600/20 rounded-full blur-xl pointer-events-none"></div>
             
             <div class="flex items-center justify-between">
-              <!-- Left: Temperature & Status -->
               <div>
                 <div class="flex items-center gap-2">
                   <span class="text-2xl">⛅</span>
@@ -472,7 +438,6 @@ print("Part 1 appended successfully!")
                 </div>
               </div>
 
-              <!-- Right: Spray Advisory & Wind/Rain -->
               <div class="text-right space-y-1">
                 <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 text-[10px] font-black border border-emerald-400/40">
                   <span>✔</span> <span data-key="good_for_spraying">Good for Spraying</span>
@@ -485,14 +450,13 @@ print("Part 1 appended successfully!")
             </div>
           </div>
 
-          <!-- Quick Action Circle Icons (2 Rows of 3 = 6 Exact Icons) -->
+          <!-- Quick Action Circle Icons (6 Exact Icons) -->
           <div class="bg-white rounded-2xl p-4 shadow-card border border-slate-100">
             <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3.5 flex items-center gap-1.5">
               <span>⚡</span> <span data-key="quick_services_title">Quick Drone Services</span>
             </h3>
 
             <div class="grid grid-cols-3 gap-y-4 gap-x-2 text-center">
-              <!-- 1. Crop Spraying -->
               <button onclick="startBookingService(1)" class="flex flex-col items-center group">
                 <div class="w-14 h-14 rounded-2xl bg-emerald-50 group-hover:bg-emerald-100 border border-emerald-200/80 flex items-center justify-center text-2xl shadow-xs transition transform group-hover:scale-105">
                   🚁
@@ -501,7 +465,6 @@ print("Part 1 appended successfully!")
                 <span class="text-[9px] text-emerald-600 font-semibold" data-key="act_pest_nutrient">Pest & Nutrient</span>
               </button>
 
-              <!-- 2. Crop Survey -->
               <button onclick="startBookingService(2)" class="flex flex-col items-center group">
                 <div class="w-14 h-14 rounded-2xl bg-blue-50 group-hover:bg-blue-100 border border-blue-200/80 flex items-center justify-center text-2xl shadow-xs transition transform group-hover:scale-105">
                   🗺️
@@ -510,7 +473,6 @@ print("Part 1 appended successfully!")
                 <span class="text-[9px] text-blue-600 font-semibold" data-key="act_field_mapping">Field Mapping</span>
               </button>
 
-              <!-- 3. Crop Monitoring -->
               <button onclick="startBookingService(3)" class="flex flex-col items-center group">
                 <div class="w-14 h-14 rounded-2xl bg-purple-50 group-hover:bg-purple-100 border border-purple-200/80 flex items-center justify-center text-2xl shadow-xs transition transform group-hover:scale-105">
                   📈
@@ -519,7 +481,6 @@ print("Part 1 appended successfully!")
                 <span class="text-[9px] text-purple-600 font-semibold" data-key="act_health_report">Health Report</span>
               </button>
 
-              <!-- 4. Field Report -->
               <button onclick="openTab('bookings')" class="flex flex-col items-center group">
                 <div class="w-14 h-14 rounded-2xl bg-amber-50 group-hover:bg-amber-100 border border-amber-200/80 flex items-center justify-center text-2xl shadow-xs transition transform group-hover:scale-105">
                   📋
@@ -528,7 +489,6 @@ print("Part 1 appended successfully!")
                 <span class="text-[9px] text-amber-600 font-semibold" data-key="act_recent_logs">Recent Logs</span>
               </button>
 
-              <!-- 5. Soil Health -->
               <button onclick="showSoilHealthModal()" class="flex flex-col items-center group">
                 <div class="w-14 h-14 rounded-2xl bg-teal-50 group-hover:bg-teal-100 border border-teal-200/80 flex items-center justify-center text-2xl shadow-xs transition transform group-hover:scale-105">
                   🌱
@@ -537,7 +497,6 @@ print("Part 1 appended successfully!")
                 <span class="text-[9px] text-teal-600 font-semibold" data-key="act_moisture_ph">Moisture & NPK</span>
               </button>
 
-              <!-- 6. Expert Advice -->
               <a href="tel:9502051939" class="flex flex-col items-center group">
                 <div class="w-14 h-14 rounded-2xl bg-rose-50 group-hover:bg-rose-100 border border-rose-200/80 flex items-center justify-center text-2xl shadow-xs transition transform group-hover:scale-105">
                   👨‍🔬
@@ -548,7 +507,7 @@ print("Part 1 appended successfully!")
             </div>
           </div>
 
-          <!-- Hero Promo Banner Card (Exact Match to Design 5) -->
+          <!-- Hero Promo Banner Card (Exact Match) -->
           <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 text-white rounded-3xl p-5 shadow-lg relative overflow-hidden">
             <div class="relative z-10 max-w-[210px]">
               <span class="px-2 py-0.5 rounded-full bg-white/20 text-emerald-100 text-[10px] font-black uppercase tracking-wider">
@@ -565,13 +524,12 @@ print("Part 1 appended successfully!")
               </button>
             </div>
 
-            <!-- Drone Graphic Overlay -->
             <div class="absolute -right-4 -bottom-3 w-36 h-36 opacity-90 pointer-events-none">
               <img src="assets/ui/hero_drone_banner.png" alt="Drone" class="w-full h-full object-contain drop-shadow-xl" onerror="this.src='assets/login-drone-hero.jpg'">
             </div>
           </div>
 
-          <!-- Active Booking Status Pill (if active booking exists) -->
+          <!-- Active Booking Status Pill -->
           <div id="dash-active-booking-banner" onclick="goToScreen('screen-tracking')" class="hidden bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-3.5 flex items-center justify-between shadow-xs cursor-pointer hover:bg-emerald-100/60 transition">
             <div class="flex items-center gap-3">
               <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
@@ -582,36 +540,26 @@ print("Part 1 appended successfully!")
             </div>
             <span class="text-xs font-bold text-emerald-700">Track ↗</span>
           </div>
-
         </div>
 
-        <!-- Persistent Bottom Navigation Bar (5 Tabs: Exact Match to Design) -->
+        <!-- Persistent Bottom Navigation Bar (5 Tabs) -->
         <nav class="fixed bottom-0 max-w-md w-full bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 flex items-center justify-around z-40 shadow-lg">
-          <!-- 1. Home -->
           <button onclick="openTab('home')" id="nav-btn-home" class="flex flex-col items-center text-emerald-700 font-black transition">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             <span class="text-[10px] mt-0.5" data-key="nav_home">Home</span>
           </button>
-
-          <!-- 2. Bookings -->
           <button onclick="openTab('bookings')" id="nav-btn-bookings" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 font-bold transition">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
             <span class="text-[10px] mt-0.5" data-key="nav_bookings">Bookings</span>
           </button>
-
-          <!-- 3. Farm -->
           <button onclick="openTab('farm')" id="nav-btn-farm" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 font-bold transition">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
             <span class="text-[10px] mt-0.5" data-key="nav_farm">Farm</span>
           </button>
-
-          <!-- 4. Support -->
           <button onclick="openTab('support')" id="nav-btn-support" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 font-bold transition">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
             <span class="text-[10px] mt-0.5" data-key="nav_support">Support</span>
           </button>
-
-          <!-- 5. Profile -->
           <button onclick="openTab('profile')" id="nav-btn-profile" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 font-bold transition">
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             <span class="text-[10px] mt-0.5" data-key="nav_profile">Profile</span>
@@ -619,23 +567,19 @@ print("Part 1 appended successfully!")
         </nav>
       </section>
 
-      <!-- ============================================================ -->
-      <!-- TAB OVERLAYS (Bookings, Farm, Support, Profile)               -->
-      <!-- ============================================================ -->
-      <!-- Tab 1: Bookings List Overlay -->
+      <!-- TAB OVERLAYS -->
+      <!-- Bookings Overlay -->
       <div id="tab-overlay-bookings" class="hidden fixed inset-0 z-50 bg-black/50 flex flex-col justify-end">
         <div class="bg-white rounded-t-3xl max-w-md w-full mx-auto p-5 max-h-[85vh] overflow-y-auto space-y-4">
           <div class="flex items-center justify-between border-b pb-3">
             <h3 class="text-base font-black text-slate-900" data-key="my_bookings_title">My Bookings / నా బుకింగ్స్</h3>
             <button onclick="closeTabOverlay()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">✕</button>
           </div>
-          <div id="bookings-history-list" class="space-y-3">
-            <!-- Dynamic bookings rendered by JS -->
-          </div>
+          <div id="bookings-history-list" class="space-y-3"></div>
         </div>
       </div>
 
-      <!-- Tab 2: Farm Details Overlay -->
+      <!-- Farm Overlay -->
       <div id="tab-overlay-farm" class="hidden fixed inset-0 z-50 bg-black/50 flex flex-col justify-end">
         <div class="bg-white rounded-t-3xl max-w-md w-full mx-auto p-5 max-h-[85vh] overflow-y-auto space-y-4">
           <div class="flex items-center justify-between border-b pb-3">
@@ -666,7 +610,7 @@ print("Part 1 appended successfully!")
         </div>
       </div>
 
-      <!-- Tab 3: Support Overlay -->
+      <!-- Support Overlay -->
       <div id="tab-overlay-support" class="hidden fixed inset-0 z-50 bg-black/50 flex flex-col justify-end">
         <div class="bg-white rounded-t-3xl max-w-md w-full mx-auto p-5 max-h-[85vh] overflow-y-auto space-y-4">
           <div class="flex items-center justify-between border-b pb-3">
@@ -690,7 +634,7 @@ print("Part 1 appended successfully!")
         </div>
       </div>
 
-      <!-- Tab 4: Profile Overlay -->
+      <!-- Profile Overlay -->
       <div id="tab-overlay-profile" class="hidden fixed inset-0 z-50 bg-black/50 flex flex-col justify-end">
         <div class="bg-white rounded-t-3xl max-w-md w-full mx-auto p-5 max-h-[85vh] overflow-y-auto space-y-4">
           <div class="flex items-center justify-between border-b pb-3">
@@ -716,18 +660,12 @@ print("Part 1 appended successfully!")
           </div>
         </div>
       </div>
-'''
 
-with open(TARGET, "a", encoding="utf-8") as f:
-    f.write(part2)
-
-print("Part 2 appended successfully!")
       <!-- ============================================================ -->
       <!-- SCREEN 6: BOOK DRONE SERVICE (EXACT MATCH TO DESIGN 7)        -->
       <!-- ============================================================ -->
       <section id="screen-booking" class="screen-view hidden min-h-full flex flex-col justify-between bg-white p-4 relative pb-20">
         <div class="space-y-4">
-          <!-- Screen Header -->
           <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
             <button onclick="goToScreen('screen-dashboard')" class="p-1 -ml-1 text-slate-700 hover:text-emerald-700 transition">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
@@ -737,7 +675,7 @@ print("Part 2 appended successfully!")
             </h1>
           </div>
 
-          <!-- 3-Step Flow Stepper (Exact Match: Service - Details - Confirm) -->
+          <!-- 3-Step Flow Stepper (Service - Details - Confirm) -->
           <div class="flex items-center justify-between px-2 pt-1">
             <div class="flex items-center gap-1.5 text-xs font-black text-emerald-700">
               <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">1</span>
@@ -761,7 +699,6 @@ print("Part 2 appended successfully!")
               Select Service Type / సర్వీస్ రకం
             </label>
             <div class="grid grid-cols-3 gap-2" id="service-type-grid">
-              <!-- Service 1: Crop Spraying (Active by default) -->
               <div onclick="selectServiceCard(1, 300, 'Crop Spraying')" id="srv-card-1" class="srv-option p-2.5 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 text-center cursor-pointer shadow-xs transition transform hover:scale-[1.02]">
                 <div class="text-2xl mb-1">🚁</div>
                 <div class="text-[11px] font-black text-slate-900 leading-tight" data-key="srv_spraying">Crop Spraying</div>
@@ -769,7 +706,6 @@ print("Part 2 appended successfully!")
                 <div class="mt-1 text-[10px] font-black text-emerald-700">₹300/ac</div>
               </div>
 
-              <!-- Service 2: Crop Survey -->
               <div onclick="selectServiceCard(2, 300, 'Crop Survey')" id="srv-card-2" class="srv-option p-2.5 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer shadow-xs transition transform hover:scale-[1.02]">
                 <div class="text-2xl mb-1">🗺️</div>
                 <div class="text-[11px] font-black text-slate-900 leading-tight" data-key="srv_survey">Crop Survey</div>
@@ -777,7 +713,6 @@ print("Part 2 appended successfully!")
                 <div class="mt-1 text-[10px] font-black text-slate-600">₹300/ac</div>
               </div>
 
-              <!-- Service 3: Crop Monitoring -->
               <div onclick="selectServiceCard(3, 250, 'Crop Monitoring')" id="srv-card-3" class="srv-option p-2.5 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer shadow-xs transition transform hover:scale-[1.02]">
                 <div class="text-2xl mb-1">📈</div>
                 <div class="text-[11px] font-black text-slate-900 leading-tight" data-key="srv_monitoring">Crop Monitoring</div>
@@ -787,41 +722,46 @@ print("Part 2 appended successfully!")
             </div>
           </div>
 
-          <!-- Section 2: Select Crop -->
+          <!-- Section 2: Select Crop (Flawless Unicode Emojis + Bilingual, NO broken HTML) -->
           <div>
             <label class="block text-xs font-black text-slate-800 uppercase tracking-wider mb-2" data-key="lbl_select_crop">
               Select Crop / పంట రకం
             </label>
             <div class="grid grid-cols-5 gap-1.5 text-center" id="crop-selector-grid">
               <!-- Paddy -->
-              <div onclick="selectCrop('Paddy (వరి)')" id="crop-btn-paddy" class="crop-btn p-2 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-center cursor-pointer transition">
-                <img src="assets/ui/crop_paddy.png" alt="Paddy" class="w-8 h-8 mx-auto object-contain mb-1" onerror="this.outerHTML='<span class=\"text-2xl block mb-1\">🌾</span>'">
-                <span class="text-[10px] font-extrabold text-slate-900 block" data-key="crop_paddy">Paddy</span>
+              <div onclick="selectCrop('Paddy (వరి)')" id="crop-btn-paddy" class="crop-btn p-2 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-center cursor-pointer transition shadow-xs">
+                <span class="text-2xl block mb-1">🌾</span>
+                <span class="text-[10px] font-black text-slate-900 block" data-key="crop_paddy">Paddy</span>
+                <span class="text-[8px] text-emerald-700 font-bold block">వరి</span>
               </div>
               <!-- Mirchi -->
-              <div onclick="selectCrop('Mirchi (మిర్చి)')" id="crop-btn-mirchi" class="crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition">
-                <img src="assets/ui/crop_chilli.png" alt="Mirchi" class="w-8 h-8 mx-auto object-contain mb-1" onerror="this.outerHTML='<span class=\"text-2xl block mb-1\">🌶️</span>'">
+              <div onclick="selectCrop('Mirchi (మిర్చి)')" id="crop-btn-mirchi" class="crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition shadow-xs">
+                <span class="text-2xl block mb-1">🌶️</span>
                 <span class="text-[10px] font-bold text-slate-700 block" data-key="crop_mirchi">Mirchi</span>
+                <span class="text-[8px] text-slate-400 font-bold block">మిర్చి</span>
               </div>
               <!-- Cotton -->
-              <div onclick="selectCrop('Cotton (పత్తి)')" id="crop-btn-cotton" class="crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition">
-                <img src="assets/ui/crop_cotton.png" alt="Cotton" class="w-8 h-8 mx-auto object-contain mb-1" onerror="this.outerHTML='<span class=\"text-2xl block mb-1\">☁️</span>'">
+              <div onclick="selectCrop('Cotton (పత్తి)')" id="crop-btn-cotton" class="crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition shadow-xs">
+                <span class="text-2xl block mb-1">☁️</span>
                 <span class="text-[10px] font-bold text-slate-700 block" data-key="crop_cotton">Cotton</span>
+                <span class="text-[8px] text-slate-400 font-bold block">పత్తి</span>
               </div>
               <!-- Maize -->
-              <div onclick="selectCrop('Maize (మొక్కజొన్న)')" id="crop-btn-maize" class="crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition">
-                <img src="assets/ui/crop_maize.png" alt="Maize" class="w-8 h-8 mx-auto object-contain mb-1" onerror="this.outerHTML='<span class=\"text-2xl block mb-1\">🌽</span>'">
+              <div onclick="selectCrop('Maize (మొక్కజొన్న)')" id="crop-btn-maize" class="crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition shadow-xs">
+                <span class="text-2xl block mb-1">🌽</span>
                 <span class="text-[10px] font-bold text-slate-700 block" data-key="crop_maize">Maize</span>
+                <span class="text-[8px] text-slate-400 font-bold block">మొక్కజొన్న</span>
               </div>
               <!-- Other -->
-              <div onclick="selectCrop('Other (ఇతర)')" id="crop-btn-other" class="crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition">
-                <img src="assets/ui/crop_other.png" alt="Other" class="w-8 h-8 mx-auto object-contain mb-1" onerror="this.outerHTML='<span class=\"text-2xl block mb-1\">🌱</span>'">
+              <div onclick="selectCrop('Other (ఇతర)')" id="crop-btn-other" class="crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition shadow-xs">
+                <span class="text-2xl block mb-1">🌱</span>
                 <span class="text-[10px] font-bold text-slate-700 block" data-key="crop_other">Other</span>
+                <span class="text-[8px] text-slate-400 font-bold block">ఇతర</span>
               </div>
             </div>
           </div>
 
-          <!-- Section 3: Farm Location (Exact Match to Design 7) -->
+          <!-- Section 3: Farm Location -->
           <div>
             <label class="block text-xs font-black text-slate-800 uppercase tracking-wider mb-2" data-key="lbl_farm_location">
               Farm Location / పొలం చిరునామా
@@ -835,7 +775,6 @@ print("Part 2 appended successfully!")
                     <div id="booking-gps-coords" class="text-[10px] font-mono text-slate-500">16.4971° N, 80.7856° E</div>
                   </div>
                 </div>
-                <!-- Select on Map Blue Button (Exact Match) -->
                 <button type="button" onclick="openMapPickerModal()" class="px-3 py-1.5 bg-[#0284C7] hover:bg-sky-600 active:bg-sky-700 text-white font-extrabold rounded-xl text-xs flex items-center gap-1 shadow-xs transition">
                   <span data-key="btn_select_on_map">Select on Map</span>
                 </button>
@@ -855,7 +794,7 @@ print("Part 2 appended successfully!")
             </div>
           </div>
 
-          <!-- Section 4: Land Area (Exact Match Stepper [-] 5 [+] Acres) -->
+          <!-- Section 4: Land Area (Stepper [-] 5 [+] Acres) -->
           <div>
             <div class="flex items-center justify-between mb-2">
               <label class="text-xs font-black text-slate-800 uppercase tracking-wider" data-key="lbl_land_area">
@@ -898,7 +837,7 @@ print("Part 2 appended successfully!")
           </div>
         </div>
 
-        <!-- Bottom Next Button (Exact Match) -->
+        <!-- Bottom Next Button -->
         <div class="pt-4">
           <button type="button" id="btn-submit-booking" onclick="submitBookingFlow()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-base shadow-btn flex items-center justify-center gap-2 transition-all">
             <span data-key="btn_next">Next →</span>
@@ -911,7 +850,6 @@ print("Part 2 appended successfully!")
       <!-- ============================================================ -->
       <section id="screen-tracking" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-50 p-4 relative pb-20">
         <div class="space-y-3.5">
-          <!-- Screen Header -->
           <div class="flex items-center gap-2 border-b border-slate-200 pb-2 bg-white -mx-4 px-4 -mt-4 pt-3">
             <button onclick="goToScreen('screen-dashboard')" class="p-1 -ml-1 text-slate-700 hover:text-emerald-700 transition">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
@@ -921,7 +859,7 @@ print("Part 2 appended successfully!")
             </h1>
           </div>
 
-          <!-- Status Banner (Exact Match: Status: Drone on the way) -->
+          <!-- Status Banner -->
           <div class="w-full p-3 bg-emerald-600 text-white rounded-2xl shadow-sm flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-200 animate-ping"></span>
@@ -934,16 +872,15 @@ print("Part 2 appended successfully!")
             </span>
           </div>
 
-          <!-- Interactive Leaflet Map Canvas with Animated Route -->
+          <!-- Interactive Satellite Map Canvas -->
           <div class="relative w-full h-56 rounded-3xl overflow-hidden shadow-md border-2 border-white">
             <div id="live-leaflet-map" class="w-full h-full"></div>
-            <!-- In-Map ETA Floating Pill -->
             <div class="absolute top-3 right-3 bg-slate-900/85 backdrop-blur-md text-white px-3 py-1.5 rounded-xl text-[11px] font-black z-[1000] border border-slate-700 shadow flex items-center gap-1.5">
               <span>🚁</span> <span id="map-eta-badge">Arriving in 8 min (3.2 km)</span>
             </div>
           </div>
 
-          <!-- Horizontal Timeline Stepper (Exact Match) -->
+          <!-- Horizontal Timeline Stepper -->
           <div class="bg-white rounded-2xl p-3.5 shadow-card border border-slate-100">
             <div class="flex items-center justify-between text-center relative">
               <div class="flex-1">
@@ -966,7 +903,7 @@ print("Part 2 appended successfully!")
             </div>
           </div>
 
-          <!-- Assigned Pilot Card (Exact Match) -->
+          <!-- Assigned Pilot Card -->
           <div class="bg-white rounded-2xl p-4 shadow-card border border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-3">
               <div class="relative">
@@ -1003,7 +940,6 @@ print("Part 2 appended successfully!")
           </div>
         </div>
 
-        <!-- Advance to Spraying In Progress Button -->
         <div class="pt-3">
           <button onclick="goToScreen('screen-spraying')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl text-sm shadow-btn flex items-center justify-center gap-2 transition">
             <span data-key="btn_view_spraying">View Spraying In Progress →</span>
@@ -1016,7 +952,6 @@ print("Part 2 appended successfully!")
       <!-- ============================================================ -->
       <section id="screen-spraying" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-50 p-4 relative pb-20">
         <div class="space-y-4">
-          <!-- Screen Header with [ In Progress ] Badge -->
           <div class="flex items-center justify-between border-b border-slate-200 pb-2 bg-white -mx-4 px-4 -mt-4 pt-3">
             <div class="flex items-center gap-2">
               <button onclick="goToScreen('screen-tracking')" class="p-1 -ml-1 text-slate-700 hover:text-emerald-700 transition">
@@ -1031,18 +966,15 @@ print("Part 2 appended successfully!")
             </span>
           </div>
 
-          <!-- Drone Hovering & Spraying Mist Graphic (Interactive Animation) -->
+          <!-- Drone Hovering & Spraying Mist Graphic -->
           <div class="relative w-full h-52 rounded-3xl overflow-hidden shadow-lg border-2 border-emerald-500 bg-emerald-950 flex flex-col items-center justify-center">
             <img src="assets/farm-landscape-bg.jpg" alt="Field Background" class="absolute inset-0 w-full h-full object-cover opacity-60">
             
-            <!-- Drone Floating Icon -->
             <div class="relative z-10 animate-drone-hover flex flex-col items-center">
               <span class="text-5xl filter drop-shadow-2xl">🚁</span>
-              <!-- Spray Fine Mist Particles Animation -->
               <div class="w-32 h-14 bg-gradient-to-b from-white/80 to-transparent blur-sm rounded-full animate-spray-mist mt-1"></div>
             </div>
 
-            <!-- Altitude & Speed Telemetry Badges -->
             <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg text-white text-[10px] font-mono font-bold">
               ALT: 3.5m • SPEED: 18 km/h
             </div>
@@ -1051,7 +983,7 @@ print("Part 2 appended successfully!")
             </div>
           </div>
 
-          <!-- Area Covered Progress Card (Exact Match: 2.5 / 5 Acres 50%) -->
+          <!-- Area Covered Progress Card -->
           <div class="bg-white rounded-2xl p-4 shadow-card border border-slate-100 space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -1061,12 +993,10 @@ print("Part 2 appended successfully!")
               <span class="text-lg font-black text-emerald-600 font-mono" id="spraying-percent-badge">50%</span>
             </div>
 
-            <!-- Animated Progress Bar -->
             <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200">
               <div id="spraying-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full transition-all duration-500" style="width: 50%;"></div>
             </div>
 
-            <!-- Spraying Volume & Estimated Time Left -->
             <div class="grid grid-cols-2 gap-3 pt-1 border-t border-slate-100 text-xs">
               <div class="flex items-center gap-2">
                 <span class="text-blue-600 text-base">💧</span>
@@ -1085,7 +1015,6 @@ print("Part 2 appended successfully!")
             </div>
           </div>
 
-          <!-- Info Box (Exact Match) -->
           <div class="bg-blue-50 border border-blue-200 text-blue-900 p-3.5 rounded-2xl text-xs font-semibold flex items-start gap-2.5">
             <span class="text-base text-blue-600">ℹ</span>
             <span data-key="alert_spraying_notify">
@@ -1094,25 +1023,18 @@ print("Part 2 appended successfully!")
           </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="space-y-2 pt-3">
           <button onclick="goToScreen('screen-completed')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-sm shadow-btn flex items-center justify-center gap-2 transition">
             <span data-key="btn_complete_service">Service Completed & Generate Bill →</span>
           </button>
         </div>
       </section>
-'''
 
-with open(TARGET, "a", encoding="utf-8") as f:
-    f.write(part3)
-
-print("Part 3 appended successfully!")
       <!-- ============================================================ -->
       <!-- SCREEN 9: SERVICE COMPLETED (EXACT MATCH TO DESIGN 10)        -->
       <!-- ============================================================ -->
       <section id="screen-completed" class="screen-view hidden min-h-full flex flex-col justify-between bg-white p-6 text-center relative pb-20">
         <div class="space-y-4 pt-4">
-          <!-- Screen Header Back -->
           <div class="flex items-center justify-start -mt-2 -ml-2 mb-2">
             <button onclick="goToScreen('screen-dashboard')" class="p-1 text-slate-700 hover:text-emerald-700 transition">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
@@ -1120,14 +1042,12 @@ print("Part 3 appended successfully!")
             <span class="text-xs font-bold text-slate-500 pl-1" data-key="lbl_service_summary">Service Summary</span>
           </div>
 
-          <!-- Big Green Checkmark Icon (Exact Match) -->
           <div class="flex justify-center">
             <div class="w-20 h-20 rounded-full bg-emerald-100 border-4 border-emerald-500 text-emerald-600 flex items-center justify-center text-4xl font-black shadow-lg animate-bounce">
               ✓
             </div>
           </div>
 
-          <!-- Title & Subtitle -->
           <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight" data-key="spraying_completed_title">
               Spraying Completed!
@@ -1137,9 +1057,8 @@ print("Part 3 appended successfully!")
             </p>
           </div>
 
-          <!-- Summary Box (Exact Match to Design 10) -->
+          <!-- Summary Box -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-left space-y-2.5 shadow-xs">
-            <!-- Total Area -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>🌾</span> <span data-key="lbl_total_area">Total Area</span>
@@ -1147,7 +1066,6 @@ print("Part 3 appended successfully!")
               <strong class="text-slate-900 font-black" id="comp-total-area">5 Acres</strong>
             </div>
 
-            <!-- Total Spray Used -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>🧪</span> <span data-key="lbl_total_spray">Total Spray Used</span>
@@ -1155,7 +1073,6 @@ print("Part 3 appended successfully!")
               <strong class="text-slate-900 font-black">100 Liters</strong>
             </div>
 
-            <!-- Completion Time -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>⏰</span> <span data-key="lbl_comp_time">Completion Time</span>
@@ -1163,7 +1080,6 @@ print("Part 3 appended successfully!")
               <strong class="text-slate-900 font-black">11:45 AM</strong>
             </div>
 
-            <!-- Date -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>📅</span> <span data-key="lbl_comp_date">Date</span>
@@ -1172,7 +1088,6 @@ print("Part 3 appended successfully!")
             </div>
           </div>
 
-          <!-- Green Protected Advisory Alert Box (Exact Match) -->
           <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 p-3.5 rounded-2xl text-xs font-semibold flex items-center gap-2.5 text-left">
             <span class="text-xl text-emerald-600 shrink-0">ℹ</span>
             <span data-key="alert_crop_protected">
@@ -1181,7 +1096,6 @@ print("Part 3 appended successfully!")
           </div>
         </div>
 
-        <!-- Proceed to Payment Button (Exact Match) -->
         <div class="pt-4">
           <button onclick="goToScreen('screen-payment-options')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-base shadow-btn flex items-center justify-center gap-2 transition">
             <span data-key="btn_proceed_to_payment">Proceed to Payment →</span>
@@ -1194,7 +1108,6 @@ print("Part 3 appended successfully!")
       <!-- ============================================================ -->
       <section id="screen-payment-options" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-50 p-6 relative pb-20">
         <div class="space-y-4">
-          <!-- Header with Logo -->
           <div class="flex items-center justify-between border-b border-slate-200 pb-3">
             <button onclick="goToScreen('screen-completed')" class="p-1 -ml-2 text-slate-700 hover:text-emerald-700 transition">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
@@ -1210,15 +1123,13 @@ print("Part 3 appended successfully!")
             Pay after spraying (as per your convenience)
           </p>
 
-          <!-- Amount Due Card -->
           <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs text-center">
             <span class="text-xs text-slate-500 font-bold block" data-key="lbl_amount_payable">Total Amount Payable</span>
             <span class="text-2xl font-black text-emerald-800 font-mono" id="pay-options-amount">₹1,500</span>
           </div>
 
-          <!-- Selectable Payment Method Cards (Exact Match) -->
+          <!-- Selectable Payment Method Cards -->
           <div class="space-y-3 pt-1">
-            <!-- Option 1: Cash Payment -->
             <div onclick="selectPaymentOption('cash')" id="opt-cash" class="pay-method-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-500 cursor-pointer shadow-xs transition flex items-center justify-between">
               <div class="flex items-center gap-3">
                 <span class="text-3xl">💵</span>
@@ -1230,7 +1141,6 @@ print("Part 3 appended successfully!")
               <input type="radio" name="pay_method" id="radio-cash" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
             </div>
 
-            <!-- Option 2: UPI Payment (SBI) (Default selected) -->
             <div onclick="selectPaymentOption('upi')" id="opt-upi" class="pay-method-card p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/60 cursor-pointer shadow-xs transition flex items-center justify-between">
               <div class="flex items-center gap-3">
                 <span class="text-3xl">📱</span>
@@ -1246,7 +1156,6 @@ print("Part 3 appended successfully!")
             </div>
           </div>
 
-          <!-- Info Box (Exact Match) -->
           <div class="bg-blue-50 border border-blue-200 text-blue-900 p-3.5 rounded-2xl text-xs font-semibold flex items-center gap-2.5">
             <span class="text-base text-blue-600">ℹ</span>
             <span data-key="alert_payment_enabled">
@@ -1255,7 +1164,6 @@ print("Part 3 appended successfully!")
           </div>
         </div>
 
-        <!-- Continue Button -->
         <div class="pt-4">
           <button onclick="handlePaymentOptionContinue()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-base shadow-btn flex items-center justify-center gap-2 transition">
             <span data-key="btn_continue">Continue →</span>
@@ -1268,7 +1176,6 @@ print("Part 3 appended successfully!")
       <!-- ============================================================ -->
       <section id="screen-upi-qr" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-50 p-6 relative pb-20">
         <div class="space-y-3.5 text-center">
-          <!-- Screen Header Back -->
           <div class="flex items-center justify-between border-b border-slate-200 pb-2">
             <button onclick="goToScreen('screen-payment-options')" class="p-1 -ml-2 text-slate-700 hover:text-emerald-700 transition">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
@@ -1277,9 +1184,8 @@ print("Part 3 appended successfully!")
             <div class="w-5"></div>
           </div>
 
-          <!-- Official SBI QR Stand Card (Exact Match) -->
+          <!-- Official SBI QR Stand Card -->
           <div class="bg-white rounded-3xl p-5 shadow-lg border border-slate-200 max-w-sm mx-auto space-y-3">
-            <!-- SBI Official Header Bar -->
             <div class="flex items-center justify-center gap-2 border-b border-slate-100 pb-2.5">
               <div class="w-7 h-7 rounded-full bg-[#1A4C8B] flex items-center justify-center text-white font-black text-xs">
                 SBI
@@ -1290,18 +1196,15 @@ print("Part 3 appended successfully!")
               </div>
             </div>
 
-            <!-- Trinetra Official Merchant Header -->
             <div>
               <h2 class="text-xs font-black text-slate-900 tracking-wide">TRINETRA DRONES AND ROBOTICS</h2>
               <p class="text-[10px] text-emerald-700 font-extrabold">Official Verified Merchant Account</p>
             </div>
 
-            <!-- Scannable High-Contrast SBI QR Code Container -->
             <div class="p-3 bg-white rounded-2xl border-2 border-slate-900 shadow-inner inline-block relative">
               <img id="upi-qr-image" src="assets/trinetra-sbi-qr.jpg" alt="SBI Scan & Pay QR" class="w-52 h-52 object-contain mx-auto rounded-lg" onerror="this.src='assets/bank-qr.png'">
             </div>
 
-            <!-- UPI ID & Copy Button -->
             <div class="bg-slate-50 rounded-xl p-2.5 border border-slate-200 flex items-center justify-between">
               <div class="text-left">
                 <div class="text-[9px] text-slate-400 font-bold uppercase">Official UPI ID:</div>
@@ -1312,12 +1215,10 @@ print("Part 3 appended successfully!")
               </button>
             </div>
 
-            <!-- Amount Due Badge -->
             <div class="text-sm font-black text-slate-900">
               Amount: <span class="text-emerald-700 font-mono text-base" id="qr-screen-amount">₹1,500</span>
             </div>
 
-            <!-- Partner UPI Logos (Exact Match: BHIM, GPay, PhonePe, Paytm, WhatsApp, Yono) -->
             <div class="pt-2 border-t border-slate-100">
               <div class="text-[9px] text-slate-400 font-bold uppercase mb-1.5">Supported UPI Apps:</div>
               <div class="flex items-center justify-center gap-2 flex-wrap text-[10px] font-black text-slate-600">
@@ -1330,14 +1231,12 @@ print("Part 3 appended successfully!")
               </div>
             </div>
 
-            <!-- Open in App Direct Button -->
             <a id="btn-upi-intent" href="upi://pay?pa=trinetradronesandrobotics@sbi&pn=Trinetra%20Drones&am=1500&cu=INR" class="block w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-xl text-xs shadow-xs transition">
               Open UPI App (GPay / PhonePe) ↗
             </a>
           </div>
         </div>
 
-        <!-- Confirm Payment Button -->
         <div class="pt-4">
           <button onclick="confirmPaymentAndProceed()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-base shadow-btn flex items-center justify-center gap-2 transition">
             <span data-key="btn_confirm_paid">I Have Paid / చెల్లించాను ✓</span>
@@ -1350,14 +1249,12 @@ print("Part 3 appended successfully!")
       <!-- ============================================================ -->
       <section id="screen-payment-success" class="screen-view hidden min-h-full flex flex-col justify-between bg-white p-6 text-center relative pb-20">
         <div class="space-y-4 pt-4">
-          <!-- Big Green Checkmark Hero (Exact Match) -->
           <div class="flex justify-center">
             <div class="w-20 h-20 rounded-full bg-emerald-100 border-4 border-emerald-500 text-emerald-600 flex items-center justify-center text-4xl font-black shadow-lg animate-bounce">
               ✓
             </div>
           </div>
 
-          <!-- Title & Subtitle -->
           <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight" data-key="payment_success_title">
               Payment Successful!
@@ -1367,9 +1264,7 @@ print("Part 3 appended successfully!")
             </p>
           </div>
 
-          <!-- Receipt Details Card (Exact Match) -->
           <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-left space-y-2.5 shadow-xs">
-            <!-- Amount Paid -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>💰</span> <span data-key="lbl_amount_paid">Amount Paid</span>
@@ -1377,7 +1272,6 @@ print("Part 3 appended successfully!")
               <strong class="text-emerald-700 font-black text-sm font-mono" id="succ-amount-paid">₹ 1,500</strong>
             </div>
 
-            <!-- Payment Method -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>💳</span> <span data-key="lbl_pay_method">Payment Method</span>
@@ -1385,7 +1279,6 @@ print("Part 3 appended successfully!")
               <strong class="text-slate-900 font-black" id="succ-method">UPI (SBI)</strong>
             </div>
 
-            <!-- UPI ID -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>🆔</span> <span>UPI ID</span>
@@ -1393,7 +1286,6 @@ print("Part 3 appended successfully!")
               <span class="text-slate-700 font-mono text-[11px]">trinetradronesandrobotics@sbi</span>
             </div>
 
-            <!-- Transaction ID -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>🧾</span> <span data-key="lbl_txn_id">Transaction ID</span>
@@ -1401,7 +1293,6 @@ print("Part 3 appended successfully!")
               <span class="text-slate-900 font-mono font-bold text-[11px]" id="succ-txn-id">T261028114512</span>
             </div>
 
-            <!-- Date & Time -->
             <div class="flex items-center justify-between text-xs">
               <span class="text-slate-500 font-bold flex items-center gap-1.5">
                 <span>🕒</span> <span data-key="lbl_date_time">Date & Time</span>
@@ -1410,13 +1301,11 @@ print("Part 3 appended successfully!")
             </div>
           </div>
 
-          <!-- Info Box (Exact Match) -->
           <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 p-3.5 rounded-2xl text-xs font-semibold text-center" data-key="alert_service_complete_done">
             Thank you for your payment. Your service is now completed. / చెల్లింపు చేసినందుకు ధన్యవాదాలు. మీ సర్వీస్ పూర్తయింది.
           </div>
         </div>
 
-        <!-- View Invoice Button (Exact Match) -->
         <div class="pt-4">
           <button onclick="goToScreen('screen-invoice')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-base shadow-btn flex items-center justify-center gap-2 transition">
             <span data-key="btn_view_invoice">View Invoice →</span>
@@ -1429,7 +1318,6 @@ print("Part 3 appended successfully!")
       <!-- ============================================================ -->
       <section id="screen-invoice" class="screen-view hidden min-h-full flex flex-col justify-between bg-slate-100 p-4 relative pb-20">
         <div class="space-y-4">
-          <!-- Header with Share & Download Icons (Exact Match) -->
           <div class="flex items-center justify-between border-b border-slate-200 pb-2 no-print">
             <button onclick="goToScreen('screen-dashboard')" class="p-1 -ml-1 text-slate-700 hover:text-emerald-700 transition">
               <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
@@ -1447,15 +1335,12 @@ print("Part 3 appended successfully!")
             </div>
           </div>
 
-          <!-- Printable Formal Service Invoice Container (Exact Match to Design 14) -->
+          <!-- Printable Formal Service Invoice Container -->
           <div id="printable-invoice" class="bg-white rounded-3xl p-5 shadow-lg border border-slate-200 text-left space-y-4 relative overflow-hidden">
-            
-            <!-- Diagonal PAID Stamp (Top Right) -->
             <div class="absolute top-12 right-6 pointer-events-none">
               <div class="paid-stamp">PAID ✓</div>
             </div>
 
-            <!-- Top Header & Logo -->
             <div class="border-b border-slate-100 pb-3">
               <div class="flex items-center gap-2 mb-1">
                 <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-8 w-auto object-contain" onerror="this.src='assets/logo.png'">
@@ -1471,7 +1356,6 @@ print("Part 3 appended successfully!")
               </div>
             </div>
 
-            <!-- Customer Details Box -->
             <div class="space-y-1 text-xs">
               <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Customer Details:</h4>
               <div class="flex justify-between">
@@ -1488,7 +1372,6 @@ print("Part 3 appended successfully!")
               </div>
             </div>
 
-            <!-- Service Details Box -->
             <div class="space-y-1 text-xs border-t border-slate-100 pt-2.5">
               <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Service Details:</h4>
               <div class="flex justify-between">
@@ -1517,7 +1400,6 @@ print("Part 3 appended successfully!")
               </div>
             </div>
 
-            <!-- Itemized Table (Exact Match) -->
             <div class="border-t border-slate-100 pt-2.5">
               <table class="w-full text-xs">
                 <thead>
@@ -1545,7 +1427,6 @@ print("Part 3 appended successfully!")
               </table>
             </div>
 
-            <!-- Payment Details Box -->
             <div class="space-y-1 text-xs bg-slate-50 p-3 rounded-2xl border border-slate-200">
               <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Payment Details:</h4>
               <div class="flex justify-between">
@@ -1566,14 +1447,12 @@ print("Part 3 appended successfully!")
               </div>
             </div>
 
-            <!-- Footer Motto -->
             <div class="text-center pt-2 border-t border-slate-100 text-[10px] text-slate-400 font-semibold">
               Thank you for choosing TRINETRA Drones & Robotics • Helpline: 9502051939
             </div>
           </div>
         </div>
 
-        <!-- Bottom Action Buttons (no-print) -->
         <div class="space-y-2 pt-4 no-print">
           <button onclick="window.print()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl text-sm shadow-btn flex items-center justify-center gap-2 transition">
             <span>📥</span> <span data-key="btn_download_print">Print / Download PDF</span>
@@ -1584,9 +1463,7 @@ print("Part 3 appended successfully!")
         </div>
       </section>
 
-      <!-- ============================================================ -->
-      <!-- MAP PICKER MODAL (Leaflet Precision Field Locator)            -->
-      <!-- ============================================================ -->
+      <!-- MAP PICKER MODAL -->
       <div id="modal-map-picker" class="hidden fixed inset-0 z-50 bg-black/60 flex flex-col justify-end sm:justify-center p-0 sm:p-4">
         <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full mx-auto p-4 flex flex-col max-h-[90vh] shadow-2xl">
           <div class="flex items-center justify-between border-b pb-3 mb-2">
@@ -1599,7 +1476,6 @@ print("Part 3 appended successfully!")
 
           <div class="relative w-full h-72 rounded-2xl overflow-hidden border border-slate-200">
             <div id="modal-leaflet-map" class="w-full h-full"></div>
-            <!-- GPS My Location Button -->
             <button type="button" onclick="detectLiveGpsLocation()" class="absolute bottom-3 right-3 bg-white/95 text-slate-900 px-3 py-2 rounded-xl text-xs font-black shadow-md border z-[1000] flex items-center gap-1.5 hover:bg-emerald-50">
               <span>🎯</span> <span>Use My GPS</span>
             </button>
@@ -1620,12 +1496,7 @@ print("Part 3 appended successfully!")
           </button>
         </div>
       </div>
-'''
 
-with open(TARGET, "a", encoding="utf-8") as f:
-    f.write(part4)
-
-print("Part 4 appended successfully!")
     </main>
 
     <!-- Global Toast Alert Container -->
@@ -1945,32 +1816,24 @@ print("Part 4 appended successfully!")
           state.screenHistory.push(screenId);
         }
 
-        // Header visibility management
-        const header = document.getElementById('in-app-header');
         const backBtn = document.getElementById('btn-header-back');
-        if (screenId === 'screen-splash' || screenId === 'screen-lang') {
-          header.classList.add('hidden');
+        if (screenId === 'screen-splash' || screenId === 'screen-dashboard' || screenId === 'screen-login') {
+          if (backBtn) backBtn.classList.add('hidden');
         } else {
-          header.classList.remove('hidden');
-          if (screenId === 'screen-dashboard' || screenId === 'screen-login') {
-            backBtn.classList.add('hidden');
-          } else {
-            backBtn.classList.remove('hidden');
-          }
+          if (backBtn) backBtn.classList.remove('hidden');
         }
 
-        // Auto trigger leaflet resize if map screens
         if (screenId === 'screen-tracking') {
           setTimeout(initTrackingMap, 200);
         }
       }
-      // Scroll to top
-      document.getElementById('screens-container').scrollTop = 0;
+      const scrollContainer = document.getElementById('screens-container');
+      if (scrollContainer) scrollContainer.scrollTop = 0;
     }
 
     function goBack() {
       if (state.screenHistory.length > 1) {
-        state.screenHistory.pop(); // remove current
+        state.screenHistory.pop();
         const prev = state.screenHistory[state.screenHistory.length - 1];
         goToScreen(prev, false);
       } else {
@@ -1992,21 +1855,30 @@ print("Part 4 appended successfully!")
       const btnTe = document.getElementById('lang-btn-te');
       const btnEn = document.getElementById('lang-btn-en');
       if (lang === 'te') {
-        btnTe.className = 'px-6 py-2.5 rounded-full font-black text-sm transition-all shadow-md bg-emerald-600 text-white border-2 border-emerald-600 flex items-center gap-1.5';
-        btnTe.innerHTML = '<span>✓</span> <span>తెలుగు</span>';
-        btnEn.className = 'px-6 py-2.5 rounded-full font-bold text-sm transition-all bg-white text-slate-700 border-2 border-slate-300 hover:border-emerald-500';
-        btnEn.innerHTML = '<span>English</span>';
+        if (btnTe) {
+          btnTe.className = 'px-6 py-2.5 rounded-full font-black text-sm transition-all shadow-md bg-emerald-600 text-white border-2 border-emerald-600 flex items-center gap-1.5';
+          btnTe.innerHTML = '<span>✓</span> <span>తెలుగు</span>';
+        }
+        if (btnEn) {
+          btnEn.className = 'px-6 py-2.5 rounded-full font-bold text-sm transition-all bg-white text-slate-700 border-2 border-slate-300 hover:border-emerald-500';
+          btnEn.innerHTML = '<span>English</span>';
+        }
       } else {
-        btnEn.className = 'px-6 py-2.5 rounded-full font-black text-sm transition-all shadow-md bg-emerald-600 text-white border-2 border-emerald-600 flex items-center gap-1.5';
-        btnEn.innerHTML = '<span>✓</span> <span>English</span>';
-        btnTe.className = 'px-6 py-2.5 rounded-full font-bold text-sm transition-all bg-white text-slate-700 border-2 border-slate-300 hover:border-emerald-500';
-        btnTe.innerHTML = '<span>తెలుగు</span>';
+        if (btnEn) {
+          btnEn.className = 'px-6 py-2.5 rounded-full font-black text-sm transition-all shadow-md bg-emerald-600 text-white border-2 border-emerald-600 flex items-center gap-1.5';
+          btnEn.innerHTML = '<span>✓</span> <span>English</span>';
+        }
+        if (btnTe) {
+          btnTe.className = 'px-6 py-2.5 rounded-full font-bold text-sm transition-all bg-white text-slate-700 border-2 border-slate-300 hover:border-emerald-500';
+          btnTe.innerHTML = '<span>తెలుగు</span>';
+        }
       }
     }
 
     function toggleLanguage() {
       const nextLang = state.language === 'te' ? 'en' : 'te';
       setLanguage(nextLang);
+      selectAppLanguage(nextLang);
       showToast(nextLang === 'te' ? 'భాష: తెలుగు' : 'Language: English');
     }
 
@@ -2031,16 +1903,16 @@ print("Part 4 appended successfully!")
     function handleRequestOtp(e) {
       if (e) e.preventDefault();
       const mobileInput = document.getElementById('input-login-mobile');
-      const mobile = mobileInput ? mobileInput.value.replace(/\\D/g, '') : '9502051939';
+      const mobile = mobileInput ? mobileInput.value.replace(/\D/g, '') : '9502051939';
       if (mobile.length < 10) {
         showToast(state.language === 'te' ? 'దయచేసి 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter valid 10-digit mobile number');
         return;
       }
 
       state.farmer.phone = mobile;
-      document.getElementById('otp-phone-display').innerText = `+91 ${mobile.slice(0,5)} ${mobile.slice(5)}`;
+      const display = document.getElementById('otp-phone-display');
+      if (display) display.innerText = `+91 ${mobile.slice(0,5)} ${mobile.slice(5)}`;
       
-      // Fire real backend OTP call in background
       fetch('/api/auth/request-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2060,7 +1932,10 @@ print("Part 4 appended successfully!")
 
     function clearOtpInputs() {
       state.otp.code = '';
-      document.querySelectorAll('.otp-box').forEach(b => { b.value = ''; b.classList.remove('border-emerald-600'); });
+      document.querySelectorAll('.otp-box').forEach(b => { 
+        b.value = ''; 
+        b.classList.remove('border-emerald-600', 'bg-emerald-50/50'); 
+      });
     }
 
     function dialpadPress(digit) {
@@ -2125,33 +2000,9 @@ print("Part 4 appended successfully!")
         return;
       }
 
-      // Accept real OTP or fast demo 123456
       showToast(state.language === 'te' ? 'OTP ధృవీకరించబడింది ✓' : 'OTP Verified Successfully ✓');
       goToScreen('screen-dashboard');
     }
-
-    // Physical keyboard input support on OTP boxes
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.otp-box').forEach((box, idx) => {
-        box.addEventListener('input', (e) => {
-          const val = e.target.value.replace(/\\D/g, '');
-          e.target.value = val;
-          if (val) {
-            state.otp.code = state.otp.code.slice(0, idx) + val + state.otp.code.slice(idx + 1);
-            const next = document.querySelector(`.otp-box[data-idx="${idx + 1}"]`);
-            if (next) next.focus();
-            if (state.otp.code.length === 6) setTimeout(handleVerifyOtp, 200);
-          }
-        });
-        box.addEventListener('keydown', (e) => {
-          if (e.key === 'Backspace' && !box.value) {
-            const prev = document.querySelector(`.otp-box[data-idx="${idx - 1}"]`);
-            if (prev) { prev.focus(); prev.value = ''; }
-            state.otp.code = state.otp.code.slice(0, -1);
-          }
-        });
-      });
-    });
 
     // =========================================================================
     // SERVICE BOOKING ENGINE
@@ -2185,7 +2036,7 @@ print("Part 4 appended successfully!")
     function selectCrop(cropName) {
       state.booking.crop = cropName;
       document.querySelectorAll('.crop-btn').forEach(btn => {
-        btn.className = 'crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition';
+        btn.className = 'crop-btn p-2 rounded-2xl border-2 border-slate-200 bg-white text-center cursor-pointer transition shadow-xs';
       });
       let id = 'crop-btn-other';
       if (cropName.includes('Paddy')) id = 'crop-btn-paddy';
@@ -2195,7 +2046,7 @@ print("Part 4 appended successfully!")
       
       const active = document.getElementById(id);
       if (active) {
-        active.className = 'crop-btn p-2 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-center cursor-pointer transition';
+        active.className = 'crop-btn p-2 rounded-2xl border-2 border-emerald-600 bg-emerald-50 text-center cursor-pointer transition shadow-xs';
       }
     }
 
@@ -2204,7 +2055,8 @@ print("Part 4 appended successfully!")
       if (current < 1) current = 1;
       if (current > 50) current = 50;
       state.booking.acres = current;
-      document.getElementById('val-land-area').innerText = current;
+      const el = document.getElementById('val-land-area');
+      if (el) el.innerText = current;
       calculateBookingTotal();
     }
 
@@ -2228,7 +2080,6 @@ print("Part 4 appended successfully!")
       const compArea = document.getElementById('comp-total-area');
       if (compArea) compArea.innerText = `${state.booking.acres} Acres`;
 
-      // Update invoice table
       const invRate = document.getElementById('inv-item-rate');
       const invQty = document.getElementById('inv-item-qty');
       const invAmt = document.getElementById('inv-item-amt');
@@ -2246,12 +2097,12 @@ print("Part 4 appended successfully!")
       const btnE = document.getElementById('slot-evening');
       if (slot === 'morning') {
         state.booking.slot = 'Morning (06:30 - 09:30 AM)';
-        btnM.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-xs font-bold text-emerald-900 flex items-center justify-center gap-1.5';
-        btnE.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5';
+        if (btnM) btnM.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-xs font-bold text-emerald-900 flex items-center justify-center gap-1.5';
+        if (btnE) btnE.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5';
       } else {
         state.booking.slot = 'Evening (04:30 - 06:30 PM)';
-        btnE.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-xs font-bold text-emerald-900 flex items-center justify-center gap-1.5';
-        btnM.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5';
+        if (btnE) btnE.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-xs font-bold text-emerald-900 flex items-center justify-center gap-1.5';
+        if (btnM) btnM.className = 'time-slot-btn py-2 px-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5';
       }
     }
 
@@ -2299,17 +2150,14 @@ print("Part 4 appended successfully!")
           state.booking.code = 'TRN-2026-' + Math.floor(800 + Math.random() * 199);
         }
       } catch (err) {
-        console.warn('Offline mode or fetch error, fallback booking code generated:', err);
         state.booking.code = 'TRN-2026-' + Math.floor(800 + Math.random() * 199);
       }
 
-      // Update Tracking screen references
       const refEl = document.getElementById('track-booking-ref');
       if (refEl) refEl.innerText = state.booking.code;
       const invNo = document.getElementById('inv-no');
       if (invNo) invNo.innerText = state.booking.code;
 
-      // Show active booking in dashboard
       const dashBanner = document.getElementById('dash-active-booking-banner');
       const dashCode = document.getElementById('dash-active-code');
       if (dashBanner) dashBanner.classList.remove('hidden');
@@ -2321,7 +2169,7 @@ print("Part 4 appended successfully!")
     }
 
     // =========================================================================
-    // LEAFLET SATELLITE MAP ENGINE (Field Picker & Live Tracking)
+    // LEAFLET SATELLITE MAP ENGINE
     // =========================================================================
     let modalMap = null;
     let modalMarker = null;
@@ -2343,7 +2191,6 @@ print("Part 4 appended successfully!")
 
       if (!modalMap) {
         modalMap = L.map('modal-leaflet-map').setView([state.booking.lat, state.booking.lng], 16);
-        // Hybrid Satellite Tiles
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
           attribution: 'Esri Satellite',
           maxZoom: 19
@@ -2427,11 +2274,9 @@ print("Part 4 appended successfully!")
           maxZoom: 18
         }).addTo(trackingMap);
 
-        // Farm Marker
         const farmMarker = L.marker([farmLat, farmLng]).addTo(trackingMap);
         farmMarker.bindPopup('<b>📍 ' + state.farmer.name + ' Farm</b><br>' + state.booking.acres + ' Acres ' + state.booking.crop);
 
-        // Drone Icon & Moving Flight Path
         const droneIcon = L.divIcon({
           html: '<div style="font-size:24px; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.5));" class="animate-bounce">🚁</div>',
           className: 'drone-map-icon',
@@ -2439,22 +2284,20 @@ print("Part 4 appended successfully!")
         });
         droneMarker = L.marker([baseLat, baseLng], { icon: droneIcon }).addTo(trackingMap);
 
-        // Dashed flight line
-        const flightPath = L.polyline([[baseLat, baseLng], [farmLat, farmLng]], {
+        L.polyline([[baseLat, baseLng], [farmLat, farmLng]], {
           color: '#22c55e',
           weight: 3,
           dashArray: '6, 8',
           opacity: 0.9
         }).addTo(trackingMap);
 
-        // Animate drone movement towards farm
         let step = 0;
         setInterval(() => {
           if (step < 100) {
             step += 2;
             const curLat = baseLat + (farmLat - baseLat) * (step / 100);
             const curLng = baseLng + (farmLng - baseLng) * (step / 100);
-            droneMarker.setLatLng([curLat, curLng]);
+            if (droneMarker) droneMarker.setLatLng([curLat, curLng]);
           }
         }, 500);
       } else {
@@ -2473,15 +2316,15 @@ print("Part 4 appended successfully!")
       const radUpi = document.getElementById('radio-upi');
 
       if (opt === 'cash') {
-        cardCash.className = 'pay-method-card p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/60 cursor-pointer shadow-xs transition flex items-center justify-between';
-        cardUpi.className = 'pay-method-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-500 cursor-pointer shadow-xs transition flex items-center justify-between';
-        radCash.checked = true;
-        radUpi.checked = false;
+        if (cardCash) cardCash.className = 'pay-method-card p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/60 cursor-pointer shadow-xs transition flex items-center justify-between';
+        if (cardUpi) cardUpi.className = 'pay-method-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-500 cursor-pointer shadow-xs transition flex items-center justify-between';
+        if (radCash) radCash.checked = true;
+        if (radUpi) radUpi.checked = false;
       } else {
-        cardUpi.className = 'pay-method-card p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/60 cursor-pointer shadow-xs transition flex items-center justify-between';
-        cardCash.className = 'pay-method-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-500 cursor-pointer shadow-xs transition flex items-center justify-between';
-        radUpi.checked = true;
-        radCash.checked = false;
+        if (cardUpi) cardUpi.className = 'pay-method-card p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/60 cursor-pointer shadow-xs transition flex items-center justify-between';
+        if (cardCash) cardCash.className = 'pay-method-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-500 cursor-pointer shadow-xs transition flex items-center justify-between';
+        if (radUpi) radUpi.checked = true;
+        if (radCash) radCash.checked = false;
       }
     }
 
@@ -2489,7 +2332,6 @@ print("Part 4 appended successfully!")
       if (state.payment.method === 'upi') {
         goToScreen('screen-upi-qr');
       } else {
-        // Cash payment direct confirmation
         state.payment.method = 'Cash Payment (నగదు)';
         confirmPaymentAndProceed();
       }
@@ -2519,14 +2361,12 @@ print("Part 4 appended successfully!")
       const methodEl = document.getElementById('succ-method');
       if (methodEl) methodEl.innerText = state.payment.method === 'upi' ? 'UPI (SBI)' : 'Cash Payment';
 
-      // Update invoice
       const invTxn = document.getElementById('inv-pay-txn');
       if (invTxn) invTxn.innerText = state.payment.txnId;
 
       const invMethod = document.getElementById('inv-pay-method');
       if (invMethod) invMethod.innerText = state.payment.method === 'upi' ? 'UPI (SBI)' : 'Cash Payment';
 
-      // Notify backend of status update to completed
       fetch('/api/bookings/' + state.booking.code + '/status', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -2599,7 +2439,7 @@ print("Part 4 appended successfully!")
     }
 
     // =========================================================================
-    // REAL-TIME SERVER-SENT EVENTS (SSE) SYNCHRONIZATION WITH ADMIN
+    // REAL-TIME SSE SYNCHRONIZATION WITH ADMIN
     // =========================================================================
     function initRealtimeSync() {
       try {
@@ -2608,7 +2448,6 @@ print("Part 4 appended successfully!")
           try {
             const data = JSON.parse(e.data);
             if (data.type === 'STATUS_UPDATED') {
-              console.log('[SSE] Status updated from Admin:', data);
               const newSt = (data.status || '').toLowerCase();
               if (newSt === 'pilot_assigned') {
                 showToast('🔔 పైలట్ కేటాయించబడ్డారు: రమేష్ కుమార్ (AP-07)');
@@ -2623,12 +2462,9 @@ print("Part 4 appended successfully!")
             }
           } catch(err) {}
         };
-      } catch(err) {
-        console.log('SSE connection note:', err);
-      }
+      } catch(err) {}
     }
 
-    // Toast Utility
     function showToast(msg) {
       const container = document.getElementById('toast-container');
       if (!container) return;
@@ -2643,16 +2479,12 @@ print("Part 4 appended successfully!")
       }, 2800);
     }
 
-    // =========================================================================
-    // INITIALIZATION ON DOM READY
-    // =========================================================================
     window.addEventListener('DOMContentLoaded', () => {
       applyLanguage(state.language);
       selectAppLanguage(state.language);
       calculateBookingTotal();
       initRealtimeSync();
 
-      // Auto-advance from splash after 3 seconds if not touched
       setTimeout(() => {
         if (state.currentScreen === 'screen-splash') {
           goToScreen('screen-lang');
