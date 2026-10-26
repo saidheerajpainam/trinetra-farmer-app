@@ -289,7 +289,7 @@
                 <span class="text-sm font-black text-slate-800 pr-2 border-r border-slate-200 flex items-center gap-1">
                   <span>🇮🇳</span> <span>+91</span>
                 </span>
-                <input type="tel" id="input-login-mobile" value="9502051939" maxlength="10" placeholder="95020 51939" class="w-full pl-3 text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
+                <input type="tel" id="input-login-mobile" value="" maxlength="10" placeholder="10 అంకెల మొబైల్ నంబర్ (e.g. 98480 12345)" class="w-full pl-3 text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
               </div>
             </div>
 
@@ -358,8 +358,7 @@
                 Farmer Full Name / రైతు పూర్తి పేరు *
               </label>
               <div class="flex items-center rounded-xl border-2 border-emerald-500/70 bg-white px-3 py-2.5 shadow-xs focus-within:ring-2 focus-within:ring-emerald-500 transition">
-                <span class="text-base mr-2">👨‍🌾</span>
-                <input type="text" id="reg-name" required placeholder="ఉదా: పి. సాయి ధీరజ్ (P. Saidheeraj)" class="w-full text-xs sm:text-sm font-bold text-slate-900 bg-transparent outline-none">
+                <input type="text" id="reg-name" required placeholder="రైతు పూర్తి పేరు (Enter Full Name)" value="" class="w-full text-xs sm:text-sm font-bold text-slate-900 bg-transparent outline-none">
               </div>
             </div>
 
@@ -372,7 +371,7 @@
                 <span class="text-xs font-black text-slate-800 pr-2 border-r border-slate-200 flex items-center gap-1">
                   <span>🇮🇳</span> <span>+91</span>
                 </span>
-                <input type="tel" id="reg-mobile" maxlength="10" required placeholder="95020 51939" class="w-full pl-3 text-xs sm:text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
+                <input type="tel" id="reg-mobile" maxlength="10" required placeholder="10 అంకెల మొబైల్ నంబర్" value="" class="w-full pl-3 text-xs sm:text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
               </div>
             </div>
 
@@ -382,13 +381,13 @@
                 <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_village">
                   Village / గ్రామం *
                 </label>
-                <input type="text" id="reg-village" required placeholder="పోరంకి" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
+                <input type="text" id="reg-village" required placeholder="గ్రామం పేరు (Village)" value="" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_mandal">
                   Mandal / మండలం *
                 </label>
-                <input type="text" id="reg-mandal" required placeholder="పెనమలూరు" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
+                <input type="text" id="reg-mandal" placeholder="మండలం (Mandal)" value="" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
               </div>
             </div>
 
@@ -450,7 +449,7 @@
                 <label class="block text-xs font-bold text-slate-700 mb-1" data-key="lbl_farm_acres">
                   Land / ఎకరాలు *
                 </label>
-                <input type="number" id="reg-acres" min="0.5" max="100" step="0.5" value="5.0" required placeholder="5.0" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
+                <input type="number" id="reg-acres" min="0.5" max="100" step="0.5" value="" required placeholder="ఎకరాలు (e.g. 3.0)" class="w-full rounded-xl border-2 border-slate-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-emerald-600 transition">
               </div>
             </div>
 
@@ -567,10 +566,10 @@
             <div>
               <div class="flex items-center gap-1">
                 <span class="text-xs text-slate-500 font-semibold" data-key="greeting_namaste">Namaste,</span>
-                <span class="text-xs font-black text-slate-900" id="dash-farmer-name">P. Saidheeraj</span>
+                <span class="text-xs font-black text-slate-900" id="dash-farmer-name">రైతు (Farmer)</span>
               </div>
               <div class="flex items-center gap-1 text-[10px] text-emerald-700 font-bold">
-                <span>📍</span> <span id="dash-farmer-village">Poranki, AP</span>
+                <span>📍</span> <span id="dash-farmer-village">ఆంధ్రప్రదేశ్ (AP)</span>
               </div>
             </div>
           </div>
@@ -747,7 +746,7 @@
           <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
             <div class="flex justify-between text-xs">
               <span class="text-slate-500">Location:</span>
-              <strong class="text-slate-900" id="farm-card-location">Poranki, Krishna District, AP</strong>
+              <strong class="text-slate-900" id="farm-card-location">ఆంధ్రప్రదేశ్ (Andhra Pradesh)</strong>
             </div>
             <div class="flex justify-between text-xs">
               <span class="text-slate-500">Default Crop:</span>
@@ -817,14 +816,14 @@
               </div>
               <div class="flex-1">
                 <div class="flex items-center justify-between">
-                  <h4 class="font-black text-slate-900 text-base" id="prof-display-name">P. Saidheeraj</h4>
+                  <h4 class="font-black text-slate-900 text-base" id="prof-display-name">రైతు (Farmer)</h4>
                   <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold border border-emerald-300">Verified AP Farmer ✓</span>
                 </div>
                 <p class="text-xs text-slate-600 font-mono mt-0.5 flex items-center gap-1">
-                  <span>📱</span> <span id="prof-display-phone">+91 9502051939</span>
+                  <span>📱</span> <span id="prof-display-phone">--</span>
                 </p>
                 <p class="text-xs text-slate-600 font-semibold mt-0.5 flex items-center gap-1">
-                  <span>📍</span> <span id="prof-display-village">Poranki, Vijayawada</span> (<span id="prof-display-district">Krishna</span>)
+                  <span>📍</span> <span id="prof-display-village">ఆంధ్రప్రదేశ్</span> (<span id="prof-display-district">AP</span>)
                 </p>
                 <div class="mt-2 flex items-center gap-2 text-[11px] font-bold text-slate-700">
                   <span class="px-2 py-0.5 bg-white rounded-lg border border-slate-200">🌾 <span id="prof-display-crop">Paddy (వరి)</span></span>
@@ -849,13 +848,13 @@
 
             <div>
               <label class="block text-[11px] font-bold text-slate-700 mb-1">Farmer Full Name / రైతు పేరు</label>
-              <input type="text" id="input-edit-name" value="P. Saidheeraj" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
+              <input type="text" id="input-edit-name" value="" placeholder="రైతు పూర్తి పేరు" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
             </div>
 
             <div class="grid grid-cols-2 gap-2">
               <div>
                 <label class="block text-[11px] font-bold text-slate-700 mb-1">Mobile / ఫోన్ నంబర్</label>
-                <input type="tel" id="input-edit-phone" value="9502051939" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold font-mono text-slate-900 focus:border-emerald-600 focus:outline-none">
+                <input type="tel" id="input-edit-phone" value="" placeholder="మొబైల్ నంబర్" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold font-mono text-slate-900 focus:border-emerald-600 focus:outline-none">
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-slate-700 mb-1">Total Land / విస్తీర్ణం (Acres)</label>
@@ -866,7 +865,7 @@
             <div class="grid grid-cols-2 gap-2">
               <div>
                 <label class="block text-[11px] font-bold text-slate-700 mb-1">Village / గ్రామం</label>
-                <input type="text" id="input-edit-village" value="Poranki" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
+                <input type="text" id="input-edit-village" value="" placeholder="గ్రామం పేరు" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-slate-700 mb-1">District / జిల్లా</label>
@@ -1054,7 +1053,7 @@
                 <div class="flex items-center gap-2">
                   <span class="text-rose-600 text-lg">📍</span>
                   <div>
-                    <div id="booking-village-name" class="text-xs font-black text-slate-900">Poranki, Vijayawada, Andhra Pradesh</div>
+                    <div id="booking-village-name" class="text-xs font-black text-slate-900">ఆంధ్రప్రదేశ్ (Andhra Pradesh)</div>
                     <div id="booking-gps-coords" class="text-[10px] font-mono text-slate-500">16.4971° N, 80.7856° E</div>
                   </div>
                 </div>
@@ -1643,15 +1642,15 @@
               <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Customer Details:</h4>
               <div class="flex justify-between">
                 <span class="text-slate-500">Name:</span>
-                <strong class="text-slate-900" id="inv-cust-name">P. Saidheeraj</strong>
+                <strong class="text-slate-900" id="inv-cust-name">రైతు (Farmer)</strong>
               </div>
               <div class="flex justify-between">
                 <span class="text-slate-500">Mobile:</span>
-                <span class="text-slate-800 font-mono font-bold" id="inv-cust-mobile">+91 9502051939</span>
+                <span class="text-slate-800 font-mono font-bold" id="inv-cust-mobile">--</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-slate-500">Village / Location:</span>
-                <strong class="text-slate-900" id="inv-cust-loc">Poranki, Vijayawada, AP</strong>
+                <strong class="text-slate-900" id="inv-cust-loc">ఆంధ్రప్రదేశ్ (AP)</strong>
               </div>
             </div>
 
@@ -1796,15 +1795,17 @@
       currentScreen: 'screen-splash',
       screenHistory: ['screen-splash'],
       farmer: {
-        name: 'P. Saidheeraj',
-        phone: '9502051939',
-        village: 'Poranki, Vijayawada',
-        district: 'Krishna',
+        id: null,
+        name: '',
+        phone: '',
+        village: '',
+        mandal: '',
+        district: '',
         state: 'Andhra Pradesh',
-        crop: 'Paddy (వరి)',
-        acres: 5.0,
-        lat: 16.4971,
-        lng: 80.7856
+        crop: 'Paddy',
+        acres: 0,
+        lat: 16.5062,
+        lng: 80.6480
       },
       booking: {
         code: 'TRN-2026-821',
@@ -1813,7 +1814,7 @@
         pricePerAcre: 300,
         acres: 5.0,
         crop: 'Paddy (వరి)',
-        village: 'Poranki, Vijayawada, Andhra Pradesh',
+        village: 'ఆంధ్రప్రదేశ్ (AP)',
         lat: 16.4971,
         lng: 80.7856,
         slot: 'Morning (06:30 - 09:30 AM)',
@@ -2231,7 +2232,7 @@
       }
     });
 
-    // =========================================================================
+        // =========================================================================
     // CREATE ACCOUNT / FARMER REGISTRATION HANDLER
     // =========================================================================
     async function handleCreateAccount(e) {
@@ -2246,21 +2247,27 @@
 
       const name = nameInput ? nameInput.value.trim() : '';
       const mobile = mobileInput ? mobileInput.value.replace(/\D/g, '') : '';
-      const village = villageInput ? villageInput.value.trim() : 'Poranki';
-      const mandal = mandalInput ? mandalInput.value.trim() : 'Penamaluru';
+      const village = villageInput ? villageInput.value.trim() : '';
+      const mandal = mandalInput ? mandalInput.value.trim() : '';
       const district = districtSelect ? districtSelect.value : 'Krishna';
       const crop = cropSelect ? cropSelect.value : 'Paddy';
-      const acres = acresInput ? parseFloat(acresInput.value) || 5.0 : 5.0;
+      const acres = acresInput ? parseFloat(acresInput.value) || 0 : 0;
 
       if (!name) {
-        showToast(state.language === 'te' ? 'దయచేసి రైతు పూర్తి పేరు నమోదు చేయండి' : 'Please enter farmer full name');
+        showToast(state.language === 'te' ? 'దయచేసి మీ పూర్తి పేరు నమోదు చేయండి' : 'Please enter your full name', 'warning');
         if (nameInput) nameInput.focus();
         return;
       }
 
       if (mobile.length !== 10) {
-        showToast(state.language === 'te' ? 'దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter valid 10-digit mobile number');
+        showToast(state.language === 'te' ? 'దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter valid 10-digit mobile number', 'warning');
         if (mobileInput) mobileInput.focus();
+        return;
+      }
+
+      if (!village) {
+        showToast(state.language === 'te' ? 'దయచేసి మీ గ్రామం పేరు నమోదు చేయండి' : 'Please enter your village name', 'warning');
+        if (villageInput) villageInput.focus();
         return;
       }
 
@@ -2270,7 +2277,7 @@
         btn.innerHTML = `<span>⏳</span> <span>${state.language === 'te' ? 'ఖాతా సృష్టించబడుతోంది...' : 'Creating Account...'}</span>`;
       }
 
-      // Update in-memory state
+      // Store REAL user data in state
       state.farmer.name = name;
       state.farmer.phone = mobile;
       state.farmer.village = village;
@@ -2313,8 +2320,137 @@
 
       showToast(state.language === 'te' ? `రైతు ఖాతా సృష్టించబడింది! స్వాగతం, ${name} గారు! 🌾` : `Account created! Welcome, ${name}! 🌾`, 'success');
 
-      // Navigate to Home Dashboard
+      // Navigate to Home Dashboard with real user details displayed!
       goToScreen('screen-dashboard');
+    }
+
+    function handleRequestOtp(e) {
+      if (e) e.preventDefault();
+      const mobileInput = document.getElementById('input-login-mobile');
+      const mobile = mobileInput ? mobileInput.value.replace(/\D/g, '') : '';
+      if (!mobile || mobile.length < 10) {
+        showToast(state.language === 'te' ? 'దయచేసి మీ 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter valid 10-digit mobile number', 'warning');
+        if (mobileInput) mobileInput.focus();
+        return;
+      }
+
+      state.farmer.phone = mobile;
+      const display = document.getElementById('otp-phone-display');
+      if (display) display.innerText = `+91 ${mobile.slice(0,5)} ${mobile.slice(5)}`;
+      
+      fetch('/api/auth/request-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile })
+      }).catch(err => console.log('OTP request sent:', err));
+
+      startOtpCountdown();
+      clearOtpInputs();
+      goToScreen('screen-otp');
+      showToast(state.language === 'te' ? 'OTP పంపబడింది: 123456' : 'OTP sent to mobile (Demo: 123456)');
+    }
+
+    async function handleVerifyOtp() {
+      syncOtpFromBoxes();
+      const code = state.otp.code;
+      if (code.length < 6) {
+        showToast(state.language === 'te' ? 'దయచేసి 6 అంకెల OTP నమోదు చేయండి (డెమో: 123456)' : 'Please enter full 6-digit OTP (Demo: 123456)', 'warning');
+        return;
+      }
+
+      // Verify OTP via API
+      try {
+        await fetch('/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mobile: state.farmer.phone,
+            otp: code
+          })
+        });
+      } catch (e) {
+        console.warn('[Verify OTP Offline]', e);
+      }
+
+      // Fetch user profile from SQLite by their logged-in mobile number
+      try {
+        const profResp = await fetch('/api/farmers/by-mobile/' + state.farmer.phone);
+        const profData = await profResp.json();
+        if (profData && profData.success && profData.data) {
+          const d = profData.data;
+          state.farmer.name = d.full_name || '';
+          state.farmer.phone = d.mobile || state.farmer.phone;
+          state.farmer.village = d.village || '';
+          state.farmer.mandal = d.mandal || '';
+          state.farmer.district = d.district || '';
+          if (d.farms && d.farms.length > 0) {
+            state.farmer.crop = d.farms[0].crop_type || state.farmer.crop;
+            state.farmer.acres = d.farms[0].area_acres || state.farmer.acres;
+          }
+        }
+      } catch (err) {
+        console.warn('[Fetch Profile by Mobile Offline]', err);
+      }
+
+      // If user is brand new and has no name set yet, fallback to 'రైతు (Farmer)'
+      if (!state.farmer.name) {
+        state.farmer.name = (state.language === 'te' ? 'రైతు' : 'Farmer');
+      }
+
+      try {
+        localStorage.setItem('trinetra_farmer_profile', JSON.stringify(state.farmer));
+      } catch(e) {}
+
+      updateFarmerProfileDOM();
+
+      showToast(state.language === 'te' ? `OTP ధృవీకరించబడింది! స్వాగతం, ${state.farmer.name} గారు! ✓` : `OTP Verified! Welcome, ${state.farmer.name}! ✓`, 'success');
+      goToScreen('screen-dashboard');
+    }
+
+    function updateFarmerProfileDOM() {
+      const f = state.farmer;
+      const dName = document.getElementById('dash-farmer-name');
+      const dVill = document.getElementById('dash-farmer-village');
+      const pName = document.getElementById('prof-display-name');
+      const pPhone = document.getElementById('prof-display-phone');
+      const pVill = document.getElementById('prof-display-village');
+      const pDist = document.getElementById('prof-display-district');
+      const pCrop = document.getElementById('prof-display-crop');
+      const pAcres = document.getElementById('prof-display-acres');
+
+      const displayName = f.name || (state.language === 'te' ? 'రైతు' : 'Farmer');
+      const displayVillage = f.village ? (f.district ? `${f.village}, ${f.district}` : `${f.village}, AP`) : (state.language === 'te' ? 'ఆంధ్రప్రదేశ్' : 'Andhra Pradesh');
+      const displayPhone = f.phone ? `+91 ${f.phone}` : '--';
+
+      if (dName) dName.innerText = displayName;
+      if (dVill) dVill.innerText = displayVillage;
+      if (pName) pName.innerText = displayName;
+      if (pPhone) pPhone.innerText = displayPhone;
+      if (pVill) pVill.innerText = f.village || '--';
+      if (pDist) pDist.innerText = f.district || 'AP';
+      if (pCrop) pCrop.innerText = f.crop || 'Paddy';
+      if (pAcres) pAcres.innerText = f.acres ? `${f.acres} Acres` : '--';
+
+      const farmLoc = document.getElementById('farm-card-location');
+      if (farmLoc) farmLoc.innerText = displayVillage;
+
+      const farmCrop = document.getElementById('farm-card-crop');
+      if (farmCrop) farmCrop.innerText = f.crop || 'Paddy';
+
+      const farmAcres = document.getElementById('farm-card-acres');
+      if (farmAcres && f.acres) farmAcres.innerText = `${f.acres} Acres`;
+
+      const invName = document.getElementById('inv-cust-name');
+      if (invName) invName.innerText = displayName;
+
+      const invMobile = document.getElementById('inv-cust-mobile');
+      if (invMobile) invMobile.innerText = displayPhone;
+
+      const invLoc = document.getElementById('inv-cust-loc');
+      if (invLoc) invLoc.innerText = displayVillage;
+
+      const bookVill = document.getElementById('booking-village-name');
+      if (bookVill) bookVill.innerText = displayVillage;
     }
 
     // =========================================================================
@@ -2969,9 +3105,9 @@
           const distIn = document.getElementById('input-edit-district');
           const acresIn = document.getElementById('input-edit-acres');
           const cropIn = document.getElementById('input-edit-crop');
-          if (nameIn) nameIn.value = state.farmer.name || 'P. Saidheeraj';
-          if (phoneIn) phoneIn.value = state.farmer.phone || '9502051939';
-          if (villageIn) villageIn.value = state.farmer.village || 'Poranki';
+          if (nameIn) nameIn.value = state.farmer.name || '';
+          if (phoneIn) phoneIn.value = state.farmer.phone || '';
+          if (villageIn) villageIn.value = state.farmer.village || '';
           if (distIn) distIn.value = state.farmer.district || 'Krishna';
           if (acresIn) acresIn.value = state.farmer.acres || 5.0;
           if (cropIn) cropIn.value = state.farmer.crop || 'Paddy (వరి)';
@@ -3033,10 +3169,15 @@
         const saved = localStorage.getItem('trinetra_farmer_profile');
         if (saved) {
           const parsed = JSON.parse(saved);
-          state.farmer = Object.assign(state.farmer, parsed);
-          updateFarmerProfileDOM();
+          // Purge old mock profile if it was previously cached on device
+          if (parsed && (parsed.name === 'P. Saidheeraj' || parsed.phone === '9502051939')) {
+            localStorage.removeItem('trinetra_farmer_profile');
+          } else {
+            state.farmer = Object.assign(state.farmer, parsed);
+          }
         }
       } catch(e) {}
+      updateFarmerProfileDOM();
     }
 
     function closeTabOverlay() {
