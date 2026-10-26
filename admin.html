@@ -1661,7 +1661,7 @@
 
       tbody.innerHTML = bookings.map(b => {
         const farmerName = b.farmer_name || 'Farmer';
-        const mobile = b.phone || '9502051939';
+        const mobile = b.phone || b.mobile || '--';
         const village = b.village || 'Kankipadu';
         const crop = b.crop_type || 'Paddy (వరి)';
         const acres = parseFloat(b.area_acres || b.farm_area || 5.0).toFixed(1);
@@ -1725,7 +1725,7 @@
       if (fName) fName.innerText = b.farmer_name || 'Farmer';
 
       const fPhone = document.getElementById('deck-farmer-phone');
-      if (fPhone) fPhone.innerText = b.phone || '+91 9502051939';
+      if (fPhone) fPhone.innerText = b.phone || b.mobile || '--';
 
       const fLoc = document.getElementById('deck-farmer-loc');
       if (fLoc) fLoc.innerText = `${b.village || 'Kankipadu'}, ${b.district || 'Krishna District'}`;
@@ -1787,7 +1787,7 @@
       grid.innerHTML = farmers.map(f => {
         const lat = parseFloat(f.latitude) || 16.4971;
         const lng = parseFloat(f.longitude) || 80.7856;
-        const mobile = f.mobile || '9502051939';
+        const mobile = f.mobile || '--';
         const village = f.village || 'Gannavaram';
         const district = f.district || 'Krishna';
         const crop = f.crop_type || 'Paddy (వరి)';

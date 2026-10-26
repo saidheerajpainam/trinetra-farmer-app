@@ -1152,9 +1152,15 @@ const server = http.createServer(async (req, res) => {
       const parts = pathname.split('/');
       const idOrCode = parts[parts.length - 2];
       const body = await readJsonBody(req);
-      const newStatus = body.status;
+      let newStatus = body.status;
+      let notes = body.notes;
+      if (newStatus === 'arrived') {
+        newStatus = 'pilot_assigned';
+        notes = notes || 'Pilot arrived at farm location and preparing drone';
+      } else {
+        notes = notes || ('Status transition to ' + newStatus);
+      }
       const pilotId = body.pilot_id ? Number(body.pilot_id) : undefined;
-      const notes = body.notes || ('Status transition to ' + newStatus);
 
       const allowedStatuses = ['pending', 'confirmed', 'pilot_assigned', 'in_progress', 'completed', 'cancelled'];
       if (!allowedStatuses.includes(newStatus)) {
@@ -1206,6 +1212,65 @@ const server = http.createServer(async (req, res) => {
       } catch (err) {
         db.exec('ROLLBACK;');
         throw err;
+      }
+    }
+
+    // POST /api/bookings/:id/pay (Pilot/Farmer Payment settlement & invoice creation)
+    if (pathname.startsWith('/api/bookings/') && pathname.endsWith('/pay') && req.method === 'POST') {
+      const parts = pathname.split('/');
+      const idOrCode = parts[parts.length - 2];
+      const body = await readJsonBody(req);
+      const paymentMode = body.payment_mode || 'Online SBI UPI';
+
+      const booking = db.prepare('SELECT b.*, f.user_id FROM bookings b JOIN farmers f ON f.id = b.farmer_id WHERE b.id = ? OR b.booking_code = ?').get(idOrCode, idOrCode);
+      if (!booking) {
+        return sendJson(res, 404, { success: false, error: 'Booking not found.' });
+      }
+
+      db.exec('BEGIN TRANSACTION;');
+      try {
+        const finalAmount = booking.final_amount || booking.estimated_amount || 2250;
+        db.prepare(`
+          UPDATE bookings 
+          SET payment_status = 'paid', 
+              final_amount = ?,
+              status = 'completed',
+              updated_at = CURRENT_TIMESTAMP 
+          WHERE id = ?
+        `).run(finalAmount, booking.id);
+
+        // Record Audit History
+        db.prepare(`
+          INSERT INTO booking_status_history (booking_id, old_status, new_status, notes)
+          VALUES (?, ?, 'completed', ?)
+        `).run(booking.id, booking.status, 'Payment settled via ' + paymentMode + ' for amount Rs ' + finalAmount);
+
+        // Record User Notification
+        if (booking.user_id) {
+          db.prepare(`
+            INSERT INTO notifications (user_id, title, message)
+            VALUES (?, 'Payment Confirmed', ?)
+          `).run(booking.user_id, 'Payment of Rs ' + finalAmount + ' confirmed via ' + paymentMode + ' for booking ' + booking.booking_code);
+        }
+
+        db.exec('COMMIT;');
+        const invoiceNo = 'INV-' + new Date().getFullYear() + '-' + (1000 + booking.id);
+        const resultData = {
+          success: true,
+          message: 'Payment recorded successfully',
+          invoice: {
+            invoice_no: invoiceNo,
+            booking_code: booking.booking_code,
+            amount: finalAmount,
+            payment_mode: paymentMode,
+            status: 'PAID'
+          }
+        };
+        broadcastEvent('BOOKING_PAID', resultData);
+        return sendJson(res, 200, resultData);
+      } catch (err) {
+        db.exec('ROLLBACK;');
+        return sendJson(res, 500, { success: false, error: err.message });
       }
     }
 

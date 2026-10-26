@@ -131,6 +131,27 @@
   <!-- MAIN PILOT INTERFACE CONTAINER -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 space-y-5">
 
+    <!-- ACTIVE MISSION PICKER & QUEUE CONTROLS -->
+    <div class="glass-card rounded-2xl p-3 border border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 shadow-lg">
+      <div class="flex items-center gap-2.5 flex-1 min-w-0">
+        <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5 whitespace-nowrap">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>🎯 Active Mission:</span>
+        </span>
+        <select id="pilot-mission-select" onchange="selectMission(this.value)" class="flex-1 bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-xs font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500 truncate cursor-pointer shadow-inner">
+          <option value="TRN-2026-881">Loading live SQLite missions...</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2 self-end md:self-auto">
+        <span id="mission-count-badge" class="px-2.5 py-1 rounded-xl bg-slate-950 text-slate-400 border border-slate-800 text-[11px] font-bold">
+          Queue: --
+        </span>
+        <button onclick="loadPilotMissions(true)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow border border-slate-700">
+          <span>⟳</span> <span>Refresh Queue</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ACTIVE MISSION BANNER -->
     <section class="glass-card rounded-3xl p-5 lg:p-6 border border-slate-800 shadow-2xl relative overflow-hidden">
       <!-- Glow Accent -->
@@ -147,7 +168,7 @@
           <h2 class="text-xl lg:text-2xl font-black text-white mt-1.5" id="mission-title-text">
             Precision Drone Spraying: Venkateswara Rao Farm
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">
+          <p class="text-xs text-slate-400 mt-0.5" id="mission-loc-sub">
             Target Location: <span class="text-slate-200 font-bold">Kankipadu, Krishna District</span> (Near Ramalayam Temple) • Drone: <span class="text-emerald-400 font-mono font-bold">Trinetra Hexa-16L (AP-07)</span>
           </p>
         </div>
@@ -176,8 +197,8 @@
           <span class="text-[10px] text-slate-400 uppercase font-bold">Farmer Phone</span>
           <p class="font-mono font-bold text-white text-sm" id="card-farmer-phone">+91 98765 43210</p>
           <div class="flex gap-1 pt-0.5">
-            <a href="tel:9876543210" class="px-2 py-0.5 bg-emerald-600/30 text-emerald-300 rounded font-bold text-[10px] hover:bg-emerald-600 hover:text-white">📞 Call</a>
-            <a href="https://wa.me/919876543210" target="_blank" class="px-2 py-0.5 bg-green-600/30 text-green-300 rounded font-bold text-[10px] hover:bg-green-600 hover:text-white">💬 WhatsApp</a>
+            <a id="btn-call-farmer" href="tel:9876543210" class="px-2 py-0.5 bg-emerald-600/30 text-emerald-300 rounded font-bold text-[10px] hover:bg-emerald-600 hover:text-white">📞 Call</a>
+            <a id="btn-wa-farmer" href="https://wa.me/919876543210" target="_blank" class="px-2 py-0.5 bg-green-600/30 text-green-300 rounded font-bold text-[10px] hover:bg-green-600 hover:text-white">💬 WhatsApp</a>
           </div>
         </div>
 
@@ -219,7 +240,7 @@
               <h3 class="text-sm font-extrabold text-white" id="map-heading">Google Satellite Field Plot & Pilot Navigation</h3>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-xl border border-emerald-500/30">
+              <span id="map-gps-badge" class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-xl border border-emerald-500/30">
                 GPS: 16.4971, 80.7856
               </span>
               <button onclick="recenterPlotMap()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-all">
@@ -391,7 +412,7 @@
                 <p class="text-[10px] text-slate-400">Collect via SBI Stand QR or Cash</p>
               </div>
             </div>
-            <span class="text-sm font-black text-emerald-400 font-mono">₹2,250</span>
+            <span id="desk-total-bill" class="text-sm font-black text-emerald-400 font-mono">₹2,250</span>
           </div>
 
           <!-- Embedded SBI Stand Image -->
@@ -507,23 +528,26 @@
           applyDynamicSettings(e.data.settings);
           showPilotToast('🔔 Admin Updated Prices & Bank Settings');
         }
-        if (e.data && e.data.status) {
-          updatePilotStatusDisplay(e.data.status);
+        if (e.data && (e.data.type === 'STATUS_UPDATE' || e.data.type === 'BOOKING_CREATED')) {
+          loadPilotMissions(false);
+          if (e.data.status && e.data.booking_code === currentBookingCode) {
+            updatePilotStatusDisplay(e.data.status);
+          }
         }
       };
     }
 
-    
     // Apply dynamic settings from Admin Console
     function applyDynamicSettings(settings) {
       if (!settings) return;
-      console.log('[PilotApp] Applying dynamic settings:', settings);
-      if (settings.pricing && settings.pricing.pesticide) {
+      if (settings.pricing && settings.pricing.pesticide && currentMissionData) {
+        const rate = settings.pricing.pesticide;
+        const acres = parseFloat(currentMissionData.area_acres || 5.0);
+        const total = Math.round(acres * rate);
         const billEl = document.getElementById('card-total-bill');
-        if (billEl) {
-          const total = 5 * (settings.pricing.pesticide || 450);
-          billEl.innerText = '₹' + total.toLocaleString();
-        }
+        if (billEl) billEl.innerText = '₹' + total.toLocaleString();
+        const deskBill = document.getElementById('desk-total-bill');
+        if (deskBill) deskBill.innerText = '₹' + total.toLocaleString();
       }
       if (settings.banking && settings.banking.upiVpa) {
         const upiTxt = document.querySelector('#tab-billing .font-mono');
@@ -535,19 +559,155 @@
       if (saved) applyDynamicSettings(JSON.parse(saved));
     } catch(e) {}
 
+    // -------------------------------------------------------------
+    // LIVE SQLite PILOT MISSION QUEUE & DISPATCH LOGIC
+    // -------------------------------------------------------------
+    let allPilotBookings = [];
+    let currentBookingCode = 'TRN-2026-881';
+    let currentMissionData = null;
+
+    async function loadPilotMissions(showToast = false) {
+      try {
+        const res = await fetch('/api/bookings');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          allPilotBookings = json.data;
+          renderMissionSelect();
+          if (showToast) showPilotToast('✅ Live SQLite Missions Synced (' + allPilotBookings.length + ' Bookings)');
+        }
+      } catch (err) {
+        console.warn('[PilotApp] Failed fetching /api/bookings:', err);
+      }
+    }
+
+    function renderMissionSelect() {
+      const sel = document.getElementById('pilot-mission-select');
+      const countBadge = document.getElementById('mission-count-badge');
+      if (countBadge) countBadge.innerText = 'Queue: ' + allPilotBookings.length;
+
+      if (!sel) return;
+      if (allPilotBookings.length === 0) {
+        sel.innerHTML = '<option value="TRN-2026-881">TRN-2026-881 • Default Mission (Kankipadu)</option>';
+        return;
+      }
+
+      sel.innerHTML = allPilotBookings.map(b => {
+        const code = b.booking_code || ('TRN-' + b.id);
+        const farmer = b.farmer_name || 'Farmer';
+        const village = b.village || 'Field';
+        const crop = b.crop_type || 'Paddy';
+        const acres = parseFloat(b.area_acres || 5.0).toFixed(1);
+        const st = (b.status || 'pending').toUpperCase();
+        return `<option value="${code}">${code} • ${farmer} (${village} - ${crop} ${acres} Ac) [${st}]</option>`;
+      }).join('');
+
+      const exists = allPilotBookings.some(b => (b.booking_code || ('TRN-' + b.id)) === currentBookingCode);
+      if (!exists && allPilotBookings.length > 0) {
+        currentBookingCode = allPilotBookings[0].booking_code || ('TRN-' + allPilotBookings[0].id);
+      }
+      sel.value = currentBookingCode;
+      selectMission(currentBookingCode);
+    }
+
+    function selectMission(code) {
+      if (!code) return;
+      currentBookingCode = code;
+      const b = allPilotBookings.find(item => (item.booking_code || ('TRN-' + item.id)) === code);
+      if (!b) return;
+      currentMissionData = b;
+
+      // Update Mission Identification
+      const mId = document.getElementById('mission-id-val');
+      if (mId) mId.innerText = b.booking_code || ('TRN-' + b.id);
+
+      const mTitle = document.getElementById('mission-title-text');
+      if (mTitle) mTitle.innerText = 'Precision Drone Spraying: ' + (b.farmer_name || 'Farmer') + ' Farm';
+
+      const mLocSub = document.getElementById('mission-loc-sub');
+      if (mLocSub) {
+        mLocSub.innerHTML = `Target Location: <span class="text-slate-200 font-bold">${b.village || 'Kankipadu'}, ${b.district || 'Krishna District'}</span> • Drone: <span class="text-emerald-400 font-mono font-bold">Trinetra Hexa-16L (AP-07)</span>`;
+      }
+
+      // Update Farmer Profile
+      const fName = document.getElementById('card-farmer-name');
+      if (fName) fName.innerText = b.farmer_name || 'Farmer';
+
+      const fPhone = document.getElementById('card-farmer-phone');
+      const rawMobile = (b.phone || b.mobile || '').trim();
+      const cleanMobile = rawMobile.replace(/\D/g, '');
+      if (fPhone) fPhone.innerText = rawMobile ? ('+91 ' + rawMobile) : 'Not Provided';
+
+      const btnCall = document.getElementById('btn-call-farmer');
+      if (btnCall) btnCall.href = cleanMobile ? ('tel:' + cleanMobile) : '#';
+
+      const btnWa = document.getElementById('btn-wa-farmer');
+      if (btnWa) btnWa.href = cleanMobile ? ('https://wa.me/91' + cleanMobile) : '#';
+
+      // Update Crop & Acres
+      const fCrop = document.getElementById('card-crop-acres');
+      const acresVal = parseFloat(b.area_acres || 5.0).toFixed(1);
+      if (fCrop) fCrop.innerText = `${b.crop_type || 'వరి'} • ${acresVal} ఎకరాలు`;
+
+      // Update Bills
+      const pricePerAcre = b.price_per_acre || 450;
+      const totalAmount = parseFloat(b.final_amount || b.estimated_amount || (pricePerAcre * parseFloat(acresVal))).toFixed(0);
+      const cardBill = document.getElementById('card-total-bill');
+      if (cardBill) cardBill.innerText = '₹' + Number(totalAmount).toLocaleString();
+
+      const deskBill = document.getElementById('desk-total-bill');
+      if (deskBill) deskBill.innerText = '₹' + Number(totalAmount).toLocaleString();
+
+      // GPS Navigation Button & Coordinates
+      const lat = parseFloat(b.latitude) || 16.4971;
+      const lng = parseFloat(b.longitude) || 80.7856;
+      const gmapsBtn = document.getElementById('btn-pilot-turn-by-turn');
+      if (gmapsBtn) gmapsBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+      const gpsBadge = document.getElementById('map-gps-badge');
+      if (gpsBadge) gpsBadge.innerText = `GPS: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+
+      const overlayFarm = document.getElementById('overlay-farm-name');
+      if (overlayFarm) overlayFarm.innerText = `${b.farmer_name || 'Farmer'} Farm Plot (${acresVal} Ac)`;
+
+      // Map Recenter & Polygon Update
+      if (pilotMapInstance) {
+        pilotMapInstance.setView([lat, lng], 16);
+        if (window.pilotDroneMarker) {
+          window.pilotDroneMarker.setLatLng([lat, lng]);
+          window.pilotDroneMarker.bindPopup(`<b>Hexacopter AP-07</b><br>Field: ${b.farmer_name || 'Farmer'}<br>Village: ${b.village || 'Kankipadu'}`);
+        }
+        if (window.pilotPlotPolygon) {
+          const delta = 0.0012;
+          const newPlotCoords = [
+            [lat - delta, lng - delta],
+            [lat + delta, lng - delta],
+            [lat + delta, lng + delta],
+            [lat - delta, lng + delta]
+          ];
+          window.pilotPlotPolygon.setLatLngs(newPlotCoords);
+        }
+      }
+
+      // Update Status Pill
+      updatePilotStatusDisplay(b.status || 'pilot_assigned');
+    }
+
     // Pilot Actions Trigger (Connected to Real SQLite Database)
     async function pilotTrigger(stage) {
       updatePilotStatusDisplay(stage);
+      const bookingCode = currentBookingCode || 'TRN-2026-881';
 
       // 1. Send update to real SQLite REST API
       try {
-        await fetch('/api/bookings/TRN-2026-881/status', {
+        await fetch(`/api/bookings/${bookingCode}/status`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             status: stage,
             pilot_name: 'Ramesh Kumar',
-            drone_model: 'Trinetra Hexa-16L (AP-07)'
+            drone_model: 'Trinetra Hexa-16L (AP-07)',
+            notes: 'Pilot Ramesh Kumar executed action: ' + stage.toUpperCase()
           })
         });
       } catch (err) {
@@ -563,18 +723,19 @@
         opsChannel.postMessage({
           type: 'STATUS_UPDATE',
           status: stage,
+          booking_code: bookingCode,
           pilotName: 'Ramesh Kumar',
           droneModel: 'Trinetra Hexa-16L (AP-07)'
         });
       }
 
-      showPilotToast('Transmitted Stage: ' + stage.toUpperCase() + ' to Real Database & Connected Apps');
+      showPilotToast('Transmitted Stage: ' + stage.toUpperCase() + ' for ' + bookingCode);
     }
 
     function updatePilotStatusDisplay(stage) {
       const pill = document.getElementById('mission-status-pill');
       if (pill) {
-        if (stage === 'arrived') {
+        if (stage === 'arrived' || stage === 'pilot_assigned') {
           pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-blue-500/20 text-blue-300 border border-blue-500/40';
           pill.innerText = 'PILOT ON-SITE AT FARM • PREPARING DRONE';
         } else if (stage === 'in_progress') {
@@ -583,13 +744,20 @@
         } else if (stage === 'completed') {
           pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-amber-500/20 text-amber-300 border border-amber-500/40';
           pill.innerText = 'STAGE 5: SERVICE COMPLETED • COLLECTING PAYMENT';
+        } else if (stage === 'pending') {
+          pill.className = 'px-3 py-1 rounded-full text-xs font-black bg-slate-800 text-slate-300 border border-slate-700';
+          pill.innerText = 'PENDING ASSIGNMENT • STANDBY';
         }
       }
     }
 
     async function recordPayment(method) {
+      const bookingCode = currentBookingCode || 'TRN-2026-881';
+      const billEl = document.getElementById('card-total-bill');
+      const billText = billEl ? billEl.innerText : '₹2,250';
+
       try {
-        const res = await fetch('/api/bookings/TRN-2026-881/pay', {
+        const res = await fetch(`/api/bookings/${bookingCode}/pay`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -599,13 +767,13 @@
         if (res.ok) {
           const data = await res.json();
           pilotTrigger('completed');
-          alert('✅ Official SQLite Tax Invoice Created: ' + (data.invoice ? data.invoice.invoice_no : 'INV-2026-1045') + '\nAmount: ₹2,250\nPayment Mode: ' + (method === 'upi' ? 'SBI UPI' : 'Cash'));
+          alert('✅ Official SQLite Tax Invoice Created: ' + (data.invoice ? data.invoice.invoice_no : 'INV-2026-1045') + '\nAmount: ' + billText + '\nPayment Mode: ' + (method === 'upi' ? 'SBI UPI' : 'Cash'));
           return;
         }
       } catch (e) {}
 
       pilotTrigger('completed');
-      alert(method === 'upi' ? '✓ Online SBI UPI Payment Recorded for ₹2,250!' : '✓ Cash of ₹2,250 Collected by Pilot Ramesh Kumar!');
+      alert(method === 'upi' ? `✓ Online SBI UPI Payment Recorded for ${billText}!` : `✓ Cash of ${billText} Collected by Pilot Ramesh Kumar!`);
     }
 
     function showPilotToast(msg) {
@@ -625,7 +793,10 @@
       document.getElementById('checklist-modal').classList.add('hidden');
     }
     function openInvoiceModal() {
-      alert('Tax Invoice INV-2026-1045 for Venkateswara Rao (₹2,250) Ready. Sharing with Farmer via WhatsApp...');
+      const farmer = currentMissionData ? currentMissionData.farmer_name : 'Farmer';
+      const billEl = document.getElementById('card-total-bill');
+      const billText = billEl ? billEl.innerText : '₹2,250';
+      alert(`Tax Invoice for ${farmer} (${billText}) Ready. Sharing with Farmer via WhatsApp...`);
     }
 
     // Leaflet Satellite Field Map
@@ -652,7 +823,7 @@
         [16.4980, 80.7870],
         [16.4958, 80.7865]
       ];
-      L.polygon(plotCoords, {
+      window.pilotPlotPolygon = L.polygon(plotCoords, {
         color: '#10B981',
         weight: 3,
         fillColor: '#10B981',
@@ -665,18 +836,27 @@
         html: '<div style="background:#0284C7; color:white; padding:4px 8px; border-radius:10px; font-weight:800; font-size:11px; border:2px solid white; box-shadow:0 4px 12px rgba(0,0,0,0.5);">🚁 AP-07 Spraying</div>',
         iconSize: [120, 30]
       });
-      L.marker([16.4971, 80.7856], { icon: droneIcon }).addTo(pilotMapInstance).bindPopup('<b>Hexacopter AP-07</b><br>Altitude: 2.5m • Battery: 84%');
+      window.pilotDroneMarker = L.marker([16.4971, 80.7856], { icon: droneIcon }).addTo(pilotMapInstance).bindPopup('<b>Hexacopter AP-07</b><br>Altitude: 2.5m • Battery: 84%');
     }
 
     function recenterPlotMap() {
-      if (pilotMapInstance) {
+      if (pilotMapInstance && currentMissionData) {
+        const lat = parseFloat(currentMissionData.latitude) || 16.4971;
+        const lng = parseFloat(currentMissionData.longitude) || 80.7856;
+        pilotMapInstance.setView([lat, lng], 16);
+      } else if (pilotMapInstance) {
         pilotMapInstance.setView([16.4971, 80.7856], 16);
       }
     }
 
-    // Initialize Map on load
+    // Initialize Map and load SQLite missions on load
     window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(initPilotMap, 300);
+      setTimeout(() => {
+        initPilotMap();
+        loadPilotMissions(false);
+      }, 300);
+      // Auto refresh missions from SQLite every 10 seconds
+      setInterval(() => loadPilotMissions(false), 10000);
     });
 
     // Language Toggle
