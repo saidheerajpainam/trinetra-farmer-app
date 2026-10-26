@@ -119,20 +119,30 @@
   <!-- Mobile App Frame Container (Clean layout, no fake status bar) -->
   <div id="app-container" class="w-full max-w-md bg-white min-h-screen flex flex-col shadow-2xl relative overflow-hidden">
     
-    <!-- Unified In-App Header Bar with Language Switcher & Helpline -->
-    <header id="in-app-header" class="w-full bg-[#15803D] text-white px-4 py-3 flex items-center justify-between shadow-sm shrink-0 z-40 transition-all sticky top-0">
+    <!-- Unified In-App Header Bar with Language Switcher, Reload, Settings & Helpline -->
+    <header id="in-app-header" class="w-full bg-[#15803D] text-white px-3 py-2 flex items-center justify-between shadow-md shrink-0 z-40 transition-all sticky top-0">
+      <!-- Left: Brand Logo & Title (Appears ONCE!) -->
       <div class="flex items-center gap-2">
-        <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-7 w-auto object-contain" onerror="this.src='assets/logo.png'">
+        <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-8 w-auto object-contain drop-shadow-xs" onerror="this.src='assets/logo.png'">
         <div>
           <h1 id="header-title" class="text-xs font-black tracking-wide leading-tight">TRINETRA DRONES</h1>
-          <p id="header-subtitle" class="text-[9px] text-emerald-100 font-semibold" data-key="header_subtitle">రైతు సేవా కేంద్రం • ఆంధ్రప్రదేశ్</p>
+          <p id="header-subtitle" class="text-[9px] text-emerald-100 font-semibold leading-tight" data-key="header_subtitle">రైతు సేవా కేంద్రం • ఆంధ్రప్రదేశ్</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
+      <!-- Right: Action Icons (Language, Reload, Settings, Helpline) -->
+      <div class="flex items-center gap-1.5">
         <!-- Bilingual Language Switcher Button -->
-        <button onclick="toggleLanguage()" class="px-2.5 py-1 rounded-full bg-emerald-950/40 border border-emerald-400/40 text-[11px] font-bold text-emerald-100 hover:text-white flex items-center gap-1 transition">
+        <button onclick="toggleLanguage()" class="px-2 py-1 rounded-full bg-emerald-950/40 border border-emerald-400/40 text-[10px] font-bold text-emerald-100 hover:text-white flex items-center gap-0.5 transition shadow-xs" title="Change Language / భాష మార్చండి">
           <span id="current-lang-label">తెలుగు</span>
-          <span class="text-[9px] opacity-75">🌐</span>
+          <span class="text-[9px] opacity-80">🌐</span>
+        </button>
+        <!-- Reload / Refresh Button -->
+        <button onclick="reloadApp()" class="p-1.5 rounded-full bg-emerald-950/40 hover:bg-emerald-800 text-white border border-emerald-400/30 transition shadow-xs" title="Refresh / రీలోడ్ చేయండి">
+          <svg class="w-3.5 h-3.5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        </button>
+        <!-- Farmer Settings & Profile Edit Button -->
+        <button onclick="openFarmerSettingsModal()" class="p-1.5 rounded-full bg-emerald-950/40 hover:bg-emerald-800 text-white border border-emerald-400/30 transition shadow-xs" title="Farmer Settings & Edit Profile / రైతు సెట్టింగులు">
+          <svg class="w-3.5 h-3.5 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         </button>
         <!-- Quick Call Helpline -->
         <a href="tel:9502051939" class="p-1.5 rounded-full bg-white text-emerald-800 shadow-xs hover:bg-emerald-50 transition" title="Call Helpline: 9502051939">
@@ -629,30 +639,155 @@
         </div>
       </div>
 
-      <!-- Profile Overlay -->
-      <div id="tab-overlay-profile" class="hidden fixed inset-0 z-50 bg-black/50 flex flex-col justify-end">
-        <div class="bg-white rounded-t-3xl max-w-md w-full mx-auto p-5 max-h-[85vh] overflow-y-auto space-y-4">
+      <!-- Comprehensive Farmer Profile & Settings Modal -->
+      <div id="tab-overlay-profile" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end">
+        <div class="bg-white rounded-t-3xl max-w-md w-full mx-auto p-5 max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl">
+          
+          <!-- Modal Header -->
           <div class="flex items-center justify-between border-b pb-3">
-            <h3 class="text-base font-black text-slate-900" data-key="profile_title">Farmer Profile / రైతు ప్రొఫైల్</h3>
-            <button onclick="closeTabOverlay()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">✕</button>
+            <div class="flex items-center gap-2">
+              <span class="text-xl">⚙️</span>
+              <div>
+                <h3 class="text-base font-black text-slate-900" data-key="profile_title">Farmer Settings / రైతు సెట్టింగులు</h3>
+                <p class="text-[10px] text-slate-500 font-medium">Manage Profile, Farmland & Drone Preferences</p>
+              </div>
+            </div>
+            <button onclick="closeTabOverlay()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-lg">✕</button>
           </div>
-          <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border">
-            <img src="assets/ui/farmer_avatar.png" alt="Profile" class="w-14 h-14 rounded-full border-2 border-emerald-500 object-cover">
+
+          <!-- VIEW MODE: Farmer Profile Card -->
+          <div id="profile-view-card" class="space-y-3">
+            <div class="flex items-center gap-3.5 p-3.5 bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl border border-emerald-200">
+              <div class="relative">
+                <img src="assets/ui/farmer_avatar.png" alt="Profile" class="w-14 h-14 rounded-full border-2 border-emerald-600 object-cover shadow-xs" onerror="this.src='assets/farmer-hero-art.jpg'">
+                <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-black text-slate-900 text-base" id="prof-display-name">P. Saidheeraj</h4>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold border border-emerald-300">Verified AP Farmer ✓</span>
+                </div>
+                <p class="text-xs text-slate-600 font-mono mt-0.5 flex items-center gap-1">
+                  <span>📱</span> <span id="prof-display-phone">+91 9502051939</span>
+                </p>
+                <p class="text-xs text-slate-600 font-semibold mt-0.5 flex items-center gap-1">
+                  <span>📍</span> <span id="prof-display-village">Poranki, Vijayawada</span> (<span id="prof-display-district">Krishna</span>)
+                </p>
+                <div class="mt-2 flex items-center gap-2 text-[11px] font-bold text-slate-700">
+                  <span class="px-2 py-0.5 bg-white rounded-lg border border-slate-200">🌾 <span id="prof-display-crop">Paddy (వరి)</span></span>
+                  <span class="px-2 py-0.5 bg-white rounded-lg border border-slate-200">📐 <span id="prof-display-acres">5.0</span> Acres</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Edit Farmer Profile Button -->
+            <button type="button" onclick="toggleEditProfileMode(true)" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-xl text-xs shadow-btn flex items-center justify-center gap-2 transition">
+              <svg class="w-4 h-4 stroke-current fill-none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              <span>Edit Farmer Profile / రైతు వివరాలు సవరించండి</span>
+            </button>
+          </div>
+
+          <!-- EDIT MODE FORM (Hidden by default) -->
+          <div id="profile-edit-form" class="hidden space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+              <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider">Edit Farmer Details / వివరాల సవరణ</h4>
+              <button type="button" onclick="toggleEditProfileMode(false)" class="text-[11px] text-slate-500 font-bold hover:underline">Cancel</button>
+            </div>
+
             <div>
-              <h4 class="font-black text-slate-900 text-sm">P. Saidheeraj</h4>
-              <p class="text-xs text-slate-500 font-mono">+91 9502051939</p>
-              <span class="inline-block mt-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Verified AP Farmer ✓</span>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Farmer Full Name / రైతు పేరు</label>
+              <input type="text" id="input-edit-name" value="P. Saidheeraj" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Mobile / ఫోన్ నంబర్</label>
+                <input type="tel" id="input-edit-phone" value="9502051939" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold font-mono text-slate-900 focus:border-emerald-600 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Total Land / విస్తీర్ణం (Acres)</label>
+                <input type="number" step="0.5" id="input-edit-acres" value="5.0" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold font-mono text-slate-900 focus:border-emerald-600 focus:outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Village / గ్రామం</label>
+                <input type="text" id="input-edit-village" value="Poranki" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">District / జిల్లా</label>
+                <select id="input-edit-district" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
+                  <option value="Krishna" selected>Krishna (కృష్ణా)</option>
+                  <option value="Guntur">Guntur (గుంటూరు)</option>
+                  <option value="NTR">NTR (ఎన్టీఆర్)</option>
+                  <option value="West Godavari">West Godavari (పశ్చిమ గోదావరి)</option>
+                  <option value="East Godavari">East Godavari (తూర్పు గోదావరి)</option>
+                  <option value="Prakasam">Prakasam (ప్రకాశం)</option>
+                  <option value="Nellore">Nellore (నెల్లూరు)</option>
+                  <option value="Kurnool">Kurnool (కర్నూలు)</option>
+                  <option value="Anantapur">Anantapur (అనంతపురం)</option>
+                  <option value="Visakhapatnam">Visakhapatnam (విశాఖపట్నం)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Main Crop / ప్రధాన పంట</label>
+              <select id="input-edit-crop" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
+                <option value="Paddy (వరి)" selected>🌾 Paddy (వరి)</option>
+                <option value="Mirchi (మిర్చి)">🌶️ Mirchi (మిర్చి)</option>
+                <option value="Cotton (పత్తి)">☁️ Cotton (పత్తి)</option>
+                <option value="Maize (మొక్కజొన్న)">🌽 Maize (మొక్కజొన్న)</option>
+                <option value="Vegetables (కూరగాయలు)">🌱 Vegetables (కూరగాయలు)</option>
+              </select>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+              <button type="button" onclick="saveFarmerProfile()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-xl text-xs shadow-btn flex items-center justify-center gap-1.5 transition">
+                <span>✓</span> <span>Save Profile / సేవ్ చేయండి</span>
+              </button>
+              <button type="button" onclick="toggleEditProfileMode(false)" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition">
+                Cancel
+              </button>
             </div>
           </div>
-          <div class="pt-2">
-            <button onclick="toggleLanguage()" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-between px-4">
-              <span>🌐 App Language: <strong id="prof-lang-label">తెలుగు</strong></span>
-              <span class="text-emerald-700 font-black">Change ↻</span>
+
+          <!-- Section 2: Agricultural Weather & Advisory -->
+          <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-amber-900 flex items-center gap-1.5">
+                <span>☀️</span> <span>AP Drone Spray Weather</span>
+              </span>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black">Ideal Spraying ✓</span>
+            </div>
+            <p class="text-[11px] text-amber-800 font-medium">
+              Wind: <strong>6 km/h</strong> • Temp: <strong>29°C</strong> • Rain: <strong>0% (Safe)</strong>
+            </p>
+          </div>
+
+          <!-- Section 3: App & Notification Settings -->
+          <div class="space-y-2 pt-1">
+            <button onclick="toggleLanguage()" class="w-full py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-between px-3.5 transition">
+              <span class="flex items-center gap-2"><span>🌐</span> <span>App Language / భాష: <strong id="prof-lang-label" class="text-emerald-700">తెలుగు</strong></span></span>
+              <span class="text-emerald-700 font-black text-[11px] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">Switch ↻</span>
             </button>
-            <button onclick="handleLogout()" class="w-full mt-2 py-3 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-xl text-xs flex items-center justify-center gap-2">
+
+            <button onclick="reloadApp()" class="w-full py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-between px-3.5 transition">
+              <span class="flex items-center gap-2"><span>⟳</span> <span>Refresh App & Cloud Data</span></span>
+              <span class="text-slate-500 font-bold text-[11px]">Sync Now</span>
+            </button>
+
+            <a href="tel:9502051939" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-900 font-bold rounded-xl text-xs flex items-center justify-between px-3.5 transition">
+              <span class="flex items-center gap-2"><span>📞</span> <span>Trinetra Kisan Helpline</span></span>
+              <span class="font-mono font-black text-emerald-700">9502051939</span>
+            </a>
+
+            <button onclick="handleLogout()" class="w-full mt-2 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
               <span>🚪</span> <span>Sign Out / లాగ్ అవుట్</span>
             </button>
           </div>
+
         </div>
       </div>
 
@@ -2456,6 +2591,101 @@
       }
     }
 
+    function openFarmerSettingsModal() {
+      openTab('profile');
+      toggleEditProfileMode(false);
+    }
+
+    function reloadApp() {
+      showToast(state.language === 'te' ? 'యాప్ రిఫ్రెష్ అవుతోంది...' : 'Refreshing app data...');
+      setTimeout(() => {
+        window.location.reload();
+      }, 350);
+    }
+
+    function toggleEditProfileMode(isEdit) {
+      const viewCard = document.getElementById('profile-view-card');
+      const editForm = document.getElementById('profile-edit-form');
+      if (isEdit) {
+        if (viewCard) viewCard.classList.add('hidden');
+        if (editForm) {
+          editForm.classList.remove('hidden');
+          const nameIn = document.getElementById('input-edit-name');
+          const phoneIn = document.getElementById('input-edit-phone');
+          const villageIn = document.getElementById('input-edit-village');
+          const distIn = document.getElementById('input-edit-district');
+          const acresIn = document.getElementById('input-edit-acres');
+          const cropIn = document.getElementById('input-edit-crop');
+          if (nameIn) nameIn.value = state.farmer.name || 'P. Saidheeraj';
+          if (phoneIn) phoneIn.value = state.farmer.phone || '9502051939';
+          if (villageIn) villageIn.value = state.farmer.village || 'Poranki';
+          if (distIn) distIn.value = state.farmer.district || 'Krishna';
+          if (acresIn) acresIn.value = state.farmer.acres || 5.0;
+          if (cropIn) cropIn.value = state.farmer.crop || 'Paddy (వరి)';
+        }
+      } else {
+        if (viewCard) viewCard.classList.remove('hidden');
+        if (editForm) editForm.classList.add('hidden');
+      }
+    }
+
+    function saveFarmerProfile() {
+      const nameIn = document.getElementById('input-edit-name');
+      const phoneIn = document.getElementById('input-edit-phone');
+      const villageIn = document.getElementById('input-edit-village');
+      const distIn = document.getElementById('input-edit-district');
+      const acresIn = document.getElementById('input-edit-acres');
+      const cropIn = document.getElementById('input-edit-crop');
+
+      if (nameIn && nameIn.value.trim()) state.farmer.name = nameIn.value.trim();
+      if (phoneIn && phoneIn.value.trim()) state.farmer.phone = phoneIn.value.trim();
+      if (villageIn && villageIn.value.trim()) state.farmer.village = villageIn.value.trim();
+      if (distIn && distIn.value) state.farmer.district = distIn.value;
+      if (acresIn && acresIn.value) state.farmer.acres = parseFloat(acresIn.value) || 5.0;
+      if (cropIn && cropIn.value) state.farmer.crop = cropIn.value;
+
+      updateFarmerProfileDOM();
+
+      try {
+        localStorage.setItem('trinetra_farmer_profile', JSON.stringify(state.farmer));
+      } catch(e) {}
+
+      toggleEditProfileMode(false);
+      showToast(state.language === 'te' ? 'రైతు వివరాలు సేవ్ అయ్యాయి! ✓' : 'Farmer Profile Updated! ✓', 'success');
+    }
+
+    function updateFarmerProfileDOM() {
+      const f = state.farmer;
+      const dName = document.getElementById('dash-farmer-name');
+      const dVill = document.getElementById('dash-farmer-village');
+      const pName = document.getElementById('prof-display-name');
+      const pPhone = document.getElementById('prof-display-phone');
+      const pVill = document.getElementById('prof-display-village');
+      const pDist = document.getElementById('prof-display-district');
+      const pCrop = document.getElementById('prof-display-crop');
+      const pAcres = document.getElementById('prof-display-acres');
+
+      if (dName) dName.innerText = f.name;
+      if (dVill) dVill.innerText = `${f.village}, AP`;
+      if (pName) pName.innerText = f.name;
+      if (pPhone) pPhone.innerText = `+91 ${f.phone}`;
+      if (pVill) pVill.innerText = f.village;
+      if (pDist) pDist.innerText = f.district;
+      if (pCrop) pCrop.innerText = f.crop;
+      if (pAcres) pAcres.innerText = f.acres;
+    }
+
+    function loadSavedFarmerProfile() {
+      try {
+        const saved = localStorage.getItem('trinetra_farmer_profile');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state.farmer = Object.assign(state.farmer, parsed);
+          updateFarmerProfileDOM();
+        }
+      } catch(e) {}
+    }
+
     function closeTabOverlay() {
       document.querySelectorAll('[id^="tab-overlay-"]').forEach(el => el.classList.add('hidden'));
     }
@@ -2538,6 +2768,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      loadSavedFarmerProfile();
       applyLanguage(state.language);
       selectAppLanguage(state.language);
       calculateBookingTotal();
