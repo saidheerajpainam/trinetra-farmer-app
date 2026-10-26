@@ -246,10 +246,13 @@ function serveStatic(req, res, filePath) {
 
     const ext = path.extname(resolvedPath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    const isHtml = ext === '.html';
     const headers = {
       'Content-Type': contentType,
       'Content-Length': stats.size,
-      'Cache-Control': 'no-cache'
+      'Cache-Control': isHtml ? 'no-cache, no-store, must-revalidate, max-age=0' : 'no-cache',
+      'Pragma': 'no-cache',
+      'Expires': '0'
     };
     if (ext === '.apk' || ext === '.aab') {
       headers['Content-Disposition'] = `attachment; filename="${path.basename(resolvedPath)}"`;

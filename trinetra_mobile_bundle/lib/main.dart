@@ -75,6 +75,7 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0xFFF8FAFC))
+      ..clearCache()
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
@@ -348,7 +349,10 @@ class _FarmerWebViewPageState extends State<FarmerWebViewPage> {
 IconButton(
               icon: const Icon(Icons.refresh, color: Colors.white),
               tooltip: 'Reload App',
-              onPressed: () => _controller.reload(),
+              onPressed: () async {
+                await _controller.clearCache();
+                _controller.reload();
+              },
             ),
             IconButton(
               icon: const Icon(Icons.settings, color: Colors.white),
