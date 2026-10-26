@@ -289,7 +289,7 @@
                 <span class="text-sm font-black text-slate-800 pr-2 border-r border-slate-200 flex items-center gap-1">
                   <span>🇮🇳</span> <span>+91</span>
                 </span>
-                <input type="tel" id="input-login-mobile" value="" maxlength="10" placeholder="10 అంకెల మొబైల్ నంబర్ (e.g. 98480 12345)" class="w-full pl-3 text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
+                <input type="tel" id="input-login-mobile" value="" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)" placeholder="10 అంకెల మొబైల్ నంబర్ (e.g. 98480 12345)" class="w-full pl-3 text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
               </div>
             </div>
 
@@ -371,7 +371,7 @@
                 <span class="text-xs font-black text-slate-800 pr-2 border-r border-slate-200 flex items-center gap-1">
                   <span>🇮🇳</span> <span>+91</span>
                 </span>
-                <input type="tel" id="reg-mobile" maxlength="10" required placeholder="10 అంకెల మొబైల్ నంబర్" value="" class="w-full pl-3 text-xs sm:text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
+                <input type="tel" id="reg-mobile" maxlength="10" required oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)" placeholder="10 అంకెల మొబైల్ నంబర్" value="" class="w-full pl-3 text-xs sm:text-sm font-bold text-slate-900 bg-transparent outline-none tracking-wider">
               </div>
             </div>
 
@@ -559,8 +559,8 @@
         <!-- Dashboard Top Header Bar -->
         <div class="bg-white px-4 py-3 border-b border-slate-100 flex items-center justify-between shadow-xs sticky top-0 z-30">
           <div class="flex items-center gap-2.5">
-            <div class="relative">
-              <img src="assets/ui/farmer_avatar.png" alt="Farmer" class="w-10 h-10 rounded-full border-2 border-emerald-500 object-cover shadow-xs" onerror="this.src='assets/farmer-hero-art.jpg'">
+            <div class="relative cursor-pointer" onclick="openTab('settings')" title="Profile Settings / ప్రొఫైల్ సెట్టింగులు">
+              <img id="dash-farmer-avatar-img" src="assets/ui/farmer_avatar.png" alt="Farmer" class="w-10 h-10 rounded-full border-2 border-emerald-500 object-cover shadow-xs" onerror="this.src='assets/farmer-hero-art.jpg'">
               <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
             </div>
             <div>
@@ -810,9 +810,11 @@
           <!-- VIEW MODE: Farmer Profile Card -->
           <div id="profile-view-card" class="space-y-3">
             <div class="flex items-center gap-3.5 p-3.5 bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl border border-emerald-200">
-              <div class="relative">
-                <img src="assets/ui/farmer_avatar.png" alt="Profile" class="w-14 h-14 rounded-full border-2 border-emerald-600 object-cover shadow-xs" onerror="this.src='assets/farmer-hero-art.jpg'">
-                <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+              <div class="relative flex-shrink-0 cursor-pointer group" onclick="triggerAvatarUpload()" title="Change Profile Photo / ఫోటో మార్చండి">
+                <img id="prof-farmer-avatar-img" src="assets/ui/farmer_avatar.png" alt="Profile" class="w-16 h-16 rounded-full border-2 border-emerald-600 object-cover shadow-xs group-hover:brightness-95 transition" onerror="this.src='assets/farmer-hero-art.jpg'">
+                <span class="absolute bottom-0 right-0 w-6 h-6 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center text-xs shadow-md border-2 border-white transition-all transform active:scale-90" title="Choose photo from gallery / files">
+                  📷
+                </span>
               </div>
               <div class="flex-1">
                 <div class="flex items-center justify-between">
@@ -829,6 +831,9 @@
                   <span class="px-2 py-0.5 bg-white rounded-lg border border-slate-200">🌾 <span id="prof-display-crop">Paddy (వరి)</span></span>
                   <span class="px-2 py-0.5 bg-white rounded-lg border border-slate-200">📐 <span id="prof-display-acres">5.0</span> Acres</span>
                 </div>
+                <button type="button" onclick="triggerAvatarUpload()" class="mt-2 text-[11px] font-extrabold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 py-1 px-2.5 bg-white/90 hover:bg-white rounded-lg border border-emerald-200 shadow-2xs transition">
+                  <span>📷</span> <span>Change Photo from Gallery / ఫైల్స్ ↗</span>
+                </button>
               </div>
             </div>
 
@@ -846,6 +851,21 @@
               <button type="button" onclick="toggleEditProfileMode(false)" class="text-[11px] text-slate-500 font-bold hover:underline">Cancel</button>
             </div>
 
+            <!-- Avatar Upload in Edit Mode -->
+            <div class="flex items-center gap-3 p-2.5 bg-white rounded-xl border border-slate-200">
+              <div class="relative cursor-pointer flex-shrink-0" onclick="triggerAvatarUpload()">
+                <img id="edit-farmer-avatar-img" src="assets/ui/farmer_avatar.png" alt="Profile Photo" class="w-14 h-14 rounded-full border-2 border-emerald-500 object-cover shadow-xs" onerror="this.src='assets/farmer-hero-art.jpg'">
+                <span class="absolute bottom-0 right-0 w-5 h-5 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[10px] border border-white">📷</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-bold text-slate-800">Profile Photo / ప్రొఫైల్ ఫోటో</p>
+                <p class="text-[10px] text-slate-400">Choose photo from phone gallery or files</p>
+                <button type="button" onclick="triggerAvatarUpload()" class="mt-1 px-3 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-black flex items-center gap-1 transition">
+                  <span>📁 Choose from Gallery / Files</span>
+                </button>
+              </div>
+            </div>
+
             <div>
               <label class="block text-[11px] font-bold text-slate-700 mb-1">Farmer Full Name / రైతు పేరు</label>
               <input type="text" id="input-edit-name" value="" placeholder="రైతు పూర్తి పేరు" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold text-slate-900 focus:border-emerald-600 focus:outline-none">
@@ -854,7 +874,7 @@
             <div class="grid grid-cols-2 gap-2">
               <div>
                 <label class="block text-[11px] font-bold text-slate-700 mb-1">Mobile / ఫోన్ నంబర్</label>
-                <input type="tel" id="input-edit-phone" value="" placeholder="మొబైల్ నంబర్" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold font-mono text-slate-900 focus:border-emerald-600 focus:outline-none">
+                <input type="tel" id="input-edit-phone" value="" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)" placeholder="10 అంకెల మొబైల్ నంబర్" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs font-bold font-mono text-slate-900 focus:border-emerald-600 focus:outline-none">
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-slate-700 mb-1">Total Land / విస్తీర్ణం (Acres)</label>
@@ -2259,8 +2279,13 @@
         return;
       }
 
-      if (mobile.length !== 10) {
-        showToast(state.language === 'te' ? 'దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter valid 10-digit mobile number', 'warning');
+      if (!mobile || mobile.length !== 10) {
+        showToast(state.language === 'te' ? 'దయచేసి ఖచ్చితంగా 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి (9 అంకెలు చెల్లవు)' : 'Mobile number must be exactly 10 digits. Less than 10 digits is not valid.', 'warning');
+        if (mobileInput) mobileInput.focus();
+        return;
+      }
+      if (!/^[6-9]\d{9}$/.test(mobile)) {
+        showToast(state.language === 'te' ? 'దయచేసి చెల్లుబాటు అయ్యే భారతీయ మొబైల్ నంబర్ నమోదు చేయండి (6, 7, 8, లేదా 9 తో ప్రారంభం కావాలి)' : 'Invalid Indian mobile number. Must start with 6, 7, 8, or 9.', 'warning');
         if (mobileInput) mobileInput.focus();
         return;
       }
@@ -2324,30 +2349,84 @@
       goToScreen('screen-dashboard');
     }
 
-    function handleRequestOtp(e) {
+    async function handleRequestOtp(e) {
       if (e) e.preventDefault();
       const mobileInput = document.getElementById('input-login-mobile');
-      const mobile = mobileInput ? mobileInput.value.replace(/\D/g, '') : '';
-      if (!mobile || mobile.length < 10) {
-        showToast(state.language === 'te' ? 'దయచేసి మీ 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter valid 10-digit mobile number', 'warning');
+      const rawVal = mobileInput ? mobileInput.value : '';
+      const mobile = rawVal.replace(/\D/g, '');
+
+      // Strict Indian 10-digit mobile number validation (exactly 10 digits starting with 6, 7, 8, or 9)
+      if (!mobile || mobile.length !== 10) {
+        showToast(
+          state.language === 'te' 
+            ? 'దయచేసి ఖచ్చితంగా 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి (9 అంకెలు లేదా తక్కువ చెల్లవు)' 
+            : 'Phone number must be exactly 10 digits. Less than 10 digits is not valid.', 
+          'warning'
+        );
         if (mobileInput) mobileInput.focus();
         return;
       }
 
-      state.farmer.phone = mobile;
-      const display = document.getElementById('otp-phone-display');
-      if (display) display.innerText = `+91 ${mobile.slice(0,5)} ${mobile.slice(5)}`;
-      
-      fetch('/api/auth/request-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile })
-      }).catch(err => console.log('OTP request sent:', err));
+      if (!/^[6-9]\d{9}$/.test(mobile)) {
+        showToast(
+          state.language === 'te' 
+            ? 'దయచేసి చెల్లుబాటు అయ్యే భారతీయ మొబైల్ నంబర్ నమోదు చేయండి (6, 7, 8, లేదా 9 తో ప్రారంభం కావాలి)' 
+            : 'Invalid Indian mobile number. Must start with 6, 7, 8, or 9.', 
+          'warning'
+        );
+        if (mobileInput) mobileInput.focus();
+        return;
+      }
 
-      startOtpCountdown();
-      clearOtpInputs();
-      goToScreen('screen-otp');
-      showToast(state.language === 'te' ? 'OTP పంపబడింది: 123456' : 'OTP sent to mobile (Demo: 123456)');
+      const btn = document.getElementById('btn-send-otp');
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-70');
+      }
+
+      try {
+        const res = await fetch('/api/auth/request-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mobile })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          showToast(data.error || 'Failed to request OTP. Please enter a valid 10-digit mobile number.', 'warning');
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-70');
+          }
+          return;
+        }
+
+        state.farmer.phone = mobile;
+        const display = document.getElementById('otp-phone-display');
+        if (display) display.innerText = `+91 ${mobile.slice(0,5)} ${mobile.slice(5)}`;
+
+        startOtpCountdown();
+        clearOtpInputs();
+        goToScreen('screen-otp');
+        showToast(
+          state.language === 'te' 
+            ? `OTP పంపబడింది: ${data.otp_demo || '123456'}` 
+            : `OTP sent to mobile (Code: ${data.otp_demo || '123456'})`
+        );
+      } catch (err) {
+        console.warn('Network error requesting OTP:', err);
+        state.farmer.phone = mobile;
+        const display = document.getElementById('otp-phone-display');
+        if (display) display.innerText = `+91 ${mobile.slice(0,5)} ${mobile.slice(5)}`;
+        startOtpCountdown();
+        clearOtpInputs();
+        goToScreen('screen-otp');
+        showToast(state.language === 'te' ? 'OTP పంపబడింది: 123456' : 'OTP sent to mobile (Demo: 123456)');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-70');
+        }
+      }
     }
 
     async function handleVerifyOtp() {
@@ -2418,7 +2497,7 @@
       const pCrop = document.getElementById('prof-display-crop');
       const pAcres = document.getElementById('prof-display-acres');
 
-      const displayName = f.name || (state.language === 'te' ? 'రైతు' : 'Farmer');
+      const displayName = f.name ? f.name : (state.language === 'te' ? 'రైతు' : 'Farmer');
       const displayVillage = f.village ? (f.district ? `${f.village}, ${f.district}` : `${f.village}, AP`) : (state.language === 'te' ? 'ఆంధ్రప్రదేశ్' : 'Andhra Pradesh');
       const displayPhone = f.phone ? `+91 ${f.phone}` : '--';
 
@@ -2426,10 +2505,14 @@
       if (dVill) dVill.innerText = displayVillage;
       if (pName) pName.innerText = displayName;
       if (pPhone) pPhone.innerText = displayPhone;
-      if (pVill) pVill.innerText = f.village || '--';
-      if (pDist) pDist.innerText = f.district || 'AP';
-      if (pCrop) pCrop.innerText = f.crop || 'Paddy';
-      if (pAcres) pAcres.innerText = f.acres ? `${f.acres} Acres` : '--';
+      if (pVill) pVill.innerText = f.village ? f.village : '--';
+      if (pDist) pDist.innerText = f.district ? f.district : 'AP';
+      if (pCrop) pCrop.innerText = f.crop ? f.crop : (state.language === 'te' ? 'వరి (Paddy)' : 'Paddy');
+      if (pAcres) pAcres.innerText = (f.acres !== undefined && f.acres !== null && f.acres !== '') ? `${f.acres} Acres` : '--';
+
+      if (f.avatar) {
+        updateFarmerAvatarUI(f.avatar);
+      }
 
       const farmLoc = document.getElementById('farm-card-location');
       if (farmLoc) farmLoc.innerText = displayVillage;
@@ -2512,31 +2595,6 @@
     // =========================================================================
     // OTP LOGIC & ON-SCREEN DIALPAD
     // =========================================================================
-    function handleRequestOtp(e) {
-      if (e) e.preventDefault();
-      const mobileInput = document.getElementById('input-login-mobile');
-      const mobile = mobileInput ? mobileInput.value.replace(/\D/g, '') : '9502051939';
-      if (mobile.length < 10) {
-        showToast(state.language === 'te' ? 'దయచేసి 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter valid 10-digit mobile number');
-        return;
-      }
-
-      state.farmer.phone = mobile;
-      const display = document.getElementById('otp-phone-display');
-      if (display) display.innerText = `+91 ${mobile.slice(0,5)} ${mobile.slice(5)}`;
-      
-      fetch('/api/auth/request-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile })
-      }).catch(err => console.log('OTP request sent:', err));
-
-      startOtpCountdown();
-      clearOtpInputs();
-      goToScreen('screen-otp');
-      showToast(state.language === 'te' ? 'OTP పంపబడింది: 123456' : 'OTP sent to mobile (Demo: 123456)');
-    }
-
     function handleGoogleSignIn() {
       showToast(state.language === 'te' ? 'గూగుల్ లాగిన్ విజయవంతమైంది!' : 'Google sign-in successful!');
       goToScreen('screen-dashboard');
@@ -2670,18 +2728,7 @@
       showToast(state.language === 'te' ? 'కొత్త OTP పంపబడింది: 123456' : 'New OTP sent: 123456');
     }
 
-    function handleVerifyOtp() {
-      syncOtpFromBoxes();
-      const code = state.otp.code;
-      if (code.length < 6) {
-        showToast(state.language === 'te' ? 'దయచేసి 6 అంకెల OTP నమోదు చేయండి (డెమో: 123456)' : 'Please enter full 6-digit OTP (Demo: 123456)', 'warning');
-        return;
-      }
-
-      showToast(state.language === 'te' ? 'OTP ధృవీకరించబడింది ✓' : 'OTP Verified Successfully ✓', 'success');
-      goToScreen('screen-dashboard');
-    }
-
+    
     // =========================================================================
     // SERVICE BOOKING ENGINE
     // =========================================================================
@@ -3127,7 +3174,15 @@
       const cropIn = document.getElementById('input-edit-crop');
 
       if (nameIn && nameIn.value.trim()) state.farmer.name = nameIn.value.trim();
-      if (phoneIn && phoneIn.value.trim()) state.farmer.phone = phoneIn.value.trim();
+      if (phoneIn && phoneIn.value.trim()) {
+        const cleanPhone = phoneIn.value.replace(/\D/g, '');
+        if (cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
+          showToast(state.language === 'te' ? 'దయచేసి చెల్లుబాటు అయ్యే 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి (6, 7, 8, లేదా 9 తో ప్రారంభం కావాలి)' : 'Please enter a valid 10-digit Indian mobile number (must be 10 digits starting with 6, 7, 8, or 9)', 'warning');
+          phoneIn.focus();
+          return;
+        }
+        state.farmer.phone = cleanPhone;
+      }
       if (villageIn && villageIn.value.trim()) state.farmer.village = villageIn.value.trim();
       if (distIn && distIn.value) state.farmer.district = distIn.value;
       if (acresIn && acresIn.value) state.farmer.acres = parseFloat(acresIn.value) || 5.0;
@@ -3141,27 +3196,6 @@
 
       toggleEditProfileMode(false);
       showToast(state.language === 'te' ? 'రైతు వివరాలు సేవ్ అయ్యాయి! ✓' : 'Farmer Profile Updated! ✓', 'success');
-    }
-
-    function updateFarmerProfileDOM() {
-      const f = state.farmer;
-      const dName = document.getElementById('dash-farmer-name');
-      const dVill = document.getElementById('dash-farmer-village');
-      const pName = document.getElementById('prof-display-name');
-      const pPhone = document.getElementById('prof-display-phone');
-      const pVill = document.getElementById('prof-display-village');
-      const pDist = document.getElementById('prof-display-district');
-      const pCrop = document.getElementById('prof-display-crop');
-      const pAcres = document.getElementById('prof-display-acres');
-
-      if (dName) dName.innerText = f.name;
-      if (dVill) dVill.innerText = `${f.village}, AP`;
-      if (pName) pName.innerText = f.name;
-      if (pPhone) pPhone.innerText = `+91 ${f.phone}`;
-      if (pVill) pVill.innerText = f.village;
-      if (pDist) pDist.innerText = f.district;
-      if (pCrop) pCrop.innerText = f.crop;
-      if (pAcres) pAcres.innerText = f.acres;
     }
 
     function loadSavedFarmerProfile() {
@@ -3261,7 +3295,106 @@
       }, 2600);
     }
 
+    
+    // =========================================================================
+    // PROFILE PHOTO / AVATAR GALLERY & CAMERA ENGINE
+    // =========================================================================
+    function triggerAvatarUpload() {
+      const input = document.getElementById('farmer-avatar-file-input');
+      if (input) {
+        input.value = '';
+        input.click();
+      }
+    }
+
+    function handleAvatarFileSelected(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast(state.language === 'te' ? 'దయచేసి సరైన ఫోటో ఫైల్‌ను ఎంచుకోండి' : 'Please select an image file', 'warning');
+        return;
+      }
+
+      if (file.size > 12 * 1024 * 1024) {
+        showToast(state.language === 'te' ? 'ఫోటో పరిమాణం 12MB కంటే తక్కువగా ఉండాలి' : 'Photo size must be under 12MB', 'warning');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const rawDataUrl = evt.target.result;
+        compressImage(rawDataUrl, 400, 400, 0.85, function(compressedDataUrl) {
+          state.farmer.avatar = compressedDataUrl;
+          try {
+            localStorage.setItem('trinetra_farmer_avatar', compressedDataUrl);
+            const savedProfile = localStorage.getItem('trinetra_farmer_profile');
+            if (savedProfile) {
+              const p = JSON.parse(savedProfile);
+              p.avatar = compressedDataUrl;
+              localStorage.setItem('trinetra_farmer_profile', JSON.stringify(p));
+            }
+          } catch (err) {
+            console.warn('Could not save avatar to localStorage:', err);
+          }
+          updateFarmerAvatarUI(compressedDataUrl);
+          showToast(state.language === 'te' ? 'ప్రొఫైల్ ఫోటో విజయవంతంగా అప్‌డేట్ చేయబడింది! 📷' : 'Profile photo updated successfully! 📷', 'success');
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function compressImage(srcDataUrl, maxWidth, maxHeight, quality, callback) {
+      const img = new Image();
+      img.onload = function() {
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressed = canvas.toDataURL('image/jpeg', quality);
+        callback(compressed);
+      };
+      img.onerror = function() {
+        callback(srcDataUrl);
+      };
+      img.src = srcDataUrl;
+    }
+
+    function updateFarmerAvatarUI(avatarUrl) {
+      if (!avatarUrl) return;
+      const ids = ['dash-farmer-avatar-img', 'prof-farmer-avatar-img', 'edit-farmer-avatar-img'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.src = avatarUrl;
+      });
+    }
+
+    function initSavedAvatar() {
+      try {
+        const saved = localStorage.getItem('trinetra_farmer_avatar');
+        if (saved && saved.startsWith('data:image')) {
+          state.farmer.avatar = saved;
+          updateFarmerAvatarUI(saved);
+        }
+      } catch (err) {}
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      initSavedAvatar();
       loadSavedFarmerProfile();
       applyLanguage(state.language);
       selectAppLanguage(state.language);
@@ -3276,5 +3409,7 @@
       }, 3200);
     });
   </script>
+  <!-- Hidden File Input for Farmer Profile Photo -->
+  <input type="file" id="farmer-avatar-file-input" accept="image/*" class="hidden" onchange="handleAvatarFileSelected(event)">
 </body>
 </html>
