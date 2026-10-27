@@ -209,51 +209,98 @@
       <!-- ============================================================ -->
       <!-- SCREEN 2: LANGUAGE SELECTION (EXACT MATCH TO DESIGN 2)        -->
       <!-- ============================================================ -->
-      <section id="screen-lang" class="screen-view hidden min-h-full flex flex-col justify-between bg-gradient-to-b from-[#F0FDF4] via-white to-[#F0FDF4] p-6 text-center relative">
-        <div class="pt-2">
-          <div class="flex justify-center mb-2">
-            <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-12 w-auto object-contain" onerror="this.src='assets/logo.png'">
+      <section id="screen-lang" class="screen-view hidden min-h-full flex flex-col justify-between bg-gradient-to-b from-[#F0FDF4] via-white to-[#F0FDF4] p-5 text-center relative overflow-hidden">
+        <!-- Top: Logo, Select Language title & Pill buttons -->
+        <div class="pt-1 flex-shrink-0">
+          <div class="flex justify-center mb-1.5">
+            <img src="assets/trinetra-logo.png" alt="Trinetra" class="h-11 w-auto object-contain" onerror="this.src='assets/logo.png'">
           </div>
-          <h2 class="text-xl font-black text-slate-900 tracking-tight" data-key="lang_select_title">
+          <h2 class="text-lg font-black text-slate-900 tracking-tight" data-key="lang_select_title">
             Select Language / భాషను ఎంచుకోండి
           </h2>
 
-          <!-- Language Selector Pills (Side-by-Side as in Design 2) -->
-          <div class="flex items-center justify-center gap-3 mt-4">
-            <button type="button" id="lang-btn-te" onclick="selectAppLanguage('te')" class="px-6 py-2.5 rounded-full font-black text-sm transition-all shadow-md bg-emerald-600 text-white border-2 border-emerald-600 flex items-center gap-1.5">
+          <!-- Language Selector Pills (Side-by-Side as in Mockup) -->
+          <div class="flex items-center justify-center gap-3 mt-3">
+            <button type="button" id="lang-btn-te" onclick="selectAppLanguage('te')" class="px-6 py-2 rounded-full font-black text-sm transition-all shadow-sm bg-emerald-600 text-white border-2 border-emerald-600 flex items-center gap-1.5">
               <span>✓</span> <span>తెలుగు</span>
             </button>
-            <button type="button" id="lang-btn-en" onclick="selectAppLanguage('en')" class="px-6 py-2.5 rounded-full font-bold text-sm transition-all bg-white text-slate-700 border-2 border-slate-300 hover:border-emerald-500">
+            <button type="button" id="lang-btn-en" onclick="selectAppLanguage('en')" class="px-6 py-2 rounded-full font-bold text-sm transition-all bg-white text-slate-700 border-2 border-slate-300 hover:border-emerald-500">
               <span>English</span>
             </button>
           </div>
         </div>
 
-        <!-- Farmer with Smartphone in Field Visual (Perfect framing, not cut off) -->
-        <div class="my-auto py-2 flex flex-col items-center">
-          <div class="relative w-full max-w-[280px] h-48 rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-3">
-            <img src="assets/farmer-hero-art.jpg" alt="Farmer with Drone" class="w-full h-full object-cover object-top" onerror="this.src='assets/login-hero-exact.jpg'">
+        <!-- Middle: Horizontal Scrolling Side-by-Side Carousel -->
+        <div class="my-auto py-2 w-full flex-1 flex flex-col justify-center items-center overflow-hidden">
+          <div id="intro-carousel" class="w-full max-w-[340px] flex overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar select-none touch-pan-x cursor-grab active:cursor-grabbing">
+            
+            <!-- Slide 1: Technology in Your Fields -->
+            <div class="w-full min-w-full flex-shrink-0 snap-center flex flex-col items-center px-1" data-slide-index="0">
+              <div class="relative w-full max-w-[300px] h-[190px] sm:h-[210px] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-3 bg-white flex items-center justify-center">
+                <img src="assets/slide1-tech-farmers.png" alt="Technology in Your Fields" class="w-full h-full object-cover object-center" onerror="this.src='assets/farmer-hero-art.jpg'">
+              </div>
+              <h3 class="text-base font-black text-slate-800" data-key="slide1_title">
+                Technology in Your Fields
+              </h3>
+              <p class="text-xs text-slate-500 font-medium mt-0.5 max-w-[280px]" data-key="slide1_sub">
+                Advanced agriculture drones for higher crop yield
+              </p>
+            </div>
+
+            <!-- Slide 2: Easy Booking with Trinetra App -->
+            <div class="w-full min-w-full flex-shrink-0 snap-center flex flex-col items-center px-1" data-slide-index="1">
+              <div class="relative w-full max-w-[300px] h-[190px] sm:h-[210px] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-3 bg-white flex items-center justify-center">
+                <img src="assets/slide2-easy-booking.png" alt="Easy Booking with Trinetra App" class="w-full h-full object-cover object-center" onerror="this.src='assets/splash-hero-banner.jpg'">
+              </div>
+              <h3 class="text-base font-black text-slate-800" data-key="slide2_title">
+                Easy Booking with Trinetra App
+              </h3>
+              <p class="text-xs text-slate-500 font-medium mt-0.5 max-w-[280px]" data-key="slide2_sub">
+                Book drone spraying in just a few steps with real-time updates
+              </p>
+            </div>
+
+            <!-- Slide 3: Suitable for Multiple Crops -->
+            <div class="w-full min-w-full flex-shrink-0 snap-center flex flex-col items-center px-1" data-slide-index="2">
+              <div class="relative w-full max-w-[300px] h-[190px] sm:h-[210px] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-3 bg-white flex items-center justify-center">
+                <img src="assets/slide3-multiple-crops.png" alt="Suitable for Multiple Crops" class="w-full h-full object-cover object-center" onerror="this.src='assets/hero_drone_banner.png'">
+              </div>
+              <h3 class="text-base font-black text-slate-800" data-key="slide3_title">
+                Suitable for Multiple Crops
+              </h3>
+              <p class="text-xs text-slate-500 font-medium mt-0.5 max-w-[280px]" data-key="slide3_sub">
+                One solution for Paddy, Chilli, Cotton, Maize & Sugarcane
+              </p>
+            </div>
+
+            <!-- Slide 4: Smart Spraying for Better Crops -->
+            <div class="w-full min-w-full flex-shrink-0 snap-center flex flex-col items-center px-1" data-slide-index="3">
+              <div class="relative w-full max-w-[300px] h-[190px] sm:h-[210px] rounded-3xl overflow-hidden shadow-xl border-4 border-white mb-3 bg-white flex items-center justify-center">
+                <img src="assets/slide4-smart-spraying.png" alt="Smart Spraying for Better Crops" class="w-full h-full object-cover object-center" onerror="this.src='assets/login-hero-exact.jpg'">
+              </div>
+              <h3 class="text-base font-black text-slate-800" data-key="slide4_title">
+                Smart Spraying for Better Crops
+              </h3>
+              <p class="text-xs text-slate-500 font-medium mt-0.5 max-w-[280px]" data-key="slide4_sub">
+                Save 90% water, cut chemical usage, and boost profit
+              </p>
+            </div>
+
           </div>
-          <h3 class="text-sm font-black text-slate-800" data-key="tech_in_fields">
-            Technology in Your Fields
-          </h3>
-          <p class="text-xs text-slate-500 font-medium mt-0.5" data-key="tech_in_fields_sub">
-            మీ పొలాల్లో అత్యాధునిక డ్రోన్ టెక్నాలజీ
-          </p>
         </div>
 
         <!-- Bottom Navigation & Next Arrow Circle Button -->
-        <div class="flex items-center justify-between pt-4 pb-2">
-          <!-- 4 Carousel Dots -->
-          <div class="flex items-center gap-1.5 pl-2">
-            <span class="w-6 h-2 rounded-full bg-emerald-600 transition-all"></span>
-            <span class="w-2 h-2 rounded-full bg-slate-300"></span>
-            <span class="w-2 h-2 rounded-full bg-slate-300"></span>
-            <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+        <div class="flex items-center justify-between pt-3 pb-2 flex-shrink-0">
+          <!-- 4 Interactive Carousel Dots -->
+          <div id="carousel-dots-container" class="flex items-center gap-1.5 pl-2">
+            <button type="button" onclick="goToCarouselSlide(0)" class="carousel-dot w-6 h-2 rounded-full bg-emerald-600 transition-all duration-300" aria-label="Slide 1"></button>
+            <button type="button" onclick="goToCarouselSlide(1)" class="carousel-dot w-2 h-2 rounded-full bg-slate-300 transition-all duration-300 hover:bg-slate-400 cursor-pointer" aria-label="Slide 2"></button>
+            <button type="button" onclick="goToCarouselSlide(2)" class="carousel-dot w-2 h-2 rounded-full bg-slate-300 transition-all duration-300 hover:bg-slate-400 cursor-pointer" aria-label="Slide 3"></button>
+            <button type="button" onclick="goToCarouselSlide(3)" class="carousel-dot w-2 h-2 rounded-full bg-slate-300 transition-all duration-300 hover:bg-slate-400 cursor-pointer" aria-label="Slide 4"></button>
           </div>
 
           <!-- Big Green Circle Next Button (Exact Match) -->
-          <button onclick="goToScreen('screen-login')" class="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-btn flex items-center justify-center transition-all transform active:scale-95">
+          <button type="button" id="btn-carousel-next" onclick="handleCarouselNext()" class="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-btn flex items-center justify-center transition-all transform active:scale-95" aria-label="Next Slide">
             <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
         </div>
@@ -1869,6 +1916,14 @@
         splash_motto: 'రైతన్నల సుసంపన్న, ఆరోగ్యవంతమైన భవిష్యత్తు కోసం త్రినేత్ర డ్రోన్స్',
         btn_get_started: 'ప్రారంభించండి →',
         lang_select_title: 'భాషను ఎంచుకోండి / Select Language',
+                slide1_title: 'మీ పొలాల్లో అత్యాధునిక సాంకేతికత',
+        slide1_sub: 'అధిక దిగుబడి కోసం అత్యాధునిక వ్యవసాయ డ్రోన్లు',
+        slide2_title: 'సులువైన డ్రోన్ బుకింగ్',
+        slide2_sub: 'కొద్ది నిమిషాల్లోనే డ్రోన్ స్ప్రేయింగ్ బుక్ చేసుకోండి',
+        slide3_title: 'అన్ని రకాల పంటలకు అనుకూలం',
+        slide3_sub: 'వరి, మిర్చి, పత్తి, మొక్కజొన్న, చెరకు పంటలకు అనువైనది',
+        slide4_title: 'స్మార్ట్ స్ప్రేయింగ్ టెక్నాలజీ',
+        slide4_sub: 'నీరు, సమయం, మందుల ఆదా తో పాటు అధిక దిగుబడి',
         tech_in_fields: 'మీ పొలాల్లో అత్యాధునిక సాంకేతికత',
         tech_in_fields_sub: 'డ్రోన్ సహాయంతో పురుగుమందుల ఖర్చు ఆదా & అధిక దిగుబడి',
         welcome_trinetra: 'త్రినేత్ర డ్రోన్స్‌కు స్వాగతం',
@@ -2003,6 +2058,14 @@
         splash_motto: 'For a Greener, Healthier and More Productive Future',
         btn_get_started: 'Get Started →',
         lang_select_title: 'Select Language',
+                slide1_title: 'Technology in Your Fields',
+        slide1_sub: 'Advanced agriculture drones for higher crop yield',
+        slide2_title: 'Easy Booking with Trinetra App',
+        slide2_sub: 'Book drone spraying in just a few steps with real-time updates',
+        slide3_title: 'Suitable for Multiple Crops',
+        slide3_sub: 'One solution for Paddy, Chilli, Cotton, Maize & Sugarcane',
+        slide4_title: 'Smart Spraying for Better Crops',
+        slide4_sub: 'Save 90% water, cut chemical wastage, and boost profit',
         tech_in_fields: 'Technology in Your Fields',
         tech_in_fields_sub: 'Advanced agriculture drones for higher crop yield',
         welcome_trinetra: 'Welcome to TRINETRA',
@@ -2147,6 +2210,11 @@
       if (target) {
         target.classList.remove('hidden');
         state.currentScreen = screenId;
+        if (screenId === 'screen-lang') {
+          setTimeout(initIntroCarousel, 80);
+        } else {
+          stopCarouselAutoSlide();
+        }
         if (addToHistory && (state.screenHistory[state.screenHistory.length - 1] !== screenId)) {
           state.screenHistory.push(screenId);
         }
@@ -2543,6 +2611,124 @@
       state.language = lang;
       try { localStorage.setItem('trinetra_lang', lang); } catch(e) {}
       applyLanguage(lang);
+    }
+
+        // =========================================================================
+    // ONBOARDING INTRO CAROUSEL (SIDE-BY-SIDE SCROLLING)
+    // =========================================================================
+    let currentCarouselIndex = 0;
+    const totalCarouselSlides = 4;
+    let carouselAutoTimer = null;
+    let carouselInitialized = false;
+
+    function initIntroCarousel() {
+      const carousel = document.getElementById('intro-carousel');
+      if (!carousel) return;
+
+      if (!carouselInitialized) {
+        carouselInitialized = true;
+
+        // Scroll listener: dynamically update indicator dots during horizontal scrolling
+        let scrollTimeout;
+        carousel.addEventListener('scroll', () => {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            const width = carousel.clientWidth || 300;
+            const newIdx = Math.round(carousel.scrollLeft / width);
+            if (newIdx !== currentCarouselIndex && newIdx >= 0 && newIdx < totalCarouselSlides) {
+              currentCarouselIndex = newIdx;
+              updateCarouselDots(currentCarouselIndex);
+            }
+          }, 35);
+        }, { passive: true });
+
+        // Touch & Mouse Drag Support for Desktop & Mobile
+        let isDown = false;
+        let startX = 0;
+        let scrollLeftPos = 0;
+
+        carousel.addEventListener('mousedown', (e) => {
+          isDown = true;
+          startX = e.pageX - carousel.offsetLeft;
+          scrollLeftPos = carousel.scrollLeft;
+          stopCarouselAutoSlide();
+        });
+
+        window.addEventListener('mouseup', () => {
+          if (!isDown) return;
+          isDown = false;
+          const width = carousel.clientWidth || 300;
+          const targetIdx = Math.round(carousel.scrollLeft / width);
+          goToCarouselSlide(targetIdx);
+        });
+
+        carousel.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - carousel.offsetLeft;
+          const walk = (x - startX) * 1.4;
+          carousel.scrollLeft = scrollLeftPos - walk;
+        });
+
+        carousel.addEventListener('touchstart', stopCarouselAutoSlide, { passive: true });
+      }
+
+      updateCarouselDots(currentCarouselIndex);
+      startCarouselAutoSlide();
+    }
+
+    function updateCarouselDots(index) {
+      const dots = document.querySelectorAll('#carousel-dots-container .carousel-dot');
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.className = 'carousel-dot w-6 h-2 rounded-full bg-emerald-600 transition-all duration-300';
+        } else {
+          dot.className = 'carousel-dot w-2 h-2 rounded-full bg-slate-300 transition-all duration-300 hover:bg-slate-400 cursor-pointer';
+        }
+      });
+    }
+
+    function goToCarouselSlide(index) {
+      const carousel = document.getElementById('intro-carousel');
+      if (!carousel) return;
+      currentCarouselIndex = Math.max(0, Math.min(totalCarouselSlides - 1, index));
+      const width = carousel.clientWidth || 300;
+      carousel.scrollTo({
+        left: currentCarouselIndex * width,
+        behavior: 'smooth'
+      });
+      updateCarouselDots(currentCarouselIndex);
+    }
+
+    function handleCarouselNext() {
+      stopCarouselAutoSlide();
+      if (currentCarouselIndex < totalCarouselSlides - 1) {
+        goToCarouselSlide(currentCarouselIndex + 1);
+      } else {
+        goToScreen('screen-login');
+      }
+    }
+
+    function startCarouselAutoSlide() {
+      stopCarouselAutoSlide();
+      carouselAutoTimer = setInterval(() => {
+        if (state.currentScreen !== 'screen-lang') {
+          stopCarouselAutoSlide();
+          return;
+        }
+        if (currentCarouselIndex < totalCarouselSlides - 1) {
+          goToCarouselSlide(currentCarouselIndex + 1);
+        } else {
+          goToCarouselSlide(0);
+        }
+      }, 4500);
+    }
+
+    function stopCarouselAutoSlide() {
+      if (carouselAutoTimer) {
+        clearInterval(carouselAutoTimer);
+        carouselAutoTimer = null;
+      }
     }
 
     function selectAppLanguage(lang) {
