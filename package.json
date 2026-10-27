@@ -24,5 +24,8 @@
     "sqlite"
   ],
   "author": "Trinetra Drones & Robotics",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^10.2.1"
+  }
 }

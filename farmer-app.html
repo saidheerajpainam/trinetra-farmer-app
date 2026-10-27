@@ -3075,7 +3075,7 @@
       if (dashCode) dashCode.innerText = state.booking.code;
 
       if (btn) btn.disabled = false;
-      showToast(state.language === 'te' ? `✓ బుకింగ్ ఖరారైంది! (#${state.booking.code})` : `✓ Booking Confirmed! (#${state.booking.code})`);
+      showToast(state.language === 'te' ? `✓ బుకింగ్ ఖరారైంది! వివరాలు మీ ఫోన్ & info@trinetrabots.com కి పంపబడ్డాయి (#${state.booking.code})` : `✓ Booking Confirmed! Dispatched to phone & info@trinetrabots.com (#${state.booking.code})`);
       goToScreen('screen-tracking');
     }
 
@@ -3284,7 +3284,7 @@
         body: JSON.stringify({ status: 'completed', payment_status: 'paid', notes: 'Payment completed by farmer' })
       }).catch(err => console.log('Payment update sent:', err));
 
-      showToast(state.language === 'te' ? 'చెల్లింపు విజయవంతమైంది! ✓' : 'Payment Received Successfully! ✓');
+      showToast(state.language === 'te' ? 'చెల్లింపు పూర్తయింది! రసీదు మీ ఫోన్ & info@trinetrabots.com కి పంపబడింది ✓' : 'Payment Confirmed! Receipt dispatched to your phone & info@trinetrabots.com ✓');
       goToScreen('screen-payment-success');
     }
 

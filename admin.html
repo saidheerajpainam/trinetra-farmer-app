@@ -31,6 +31,76 @@
         }
       }
     }
+
+    // =========================================================================
+    // DISPATCHES & NOTIFICATIONS (info@trinetrabots.com) LOGIC
+    // =========================================================================
+    async function loadRecentDispatches() {
+      const tbody = document.getElementById('dispatches-tbody');
+      if (!tbody) return;
+      try {
+        const res = await fetch('/api/notifications/recent');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          renderDispatches(json.data);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500 text-xs">No dispatches logged yet.</td></tr>';
+        }
+      } catch (err) {
+        console.error('Error loading dispatches:', err);
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-red-400 text-xs">Failed to load dispatch history.</td></tr>';
+      }
+    }
+
+    function renderDispatches(items) {
+      const tbody = document.getElementById('dispatches-tbody');
+      if (!tbody) return;
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500 text-xs">No notifications in outbox yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = items.map(n => {
+        const timeStr = n.created_at ? new Date(n.created_at.replace(' ', 'T') + 'Z').toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--';
+        const channel = (n.channel || 'in_app').toLowerCase();
+        let chanBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300">In-App</span>';
+        if (channel === 'email') chanBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">📧 Email</span>';
+        if (channel === 'sms') chanBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">📱 SMS</span>';
+
+        return `
+          <tr class="hover:bg-slate-900/50 transition-all">
+            <td class="py-3 px-3.5 font-mono text-slate-400 text-[11px]">${timeStr}</td>
+            <td class="py-3 px-3">${chanBadge}</td>
+            <td class="py-3 px-3 font-mono font-bold ${channel === 'email' ? 'text-rose-400' : 'text-emerald-400'}">${n.recipient || '--'}</td>
+            <td class="py-3 px-3 font-bold text-white max-w-[200px] truncate">${n.title || '--'}</td>
+            <td class="py-3 px-3 text-slate-400 text-[11px] max-w-[320px] truncate font-sans">${n.message || '--'}</td>
+            <td class="py-3 px-3 text-right">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Dispatched ✓</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function sendTestNotification() {
+      showAdminToast('⚡ Dispatching test alert to info@trinetrabots.com...');
+      try {
+        const res = await fetch('/api/notifications/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: 'info@trinetrabots.com', mobile: '9502051939' })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showAdminToast('✓ Test Alert Sent to info@trinetrabots.com and +91 9502051939!');
+          loadRecentDispatches();
+        } else {
+          showAdminToast('⚠ Test failed: ' + (json.error || 'Unknown error'));
+        }
+      } catch (err) {
+        showAdminToast('⚠ Error triggering test alert');
+      }
+    }
+
   </script>
   <style>
     body {
@@ -245,6 +315,10 @@
       <button onclick="switchTab('pricing')" id="tab-btn-pricing" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-900 transition-all">
         <span>⚙️</span>
         <span id="tab-text-pricing">Pricing & SOP</span>
+      </button>
+      <button onclick="switchTab('comms')" id="tab-btn-comms" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-rose-400 hover:text-white hover:bg-rose-950/40 border border-rose-800/40 transition-all">
+        <span>📧</span>
+        <span id="tab-text-comms">Dispatches & Alerts (info@trinetrabots.com)</span>
       </button>
       <button onclick="switchTab('database')" id="tab-btn-database" class="px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 text-cyan-400 hover:text-white hover:bg-cyan-950/40 border border-cyan-800/40 transition-all">
         <span>🗄️</span>
@@ -1557,6 +1631,78 @@
 
     </section>
 
+
+    <!-- TAB: DISPATCHES & ALERTS (info@trinetrabots.com & FARMER PHONES) -->
+    <section id="tab-comms" class="hidden space-y-6">
+      <div class="glass-card rounded-3xl p-6 border border-slate-800 shadow-xl space-y-5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+          <div>
+            <div class="flex items-center gap-2.5">
+              <span class="p-2.5 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xl">📧</span>
+              <div>
+                <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                  <span>Automated Communications & Outbox Alerts</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    Live Multi-Channel
+                  </span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  Real-time notifications dispatched to <strong class="text-white">info@trinetrabots.com</strong> and farmer mobile numbers for new bookings, status updates & payments.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <button onclick="sendTestNotification()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all shadow flex items-center gap-1.5">
+              <span>⚡</span> <span>Send Test Alert to info@trinetrabots.com</span>
+            </button>
+            <button onclick="loadRecentDispatches()" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1">
+              <span>↺</span> <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Info Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 space-y-1">
+            <div class="text-slate-500 font-bold uppercase text-[10px]">Primary Company Recipient</div>
+            <div class="text-sm font-black text-rose-400 font-mono">info@trinetrabots.com</div>
+            <div class="text-[11px] text-slate-400">Receives full booking, farmer contact & GPS specifications</div>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 space-y-1">
+            <div class="text-slate-500 font-bold uppercase text-[10px]">Customer Notifications</div>
+            <div class="text-sm font-black text-emerald-400">Farmer Mobile & In-App</div>
+            <div class="text-[11px] text-slate-400">Bilingual Telugu & English SMS + in-app order status</div>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 space-y-1">
+            <div class="text-slate-500 font-bold uppercase text-[10px]">Operations Hotline</div>
+            <div class="text-sm font-black text-blue-400 font-mono">+91 9502051939</div>
+            <div class="text-[11px] text-slate-400">Real-time SMS dispatch alerts for field crew</div>
+          </div>
+        </div>
+
+        <!-- Recent Dispatches Table -->
+        <div class="overflow-x-auto rounded-2xl border border-slate-800/80 bg-slate-950">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-900/80 text-slate-400 font-bold border-b border-slate-800 text-[11px]">
+                <th class="py-3 px-3.5">Time</th>
+                <th class="py-3 px-3">Channel</th>
+                <th class="py-3 px-3">Recipient</th>
+                <th class="py-3 px-3">Subject / Title</th>
+                <th class="py-3 px-3">Message Preview</th>
+                <th class="py-3 px-3 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="dispatches-tbody" class="divide-y divide-slate-800/60 font-medium">
+              <tr><td colspan="6" class="py-8 text-center text-slate-500 text-xs">Loading recent dispatches...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- TOAST NOTIFICATION -->
@@ -2143,7 +2289,7 @@
 
     // Switch Tabs
     function switchTab(tabId) {
-      const tabs = ['queue', 'farmers', 'map', 'ai_assistant', 'flight_monitor', 'reports', 'maintenance', 'fleet', 'billing', 'pricing', 'database'];
+      const tabs = ['queue', 'farmers', 'map', 'ai_assistant', 'flight_monitor', 'reports', 'maintenance', 'fleet', 'billing', 'pricing', 'database', 'comms'];
       tabs.forEach(t => {
         const sec = document.getElementById('tab-' + t);
         const btn = document.getElementById('tab-btn-' + t);
@@ -2162,6 +2308,8 @@
         setTimeout(initFleetMap, 200);
       } else if (tabId === 'database') {
         loadDatabaseExplorer();
+      } else if (tabId === 'comms') {
+        loadRecentDispatches();
       } else if (tabId === 'flight_monitor') {
         loadFlightMonitor();
       } else if (tabId === 'reports') {
@@ -2816,6 +2964,76 @@
           } catch(err) {}
         };
       } catch(e) {}
+    }
+
+
+    // =========================================================================
+    // DISPATCHES & NOTIFICATIONS (info@trinetrabots.com) LOGIC
+    // =========================================================================
+    async function loadRecentDispatches() {
+      const tbody = document.getElementById('dispatches-tbody');
+      if (!tbody) return;
+      try {
+        const res = await fetch('/api/notifications/recent');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          renderDispatches(json.data);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500 text-xs">No dispatches logged yet.</td></tr>';
+        }
+      } catch (err) {
+        console.error('Error loading dispatches:', err);
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-red-400 text-xs">Failed to load dispatch history.</td></tr>';
+      }
+    }
+
+    function renderDispatches(items) {
+      const tbody = document.getElementById('dispatches-tbody');
+      if (!tbody) return;
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500 text-xs">No notifications in outbox yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = items.map(n => {
+        const timeStr = n.created_at ? new Date(n.created_at.replace(' ', 'T') + 'Z').toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--';
+        const channel = (n.channel || 'in_app').toLowerCase();
+        let chanBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300">In-App</span>';
+        if (channel === 'email') chanBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">📧 Email</span>';
+        if (channel === 'sms') chanBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">📱 SMS</span>';
+
+        return `
+          <tr class="hover:bg-slate-900/50 transition-all">
+            <td class="py-3 px-3.5 font-mono text-slate-400 text-[11px]">${timeStr}</td>
+            <td class="py-3 px-3">${chanBadge}</td>
+            <td class="py-3 px-3 font-mono font-bold ${channel === 'email' ? 'text-rose-400' : 'text-emerald-400'}">${n.recipient || '--'}</td>
+            <td class="py-3 px-3 font-bold text-white max-w-[200px] truncate">${n.title || '--'}</td>
+            <td class="py-3 px-3 text-slate-400 text-[11px] max-w-[320px] truncate font-sans">${n.message || '--'}</td>
+            <td class="py-3 px-3 text-right">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Dispatched ✓</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function sendTestNotification() {
+      showAdminToast('⚡ Dispatching test alert to info@trinetrabots.com...');
+      try {
+        const res = await fetch('/api/notifications/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: 'info@trinetrabots.com', mobile: '9502051939' })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showAdminToast('✓ Test Alert Sent to info@trinetrabots.com and +91 9502051939!');
+          loadRecentDispatches();
+        } else {
+          showAdminToast('⚠ Test failed: ' + (json.error || 'Unknown error'));
+        }
+      } catch (err) {
+        showAdminToast('⚠ Error triggering test alert');
+      }
     }
 
   </script>
