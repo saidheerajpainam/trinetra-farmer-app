@@ -7,6 +7,8 @@
 // ==============================================================================
 
 const https = require('node:https');
+const http = require('node:http');
+
 let nodemailer = null;
 try {
   nodemailer = require('nodemailer');
@@ -14,7 +16,50 @@ try {
   // Gracefully fallback if nodemailer not yet installed
 }
 
-const { normalizeIndianMobile, makeHttpRequest } = require('./smsService');
+const { normalizeIndianMobile } = require('./smsService');
+
+/**
+ * Robust HTTP/HTTPS POST helper
+ */
+function makeHttpRequest(urlStr, options = {}, postData = null) {
+  return new Promise((resolve, reject) => {
+    const parsedUrl = new URL(urlStr);
+    const isHttps = parsedUrl.protocol === 'https:';
+    const client = isHttps ? https : http;
+
+    const reqOptions = {
+      method: options.method || 'POST',
+      hostname: parsedUrl.hostname,
+      port: parsedUrl.port || (isHttps ? 443 : 80),
+      path: parsedUrl.pathname + parsedUrl.search,
+      headers: options.headers || {}
+    };
+
+    if (options.auth) reqOptions.auth = options.auth;
+
+    const req = client.request(reqOptions, (res) => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(body);
+          resolve({ statusCode: res.statusCode, data: json, raw: body });
+        } catch {
+          resolve({ statusCode: res.statusCode, data: null, raw: body });
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.setTimeout(options.timeout || 10000, () => {
+      req.destroy();
+      reject(new Error('Gateway connection timed out after 10s'));
+    });
+
+    if (postData) req.write(postData);
+    req.end();
+  });
+}
 
 const COMPANY_EMAIL = process.env.COMPANY_NOTIFICATION_EMAIL || 'info@trinetrabots.com';
 const HELPLINE_MOBILE = process.env.HELPLINE_MOBILE || '9502051939';

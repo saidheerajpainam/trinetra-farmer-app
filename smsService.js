@@ -349,5 +349,6 @@ function getGatewayStatus(env = process.env) {
 module.exports = {
   normalizeIndianMobile,
   dispatchSmsOtp,
-  getGatewayStatus
+  getGatewayStatus,
+  makeHttpRequest
 };
