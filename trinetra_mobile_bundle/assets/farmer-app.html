@@ -154,36 +154,57 @@
     <!-- Main Screens Container (Scrollable) -->
     <main id="screens-container" class="flex-1 w-full overflow-y-auto no-scrollbar relative flex flex-col bg-slate-50">
 
+            <!-- ============================================================ -->
+      <!-- SCREEN 1: SPLASH SCREEN (WITH 3-CARD SIDE-BY-SIDE CAROUSEL)   -->
       <!-- ============================================================ -->
-      <!-- SCREEN 1: SPLASH SCREEN (EXACT MATCH TO DESIGN 1)             -->
-      <!-- ============================================================ -->
-      <section id="screen-splash" class="screen-view min-h-full flex flex-col justify-between bg-gradient-to-b from-[#F0FDF4] via-white to-[#F0FDF4] p-6 text-center relative">
-        <div class="pt-4">
-          <div class="flex justify-center mb-3">
-            <img src="assets/trinetra-logo.png" alt="Trinetra Drones & Robotics" class="h-16 w-auto object-contain drop-shadow-sm" onerror="this.src='assets/logo.png'">
+      <section id="screen-splash" class="screen-view min-h-full flex flex-col justify-between bg-gradient-to-b from-[#F0FDF4] via-white to-[#F0FDF4] px-4 py-5 text-center relative overflow-hidden">
+        <div class="pt-2 flex-shrink-0">
+          <div class="flex justify-center mb-2">
+            <img src="assets/trinetra-logo.png" alt="Trinetra Drones & Robotics" class="h-14 w-auto object-contain drop-shadow-sm" onerror="this.src='assets/logo.png'">
           </div>
-          <h2 class="text-xs font-black tracking-widest text-emerald-800 uppercase mb-3">DRONES & ROBOTICS</h2>
+          <h2 class="text-xs font-black tracking-widest text-emerald-800 uppercase mb-2">DRONES & ROBOTICS</h2>
           
-          <h1 class="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
             <span class="text-emerald-700 block">Smart Farming</span>
             <span class="text-slate-900">Smarter Tomorrow</span>
           </h1>
+          <p class="text-xs font-bold text-slate-500 mt-1" data-key="splash_subtitle">
+            Drone services at your fingertips / డ్రోన్ సేవలు మీ చేతివేళ్ల వద్ద
+          </p>
         </div>
 
-        <!-- Hero Drone Spraying Photo -->
-        <div class="my-auto py-3 relative flex justify-center">
-          <div class="relative w-full max-w-[320px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-            <img src="assets/hero_drone_banner.png" alt="Drone Spraying In Field" class="w-full h-full object-cover" onerror="this.src='assets/splash-hero-banner.jpg'">
-            <div class="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-md rounded-xl p-2 text-white text-[11px] font-bold flex items-center justify-between">
-              <span>🚁 Hexacopter Spraying</span>
-              <span class="text-emerald-400">100% Precision</span>
+        <!-- Middle: 3-Card Side-by-Side Scrolling Carousel -->
+        <div class="my-auto py-2 w-full flex-1 flex flex-col justify-center items-center overflow-hidden">
+          <div id="splash-carousel" class="w-full flex overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar select-none touch-pan-x cursor-grab active:cursor-grabbing py-2 gap-3.5 items-center" style="padding-left: calc(50% - 115px); padding-right: calc(50% - 115px); scroll-behavior: smooth;">
+            
+            <!-- Card 1: Smart Spraying -->
+            <div class="splash-card-slide flex-shrink-0 w-[230px] sm:w-[250px] snap-center rounded-3xl overflow-hidden shadow-xl border-2 border-emerald-100 bg-white cursor-pointer transform transition-all duration-300 hover:scale-[1.02] active:scale-95" data-splash-index="0" onclick="handleSplashCardClick(0)">
+              <img src="assets/splash-card-spraying.jpg" alt="Smart Spraying - Healthier Crops Higher Yield" class="w-full h-auto object-cover block select-none pointer-events-none" draggable="false" onerror="this.src='assets/hero_drone_banner.png'">
             </div>
+
+            <!-- Card 2: Crop Monitoring -->
+            <div class="splash-card-slide flex-shrink-0 w-[230px] sm:w-[250px] snap-center rounded-3xl overflow-hidden shadow-xl border-2 border-emerald-100 bg-white cursor-pointer transform transition-all duration-300 hover:scale-[1.02] active:scale-95" data-splash-index="1" onclick="handleSplashCardClick(1)">
+              <img src="assets/splash-card-monitoring.jpg" alt="Crop Monitoring - Detect Problems Early" class="w-full h-auto object-cover block select-none pointer-events-none" draggable="false" onerror="this.src='assets/hero_drone_banner.png'">
+            </div>
+
+            <!-- Card 3: Farmers Can Observe -->
+            <div class="splash-card-slide flex-shrink-0 w-[230px] sm:w-[250px] snap-center rounded-3xl overflow-hidden shadow-xl border-2 border-emerald-100 bg-white cursor-pointer transform transition-all duration-300 hover:scale-[1.02] active:scale-95" data-splash-index="2" onclick="handleSplashCardClick(2)">
+              <img src="assets/splash-card-pilot.jpg" alt="Farmers Can Observe - Live Crop View with Our Pilot" class="w-full h-auto object-cover block select-none pointer-events-none" draggable="false" onerror="this.src='assets/hero_drone_banner.png'">
+            </div>
+
+          </div>
+
+          <!-- 3 Interactive Splash Carousel Dots -->
+          <div id="splash-dots-container" class="flex items-center justify-center gap-2 mt-2.5">
+            <button type="button" onclick="goToSplashSlide(0)" class="splash-dot w-6 h-2 rounded-full bg-emerald-600 transition-all duration-300 cursor-pointer focus:outline-none" aria-label="Card 1"></button>
+            <button type="button" onclick="goToSplashSlide(1)" class="splash-dot w-2 h-2 rounded-full bg-slate-300 transition-all duration-300 hover:bg-slate-400 cursor-pointer focus:outline-none" aria-label="Card 2"></button>
+            <button type="button" onclick="goToSplashSlide(2)" class="splash-dot w-2 h-2 rounded-full bg-slate-300 transition-all duration-300 hover:bg-slate-400 cursor-pointer focus:outline-none" aria-label="Card 3"></button>
           </div>
         </div>
 
-        <!-- 3 Feature Pills -->
-        <div class="space-y-4 pb-2">
-          <div class="flex items-center justify-center gap-2">
+        <!-- 3 Feature Pills & Action Button -->
+        <div class="space-y-3 pb-1 flex-shrink-0">
+          <div class="flex items-center justify-center gap-1.5 flex-wrap">
             <span class="px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center gap-1.5 shadow-xs">
               <span>🌱</span> <span data-key="feature_spraying">Crop Spraying</span>
             </span>
@@ -199,7 +220,7 @@
             For a Greener, Healthier and More Productive Future
           </p>
 
-          <button onclick="goToScreen('screen-lang')" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-base shadow-btn flex items-center justify-center gap-2 transition-all transform active:scale-[0.98]">
+          <button onclick="goToScreen('screen-lang')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black rounded-2xl text-base shadow-btn flex items-center justify-center gap-2 transition-all transform active:scale-[0.98]">
             <span data-key="btn_get_started">Get Started / ప్రారంభించండి</span>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
@@ -1913,6 +1934,7 @@
         feature_spraying: 'పంట స్ప్రేయింగ్',
         feature_monitoring: 'పంట పర్యవేక్షణ',
         feature_mapping: 'పొలం మ్యాపింగ్',
+        splash_subtitle: 'డ్రోన్ సేవలు మీ చేతివేళ్ల వద్ద',
         splash_motto: 'రైతన్నల సుసంపన్న, ఆరోగ్యవంతమైన భవిష్యత్తు కోసం త్రినేత్ర డ్రోన్స్',
         btn_get_started: 'ప్రారంభించండి →',
         lang_select_title: 'భాషను ఎంచుకోండి / Select Language',
@@ -2055,6 +2077,7 @@
         feature_spraying: 'Crop Spraying',
         feature_monitoring: 'Crop Monitoring',
         feature_mapping: 'Field Mapping',
+        splash_subtitle: 'Drone services at your fingertips',
         splash_motto: 'For a Greener, Healthier and More Productive Future',
         btn_get_started: 'Get Started →',
         lang_select_title: 'Select Language',
@@ -2214,6 +2237,11 @@
           setTimeout(initIntroCarousel, 80);
         } else {
           stopCarouselAutoSlide();
+        }
+        if (screenId === 'screen-splash') {
+          setTimeout(initSplashCarousel, 80);
+        } else {
+          stopSplashAutoSlide();
         }
         if (addToHistory && (state.screenHistory[state.screenHistory.length - 1] !== screenId)) {
           state.screenHistory.push(screenId);
@@ -2613,7 +2641,145 @@
       applyLanguage(lang);
     }
 
-        // =========================================================================
+            // =========================================================================
+    // SCREEN 1: SPLASH CAROUSEL (3-CARD SIDE-BY-SIDE SLIDER)
+    // =========================================================================
+    let currentSplashIndex = 0;
+    const totalSplashSlides = 3;
+    let splashAutoTimer = null;
+    let splashCarouselInitialized = false;
+
+    function initSplashCarousel() {
+      const carousel = document.getElementById('splash-carousel');
+      if (!carousel) return;
+
+      if (!splashCarouselInitialized) {
+        splashCarouselInitialized = true;
+
+        // Scroll listener: dynamically update indicator dots during horizontal scrolling
+        let scrollTimeout;
+        carousel.addEventListener('scroll', () => {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            const newIdx = getSplashCurrentIndex();
+            if (newIdx !== currentSplashIndex && newIdx >= 0 && newIdx < totalSplashSlides) {
+              currentSplashIndex = newIdx;
+              updateSplashDots(currentSplashIndex);
+            }
+          }, 35);
+        }, { passive: true });
+
+        // Touch & Mouse Drag Support for Desktop & Mobile
+        let isDown = false;
+        let startX = 0;
+        let scrollLeftPos = 0;
+
+        carousel.addEventListener('mousedown', (e) => {
+          isDown = true;
+          startX = e.pageX - carousel.offsetLeft;
+          scrollLeftPos = carousel.scrollLeft;
+          stopSplashAutoSlide();
+        });
+
+        window.addEventListener('mouseup', () => {
+          if (!isDown) return;
+          isDown = false;
+          const targetIdx = getSplashCurrentIndex();
+          goToSplashSlide(targetIdx);
+        });
+
+        carousel.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - carousel.offsetLeft;
+          const walk = (x - startX) * 1.3;
+          carousel.scrollLeft = scrollLeftPos - walk;
+        });
+
+        carousel.addEventListener('touchstart', stopSplashAutoSlide, { passive: true });
+      }
+
+      updateSplashDots(currentSplashIndex);
+      startSplashAutoSlide();
+    }
+
+    function getSplashCurrentIndex() {
+      const carousel = document.getElementById('splash-carousel');
+      if (!carousel) return 0;
+      const slides = carousel.querySelectorAll('.splash-card-slide');
+      if (!slides || slides.length === 0) return 0;
+      const carouselCenter = carousel.scrollLeft + carousel.clientWidth / 2;
+      let closestIdx = 0;
+      let minDiff = Infinity;
+      slides.forEach((slide, idx) => {
+        const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+        const diff = Math.abs(carouselCenter - slideCenter);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIdx = idx;
+        }
+      });
+      return closestIdx;
+    }
+
+    function updateSplashDots(index) {
+      const dots = document.querySelectorAll('#splash-dots-container .splash-dot');
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.className = 'splash-dot w-6 h-2 rounded-full bg-emerald-600 transition-all duration-300 cursor-pointer focus:outline-none';
+        } else {
+          dot.className = 'splash-dot w-2 h-2 rounded-full bg-slate-300 transition-all duration-300 hover:bg-slate-400 cursor-pointer focus:outline-none';
+        }
+      });
+    }
+
+    function goToSplashSlide(index) {
+      const carousel = document.getElementById('splash-carousel');
+      if (!carousel) return;
+      currentSplashIndex = Math.max(0, Math.min(totalSplashSlides - 1, index));
+      const slides = carousel.querySelectorAll('.splash-card-slide');
+      if (slides[currentSplashIndex]) {
+        slides[currentSplashIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+      updateSplashDots(currentSplashIndex);
+    }
+
+    function handleSplashCardClick(index) {
+      stopSplashAutoSlide();
+      if (index === currentSplashIndex) {
+        if (currentSplashIndex < totalSplashSlides - 1) {
+          goToSplashSlide(currentSplashIndex + 1);
+        } else {
+          goToScreen('screen-lang');
+        }
+      } else {
+        goToSplashSlide(index);
+      }
+    }
+
+    function startSplashAutoSlide() {
+      stopSplashAutoSlide();
+      splashAutoTimer = setInterval(() => {
+        if (state.currentScreen !== 'screen-splash') {
+          stopSplashAutoSlide();
+          return;
+        }
+        if (currentSplashIndex < totalSplashSlides - 1) {
+          goToSplashSlide(currentSplashIndex + 1);
+        } else {
+          goToSplashSlide(0);
+        }
+      }, 4200);
+    }
+
+    function stopSplashAutoSlide() {
+      if (splashAutoTimer) {
+        clearInterval(splashAutoTimer);
+        splashAutoTimer = null;
+      }
+    }
+
+    // =========================================================================
     // ONBOARDING INTRO CAROUSEL (SIDE-BY-SIDE SCROLLING)
     // =========================================================================
     let currentCarouselIndex = 0;
@@ -3588,11 +3754,7 @@
       initOtpInputs();
       initRealtimeSync();
 
-      setTimeout(() => {
-        if (state.currentScreen === 'screen-splash') {
-          goToScreen('screen-lang');
-        }
-      }, 3200);
+      initSplashCarousel();
     });
   </script>
   <!-- Hidden File Input for Farmer Profile Photo -->
